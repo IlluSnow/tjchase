@@ -15,6 +15,13 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
 
     @Override
     public void registerSounds() {
+        add(ModSoundEvents.HARP_ATTRACT_BLOCKS, definition()
+                .subtitle(ModSoundSubtitles.HARP_ATTRACT_BLOCKS)
+                .with(modSound("item/%s/attract".formatted(ModItemNames.HARP))));
+        add(ModSoundEvents.HARP_THROW_BLOCK, definition()
+                .subtitle(ModSoundSubtitles.HARP_THROW_BLOCK)
+                .with(modSound("item/%s/throw".formatted(ModItemNames.HARP))));
+
         add(ModSoundEvents.VINE_SEED_THROW, definition()
                 .subtitle(ModSoundSubtitles.VINE_SEED_THROW)
                 .with(sound("random/bow")));

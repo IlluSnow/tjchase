@@ -1,0 +1,22 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+      "name": "TJCHASE_HARP_PLAY",
+      "constructor": "(ZZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "parameters": {
+        "class": "illusnow/tjchase/client/model/ModArmPoses",
+        "field": "HARP_PLAY"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/ItemUseAnimation",
+      "name": "TJCHASE_HARP_PLAY",
+      "constructor": "(ILjava/lang/String;Z)V",
+      "parameters": {
+        "class": "illusnow/tjchase/item/ModItemUseAnimations",
+        "field": "HARP_PLAY"
+      }
+    }
+  ]
+}

@@ -44,6 +44,7 @@ public class VineSeedItem extends Item implements ProjectileItem {
         player.awardStat(Stats.ITEM_USED.get(this));
         player.getCooldowns().addCooldown(stack, COOLDOWN_TICKS);
         stack.consume(1, player);
+        player.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResult.SUCCESS;
     }
 

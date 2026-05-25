@@ -1,6 +1,7 @@
 package illusnow.tjchase.item;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.util.HarpConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
@@ -12,8 +13,11 @@ import java.util.function.UnaryOperator;
 
 public final class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(TJChase.MODID);
-    public static final DeferredHolder<Item, Item> VINE_SEED
-            = register(ModItemNames.VINE_SEED, VineSeedItem::new, UnaryOperator.identity());
+    public static final DeferredHolder<Item, Item> HARP = register(ModItemNames.HARP, HarpItem::new,
+            p -> p.durability(HarpConstants.DURABILITY).enchantable(HarpConstants.ENCHANTMENT_VALUE));
+    public static final DeferredHolder<Item, Item> NETHERITE_HARP = register(ModItemNames.NETHERITE_HARP, HarpItem::new,
+            p -> p.durability(HarpConstants.DURABILITY_NETHERITE).enchantable(HarpConstants.ENCHANTMENT_VALUE_NETHERITE));
+    public static final DeferredHolder<Item, Item> VINE_SEED = register(ModItemNames.VINE_SEED, VineSeedItem::new, UnaryOperator.identity());
 
     private ModItems() {}
 

@@ -32,11 +32,15 @@ public final class ModLanguageProvider {
             add(ModEntities.VINE_MANAGER.get(), "Vine Manager");
             add(ModEntities.VINE_SEED.get(), "Vine Seed");
             add(ModCreativeModeTabs.RANDOM_CREATIONS_TAB_ID, "TJChase");
+            add(ModItems.HARP.get(), "Harp");
+            add(ModItems.NETHERITE_HARP.get(), "Netherite Harp");
             add(ModItems.VINE_SEED.get(), "Vine Seed");
-            add(ModSoundSubtitles.VINE_GROW, "Vine Grows");
-            add(ModSoundSubtitles.VINE_SEED_THROW, "Vine Seed Flies");
-            add(ModSoundSubtitles.VINE_HEAL, "Vine Heals");
-            add(ModSoundSubtitles.VINE_VANISH, "Vine Vanishes");
+            add(ModSoundSubtitles.HARP_ATTRACT_BLOCKS, "Harp attracts blocks");
+            add(ModSoundSubtitles.HARP_THROW_BLOCK, "Block thrown");
+            add(ModSoundSubtitles.VINE_GROW, "Vine grows");
+            add(ModSoundSubtitles.VINE_SEED_THROW, "Vine seed flies");
+            add(ModSoundSubtitles.VINE_HEAL, "Vine heals");
+            add(ModSoundSubtitles.VINE_VANISH, "Vine vanishes");
         }
     }
 
@@ -60,7 +64,11 @@ public final class ModLanguageProvider {
             add(ModEntities.VINE_MANAGER.get(), "藤蔓管理器");
             add(ModEntities.VINE_SEED.get(), "藤蔓种子");
             add(ModCreativeModeTabs.RANDOM_CREATIONS_TAB_ID, "猫鼠");
+            add(ModItems.HARP.get(), "竖琴");
+            add(ModItems.NETHERITE_HARP.get(), "下界合金竖琴");
             add(ModItems.VINE_SEED.get(), "藤蔓种子");
+            add(ModSoundSubtitles.HARP_ATTRACT_BLOCKS, "竖琴：吸引方块");
+            add(ModSoundSubtitles.HARP_THROW_BLOCK, "方块：被扔出");
             add(ModSoundSubtitles.VINE_GROW, "藤蔓：生长");
             add(ModSoundSubtitles.VINE_HEAL, "藤蔓：治疗");
             add(ModSoundSubtitles.VINE_SEED_THROW, "藤蔓种子：飞出");

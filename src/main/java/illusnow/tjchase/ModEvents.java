@@ -11,6 +11,8 @@ public class ModEvents {
     @SubscribeEvent
     public static void onBuildCreativeModeTabContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() == ModCreativeModeTabs.TAB.get()) {
+            event.accept(ModItems.HARP.get());
+            event.accept(ModItems.NETHERITE_HARP.get());
             event.accept(ModItems.VINE_SEED.get());
         }
     }

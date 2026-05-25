@@ -1,13 +1,35 @@
 package illusnow.tjchase.client;
 
+import com.google.common.reflect.TypeToken;
+import com.mojang.blaze3d.vertex.PoseStack;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
+import illusnow.tjchase.client.model.ModArmPoses;
+import illusnow.tjchase.client.util.HarpAnimation;
+import illusnow.tjchase.item.HarpItem;
+import illusnow.tjchase.item.ModItems;
+import illusnow.tjchase.tag.ModItemTags;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RenderHandEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
+import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = TJChase.MODID, value = Dist.CLIENT)
 public class ClientModEvents {
@@ -28,5 +50,59 @@ public class ClientModEvents {
                 ModBlocks.TEMPORARY_OAK_LEAVES.get(),
                 ModBlocks.TEMPORARY_VINE.get()
         );
+    }
+
+    @SubscribeEvent
+    public static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerItem(new IClientItemExtensions() {
+            @Nullable
+            @Override
+            public HumanoidModel.ArmPose getArmPose(LivingEntity user, InteractionHand hand, ItemStack handItem) {
+                if (user.getUsedItemHand() == hand && user.getUseItemRemainingTicks() > 0 && handItem.is(ModItemTags.HARPS)) {
+                    return ModArmPoses.HARP_PLAY.getValue();
+                }
+                return null;
+            }
+
+            @Override
+            public boolean applyForgeHandTransform(PoseStack poseStack, LocalPlayer player, HumanoidArm arm, ItemStack itemInHand, float partialTick, float equipProcess, float swingProcess) {
+                HarpAnimation.applyHarpTransform(poseStack, player, arm, itemInHand, partialTick);
+                return false;
+            }
+        }, ModItems.HARP, ModItems.NETHERITE_HARP);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRenderStateModifiers(RegisterRenderStateModifiersEvent event) {
+        event.registerEntityModifier(new TypeToken<LivingEntityRenderer<?, ?, ?>>() {}, (entity, state) -> {
+            float maxPlayHarpDuration = 0;
+            if (entity.isUsingItem() && entity.getUseItem().is(ModItemTags.HARPS)) {
+                maxPlayHarpDuration = HarpItem.getPlayDuration(entity.getUseItem(), entity);
+            }
+            state.setRenderData(ModRenderStateContextKeys.MAX_PLAY_HARP_DURATION, maxPlayHarpDuration);
+        });
+    }
+
+    @SubscribeEvent
+    public static void onRenderHand(RenderHandEvent event) {
+        Minecraft mc = Minecraft.getInstance();
+        AbstractClientPlayer player = mc.player;
+        if (player == null) {
+            return;
+        }
+        ItemStack stack = event.getItemStack();
+        ItemInHandRenderer itemInHandRenderer = mc.getEntityRenderDispatcher().getItemInHandRenderer();
+        if (stack.is(ModItemTags.HARPS)) {
+            if (player.getUseItem() == stack && event.getHand() == player.getUsedItemHand()) {
+                HarpAnimation.renderFirstPersonPlayHarpAnimation(event, player, stack, itemInHandRenderer);
+            }
+        }
+        if (event.getHand() == InteractionHand.OFF_HAND
+                && event.getItemStack().isEmpty()
+                && event.getSwingProgress() > 0
+                && event.getSwingProgress() < 0.5
+                && player.getItemInHand(InteractionHand.MAIN_HAND).is(ModItemTags.HARPS)) {
+            HarpAnimation.renderFirstPersonThrowBlockAnimation(event, player, itemInHandRenderer);
+        }
     }
 }

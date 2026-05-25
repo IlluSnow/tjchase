@@ -1,4 +1,4 @@
-package illusnow.tjchase.data;
+package illusnow.tjchase.client;
 
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlockNames;
@@ -15,6 +15,7 @@ import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
@@ -62,6 +63,9 @@ public class ModModelProvider extends ModelProvider {
 
         // Item Models
         itemModels.generateFlatItem(ModItems.VINE_SEED.get(), ModelTemplates.FLAT_ITEM);
+
+        createHarp(itemModels, ModItems.HARP.get());
+        createHarp(itemModels, ModItems.NETHERITE_HARP.get());
     }
 
     private static @NotNull Identifier prefixVanillaBlock(String name) {
@@ -70,6 +74,11 @@ public class ModModelProvider extends ModelProvider {
 
     private static Identifier prefixBlock(String name) {
         return TJChase.prefix("block/" + name);
+    }
+
+    public static void createHarp(ItemModelGenerators itemModels, Item harp) {
+        itemModels.generateFlatItem(harp, ModModelTemplates.HARP);
+//        ModModelTemplates.HARP.create(harp, TextureMapping.layer0(harp), itemModels.modelOutput);
     }
 
     public static void copyBlockModelOnly(BlockModelGenerators blockModelGenerators, Block sourceBlock, Block targetBlock) {

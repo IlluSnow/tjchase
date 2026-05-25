@@ -1,6 +1,7 @@
 package illusnow.tjchase.data;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.client.ModModelProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -14,6 +15,7 @@ public final class ModDataGenerators {
         event.createProvider(ModModelProvider::new);
         event.createProvider(ModSoundProvider::new);
         event.createProvider(ModBlockTagsProvider::new);
+        event.createProvider(ModItemTagsProvider::new);
     }
 
     private ModDataGenerators() {}
