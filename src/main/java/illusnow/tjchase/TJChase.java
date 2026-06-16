@@ -4,8 +4,11 @@ import com.mojang.logging.LogUtils;
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.entity.ModEntities;
+import illusnow.tjchase.entity.ModEntityDataSerializers;
 import illusnow.tjchase.item.ModCreativeModeTabs;
 import illusnow.tjchase.item.ModItems;
+import illusnow.tjchase.item.enchantment.ModEnchantmentEffectComponents;
+import illusnow.tjchase.particle.ModParticleTypes;
 import illusnow.tjchase.sound.ModSoundEvents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -34,8 +37,11 @@ public class TJChase {
         ModAttachments.ATTACHMENT_TYPES.register(bus);
         ModBlocks.BLOCKS.register(bus);
         ModCreativeModeTabs.CREATIVE_MODE_TABS.register(bus);
+        ModEnchantmentEffectComponents.ENCHANTMENT_COMPONENT_TYPES.register(bus);
         ModEntities.ENTITY_TYPES.register(bus);
+        ModEntityDataSerializers.ENTITY_DATA_SERIALIZERS.register(bus);
         ModItems.ITEMS.register(bus);
+        ModParticleTypes.PARTICLE_TYPES.register(bus);
         ModSoundEvents.SOUND_EVENTS.register(bus);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
@@ -44,6 +50,14 @@ public class TJChase {
 
     public static Identifier prefix(String name) {
         return Identifier.fromNamespaceAndPath(MODID, name);
+    }
+
+    public static String prefix(String type, String name) {
+        return type + "." + MODID + "." + name;
+    }
+
+    public static String prefixMsg(String name) {
+        return prefix("message", name);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

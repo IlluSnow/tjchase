@@ -4,6 +4,8 @@ import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.VineGenerator;
+import illusnow.tjchase.util.WeightedBlock;
+import illusnow.tjchase.util.WeightedBlockSelector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
@@ -21,27 +23,27 @@ import net.minecraft.world.phys.Vec3;
 
 public class VineSeed extends ThrowableItemProjectile {
     public static final float GROW_SOUND_VOLUME = 7.5F;
-    private static final VineGenerator.VineMaterialSelector DECORATIVE_SELECTOR = new VineGenerator.VineMaterialSelector(
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_ACACIA_LEAVES.get().defaultBlockState(), 10),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_BIRCH_LEAVES.get().defaultBlockState(), 15),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_OAK_LEAVES.get().defaultBlockState(), 15),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_JUNGLE_LEAVES.get().defaultBlockState(), 10),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_SPRUCE_LEAVES.get().defaultBlockState(), 10),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_DARK_OAK_LEAVES.get().defaultBlockState(), 5),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_AZALEA_LEAVES.get().defaultBlockState(), 15),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_FLOWERING_AZALEA_LEAVES.get().defaultBlockState(), 1),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_MOSS_BLOCK.get().defaultBlockState(), 20)
+    private static final WeightedBlockSelector DECORATIVE_SELECTOR = new WeightedBlockSelector(
+            new WeightedBlock(ModBlocks.TEMPORARY_ACACIA_LEAVES.get().defaultBlockState(), 10),
+            new WeightedBlock(ModBlocks.TEMPORARY_BIRCH_LEAVES.get().defaultBlockState(), 15),
+            new WeightedBlock(ModBlocks.TEMPORARY_OAK_LEAVES.get().defaultBlockState(), 15),
+            new WeightedBlock(ModBlocks.TEMPORARY_JUNGLE_LEAVES.get().defaultBlockState(), 10),
+            new WeightedBlock(ModBlocks.TEMPORARY_SPRUCE_LEAVES.get().defaultBlockState(), 10),
+            new WeightedBlock(ModBlocks.TEMPORARY_DARK_OAK_LEAVES.get().defaultBlockState(), 5),
+            new WeightedBlock(ModBlocks.TEMPORARY_AZALEA_LEAVES.get().defaultBlockState(), 15),
+            new WeightedBlock(ModBlocks.TEMPORARY_FLOWERING_AZALEA_LEAVES.get().defaultBlockState(), 1),
+            new WeightedBlock(ModBlocks.TEMPORARY_MOSS_BLOCK.get().defaultBlockState(), 20)
     );
-    private static final VineGenerator.VineMaterialSelector PLATFORM_SELECTOR = new VineGenerator.VineMaterialSelector(
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_ACACIA_LEAVES.get().defaultBlockState(), 10),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_BIRCH_LEAVES.get().defaultBlockState(), 15),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_OAK_LEAVES.get().defaultBlockState(), 15),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_JUNGLE_LEAVES.get().defaultBlockState(), 10),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_SPRUCE_LEAVES.get().defaultBlockState(), 10),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_DARK_OAK_LEAVES.get().defaultBlockState(), 5),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_AZALEA_LEAVES.get().defaultBlockState(), 15),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_FLOWERING_AZALEA_LEAVES.get().defaultBlockState(), 1),
-            new VineGenerator.VineMaterial(ModBlocks.TEMPORARY_MOSS_BLOCK.get().defaultBlockState(), 150)
+    private static final WeightedBlockSelector PLATFORM_SELECTOR = new WeightedBlockSelector(
+            new WeightedBlock(ModBlocks.TEMPORARY_ACACIA_LEAVES.get().defaultBlockState(), 10),
+            new WeightedBlock(ModBlocks.TEMPORARY_BIRCH_LEAVES.get().defaultBlockState(), 15),
+            new WeightedBlock(ModBlocks.TEMPORARY_OAK_LEAVES.get().defaultBlockState(), 15),
+            new WeightedBlock(ModBlocks.TEMPORARY_JUNGLE_LEAVES.get().defaultBlockState(), 10),
+            new WeightedBlock(ModBlocks.TEMPORARY_SPRUCE_LEAVES.get().defaultBlockState(), 10),
+            new WeightedBlock(ModBlocks.TEMPORARY_DARK_OAK_LEAVES.get().defaultBlockState(), 5),
+            new WeightedBlock(ModBlocks.TEMPORARY_AZALEA_LEAVES.get().defaultBlockState(), 15),
+            new WeightedBlock(ModBlocks.TEMPORARY_FLOWERING_AZALEA_LEAVES.get().defaultBlockState(), 1),
+            new WeightedBlock(ModBlocks.TEMPORARY_MOSS_BLOCK.get().defaultBlockState(), 150)
     );
 
     public VineSeed(EntityType<? extends ThrowableItemProjectile> type, Level level) {

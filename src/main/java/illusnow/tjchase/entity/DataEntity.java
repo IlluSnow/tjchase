@@ -1,5 +1,6 @@
 package illusnow.tjchase.entity;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.PushReaction;
+import org.jspecify.annotations.Nullable;
 
 public abstract class DataEntity extends Entity {
     protected boolean ignoreKillCommand = true;
@@ -51,4 +53,18 @@ public abstract class DataEntity extends Entity {
 
     @Override
     public void thunderHit(ServerLevel level, LightningBolt lightning) {}
+
+    @Override
+    public boolean hasCustomName() {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public Component getCustomName() {
+        return null;
+    }
+
+    @Override
+    public void setCustomName(@Nullable Component name) {}
 }

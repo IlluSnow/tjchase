@@ -5,9 +5,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.client.model.ModArmPoses;
+import illusnow.tjchase.client.particle.HarpPlayedNoteParticle;
+import illusnow.tjchase.client.particle.TJChaseBuffParticle;
 import illusnow.tjchase.client.util.HarpAnimation;
 import illusnow.tjchase.item.HarpItem;
 import illusnow.tjchase.item.ModItems;
+import illusnow.tjchase.particle.ModParticleTypes;
 import illusnow.tjchase.tag.ModItemTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -25,6 +28,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RenderHandEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -81,6 +85,12 @@ public class ClientModEvents {
             }
             state.setRenderData(ModRenderStateContextKeys.MAX_PLAY_HARP_DURATION, maxPlayHarpDuration);
         });
+    }
+
+    @SubscribeEvent
+    public static void onRegisterParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ModParticleTypes.TJCHASE_BUFF.get(), TJChaseBuffParticle.Provider::new);
+        event.registerSpriteSet(ModParticleTypes.HARP_PLAYED_NOTE.get(), HarpPlayedNoteParticle.Provider::new);
     }
 
     @SubscribeEvent

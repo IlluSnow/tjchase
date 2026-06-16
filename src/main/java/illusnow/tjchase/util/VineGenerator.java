@@ -3,8 +3,6 @@ package illusnow.tjchase.util;
 import illusnow.tjchase.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LadderBlock;
@@ -19,11 +17,11 @@ public class VineGenerator {
     private static final double THICKNESS_MULTIPLIER = 0.9;
     private final BlockPos bottomCenter;
     private final Direction direction;
-    private final VineMaterialSelector decorativeSelector;
-    private final VineMaterialSelector platformSelector;
+    private final WeightedBlockSelector decorativeSelector;
+    private final WeightedBlockSelector platformSelector;
     private final Map<Integer, Set<BlockPos>> vineBlocks = new HashMap<>();
 
-    public VineGenerator(BlockPos bottomCenter, Direction direction, VineMaterialSelector selector, VineMaterialSelector platformSelector) {
+    public VineGenerator(BlockPos bottomCenter, Direction direction, WeightedBlockSelector selector, WeightedBlockSelector platformSelector) {
         this.bottomCenter = bottomCenter;
         this.direction = direction;
         this.decorativeSelector = selector;
@@ -83,7 +81,7 @@ public class VineGenerator {
         }
     }
 
-    private void drawSolidCircle(Level level, double cx, int cy, double cz, double radius, VineMaterialSelector selector) {
+    private void drawSolidCircle(Level level, double cx, int cy, double cz, double radius, WeightedBlockSelector selector) {
         if (radius <= 0) {
             return;
         }
@@ -134,22 +132,4 @@ public class VineGenerator {
     public Map<Integer, Set<BlockPos>> getVineBlocks() {
         return Collections.unmodifiableMap(vineBlocks);
     }
-
-    public static class VineMaterialSelector {
-        private final List<VineMaterial> materials;
-
-        public VineMaterialSelector(VineMaterial... materials) {
-            this(List.of(materials));
-        }
-
-        public VineMaterialSelector(List<VineMaterial> materials) {
-            this.materials = materials;
-        }
-
-        public BlockState getRandomMaterial(RandomSource random) {
-            return WeightedRandom.getRandomItem(random, materials, VineMaterial::weight).orElseThrow().material();
-        }
-    }
-
-    public record VineMaterial(BlockState material, int weight) {}
 }

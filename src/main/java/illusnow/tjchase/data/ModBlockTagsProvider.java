@@ -6,6 +6,7 @@ import illusnow.tjchase.tag.ModBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
 import java.util.concurrent.CompletableFuture;
@@ -61,5 +62,6 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.MANGROVE_LOGS_CAN_GROW_THROUGH).add(ModBlocks.TEMPORARY_VINE.get());
         tag(BlockTags.MANGROVE_ROOTS_CAN_GROW_THROUGH).add(ModBlocks.TEMPORARY_VINE.get());
         tag(BlockTags.REPLACEABLE_BY_TREES).add(ModBlocks.TEMPORARY_VINE.get());
+        tag(ModBlockTags.SOFT_ORBITING_BLOCK_TAG_SPECIAL).add(Blocks.COBWEB, Blocks.VINE, Blocks.GLOW_LICHEN);
     }
 }

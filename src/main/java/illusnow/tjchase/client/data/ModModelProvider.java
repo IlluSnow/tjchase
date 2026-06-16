@@ -1,8 +1,9 @@
-package illusnow.tjchase.client;
+package illusnow.tjchase.client.data;
 
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlockNames;
 import illusnow.tjchase.block.ModBlocks;
+import illusnow.tjchase.client.ModModelTemplates;
 import illusnow.tjchase.item.ModItems;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
@@ -16,9 +17,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -66,9 +67,11 @@ public class ModModelProvider extends ModelProvider {
 
         createHarp(itemModels, ModItems.HARP.get());
         createHarp(itemModels, ModItems.NETHERITE_HARP.get());
+        itemModels.generateFlatItem(ModItems.ENTITY_DEBUG_STICK.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.HARP_TESTER.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
     }
 
-    private static @NotNull Identifier prefixVanillaBlock(String name) {
+    private static Identifier prefixVanillaBlock(String name) {
         return Identifier.withDefaultNamespace("block/" + name);
     }
 

@@ -11,6 +11,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 public final class ModEntityRenderers {
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ModEntities.HARP_TESTER.get(), DummyEntityRenderer::new);
         event.registerEntityRenderer(ModEntities.ORBITING_BLOCK.get(), OrbitingBlockRenderer::new);
         event.registerEntityRenderer(ModEntities.VINE_MANAGER.get(), DummyEntityRenderer::new);
         event.registerEntityRenderer(ModEntities.VINE_SEED.get(), ThrownItemRenderer::new);

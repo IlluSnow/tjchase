@@ -64,7 +64,6 @@ public abstract class LivingEntityMixin extends Entity {
         return original.call(a, b);
     }
 
-
     @Unique
     private boolean randomCreations$climbingOnSpeedBoostingVine() {
         if (!VineManager.AFFECTED_BY_VINES.test(this)) {

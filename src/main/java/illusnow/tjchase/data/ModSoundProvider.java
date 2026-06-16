@@ -4,7 +4,9 @@ import illusnow.tjchase.TJChase;
 import illusnow.tjchase.item.ModItemNames;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.sound.ModSoundSubtitles;
+import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
+import net.minecraft.sounds.SoundEvent;
 import net.neoforged.neoforge.common.data.SoundDefinition;
 import net.neoforged.neoforge.common.data.SoundDefinitionsProvider;
 
@@ -15,12 +17,15 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
 
     @Override
     public void registerSounds() {
-        add(ModSoundEvents.HARP_ATTRACT_BLOCKS, definition()
-                .subtitle(ModSoundSubtitles.HARP_ATTRACT_BLOCKS)
-                .with(modSound("item/%s/attract".formatted(ModItemNames.HARP))));
-        add(ModSoundEvents.HARP_THROW_BLOCK, definition()
-                .subtitle(ModSoundSubtitles.HARP_THROW_BLOCK)
-                .with(modSound("item/%s/throw".formatted(ModItemNames.HARP))));
+        harpAttract(ModSoundEvents.HARP_ATTRACT_BLOCKS, "");
+        harpAttract(ModSoundEvents.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_1, "1");
+        harpAttract(ModSoundEvents.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_2, "2");
+        harpAttract(ModSoundEvents.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_3, "3");
+
+        harpThrow(ModSoundEvents.HARP_THROW_BLOCK, "");
+        harpThrow(ModSoundEvents.HARP_THROW_BLOCK_LIGHTWEIGHT_1, "1");
+        harpThrow(ModSoundEvents.HARP_THROW_BLOCK_LIGHTWEIGHT_2, "2");
+        harpThrow(ModSoundEvents.HARP_THROW_BLOCK_LIGHTWEIGHT_3, "3");
 
         add(ModSoundEvents.VINE_SEED_THROW, definition()
                 .subtitle(ModSoundSubtitles.VINE_SEED_THROW)
@@ -36,6 +41,18 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
                 .subtitle(ModSoundSubtitles.VINE_VANISH)
                 .with(modSound("item/%s/vanish1".formatted(ModItemNames.VINE_SEED)))
                 .with(modSound("item/%s/vanish2".formatted(ModItemNames.VINE_SEED))));
+    }
+
+    private void harpAttract(Holder<SoundEvent> sound, String suffix) {
+        add(sound, definition()
+                .subtitle(ModSoundSubtitles.HARP_ATTRACT_BLOCKS)
+                .with(modSound("item/%s/attract%s".formatted(ModItemNames.HARP, suffix))));
+    }
+
+    private void harpThrow(Holder<SoundEvent> sound, String suffix) {
+        add(sound, definition()
+                .subtitle(ModSoundSubtitles.HARP_THROW_BLOCK)
+                .with(modSound("item/%s/throw%s".formatted(ModItemNames.HARP, suffix))));
     }
 
     private static SoundDefinition.Sound modSound(String path) {
