@@ -4,7 +4,9 @@ import com.google.common.base.Predicates;
 import com.mojang.serialization.Codec;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.entity.HarpTester;
+import illusnow.tjchase.entity.Zuri;
 import illusnow.tjchase.util.AngelTomPassive2Tracker;
+import illusnow.tjchase.util.DancingHelper;
 import illusnow.tjchase.util.OrbitingBlockHolder;
 import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.level.storage.ValueInput;
@@ -29,6 +31,10 @@ public final class ModAttachments {
             AttachmentType.builder(() -> 0L).serialize(Codec.LONG.fieldOf(ModAttachmentNames.VINE_CD)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Optional<EntityReference<HarpTester>>>> HARP_TESTER = ATTACHMENT_TYPES.register(ModAttachmentNames.HARP_TESTER, () ->
             AttachmentType.<Optional<EntityReference<HarpTester>>>builder(Optional::empty).serialize(optionalSerializer(EntityReference.codec())).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Optional<EntityReference<Zuri>>>> DANCING_WITH = ATTACHMENT_TYPES.register(ModAttachmentNames.DANCING_WITH, () ->
+            AttachmentType.<Optional<EntityReference<Zuri>>>builder(Optional::empty).serialize(optionalSerializer(EntityReference.codec())).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<DancingHelper.DanceEffectType>> DANCE_EFFECT_TYPE = ATTACHMENT_TYPES.register(ModAttachmentNames.DANCE_EFFECT_TYPE, () ->
+            AttachmentType.builder(holder -> DancingHelper.DanceEffectType.NONE).serialize(DancingHelper.DanceEffectType.MAP_CODEC).sync(DancingHelper.DanceEffectType.STREAM_CODEC).build());
 
     private ModAttachments() {}
 

@@ -5,11 +5,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.client.model.ModArmPoses;
+import illusnow.tjchase.client.network.ModClientPayloadHandlers;
 import illusnow.tjchase.client.particle.HarpPlayedNoteParticle;
 import illusnow.tjchase.client.particle.TJChaseBuffParticle;
 import illusnow.tjchase.client.util.HarpAnimation;
 import illusnow.tjchase.item.HarpItem;
 import illusnow.tjchase.item.ModItems;
+import illusnow.tjchase.network.PlayDanceTimePayload;
 import illusnow.tjchase.particle.ModParticleTypes;
 import illusnow.tjchase.tag.ModItemTags;
 import net.minecraft.client.Minecraft;
@@ -32,6 +34,7 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RenderHandEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,6 +42,14 @@ import org.jetbrains.annotations.Nullable;
 public class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {}
+
+    @SubscribeEvent // on the mod event bus only on the physical client
+    public static void register(RegisterClientPayloadHandlersEvent event) {
+        event.register(
+                PlayDanceTimePayload.TYPE,
+                ModClientPayloadHandlers::handlePlayDanceTime
+        );
+    }
 
     @SubscribeEvent
     public static void onRegisterBlockColorHandlers(RegisterColorHandlersEvent.Block event) {

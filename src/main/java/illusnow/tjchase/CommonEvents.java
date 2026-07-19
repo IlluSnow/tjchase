@@ -2,7 +2,10 @@ package illusnow.tjchase;
 
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.entity.HarpTester;
+import illusnow.tjchase.entity.TJChaseCharacter;
+import illusnow.tjchase.entity.Zuri;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
+import illusnow.tjchase.entity.projectile.YogaBall;
 import illusnow.tjchase.item.HarpItem;
 import illusnow.tjchase.item.enchantment.ModEnchantmentEffectComponents;
 import illusnow.tjchase.tag.ModBlockTags;
@@ -13,17 +16,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityReference;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -59,7 +61,25 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
+    public static void onProjectileImpact(ProjectileImpactEvent event) {
+        if (event.getProjectile() instanceof YogaBall && event.getRayTraceResult().getType() == HitResult.Type.ENTITY) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
+        handleOrbitingBlocksDamageReduction(event);
+        handleTJChaseCharacterDamageReductionStart(event);
+    }
+
+    private static void handleTJChaseCharacterDamageReductionStart(LivingIncomingDamageEvent event) {
+        if (event.getEntity() instanceof TJChaseCharacter tj) {
+            event.setAmount(tj.getReducedStartDamage(event.getAmount(), event.getOriginalAmount()));
+        }
+    }
+
+    private static void handleOrbitingBlocksDamageReduction(LivingIncomingDamageEvent event) {
         LivingEntity entity = event.getEntity();
         OrbitingBlockHolder orbitingBlocks = entity.getData(ModAttachments.ORBITING_BLOCKS);
         boolean invalidDamageSource = event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)
@@ -88,6 +108,17 @@ public class CommonEvents {
                     HarpItem.addHarpCooldown(player, HarpConstants.BASE_COOLDOWN - playCooldownTicksDecrease);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDamagePre(LivingDamageEvent.Pre event) {
+        handleTJChaseCharacterDamageReductionFinal(event);
+    }
+
+    private static void handleTJChaseCharacterDamageReductionFinal(LivingDamageEvent.Pre event) {
+        if (event.getEntity() instanceof TJChaseCharacter tj) {
+            event.setNewDamage(tj.getReducedFinalDamage(event.getNewDamage(), event.getOriginalDamage()));
         }
     }
 
@@ -123,11 +154,25 @@ public class CommonEvents {
         if (AngelTomPassive2Owner.hasBuff(event.getEntity())) {
             event.setCanceled(true);
         }
+        if (event.getEntity() instanceof TJChaseCharacter tj && tj.hasSuperArmor()) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
     public static void onLivingChangeAttackTarget(LivingChangeTargetEvent event) {
         handleHarpTester(event);
+        if (event.getEntity() instanceof Mob mob && DancingHelper.isTargetingAffectedByZuri(mob) && event.getNewAboutToBeSetTarget() != null) {
+            LivingEntity oldTarget = mob.getTarget();
+            Zuri zuri = DancingHelper.getZuriDancingWithDirectly(mob);
+            boolean cannotAttack = !zuri.canActivelyAttack(event.getNewAboutToBeSetTarget());
+            boolean ally = zuri.isAlliedTo(event.getNewAboutToBeSetTarget());
+            if (ally || cannotAttack && event.getNewAboutToBeSetTarget() == oldTarget) {
+                event.setNewAboutToBeSetTarget(null);
+            } else if (cannotAttack) {
+                event.setCanceled(true);
+            }
+        }
     }
 
     private static void handleHarpTester(LivingChangeTargetEvent event) {
@@ -137,8 +182,8 @@ public class CommonEvents {
         Optional<EntityReference<HarpTester>> ref1 = attacker.getData(ModAttachments.HARP_TESTER);
         Optional<EntityReference<HarpTester>> ref2 = target == null ? Optional.empty() : target.getData(ModAttachments.HARP_TESTER);
         Optional<EntityReference<HarpTester>> ref3 = Optional.empty();
-        if (target instanceof TraceableEntity traceable && traceable.getOwner() != null) {
-            ref3 = traceable.getOwner().getData(ModAttachments.HARP_TESTER);
+        if (target instanceof OwnableEntity ownable && ownable.getOwner() != null) {
+            ref3 = ownable.getOwner().getData(ModAttachments.HARP_TESTER);
         }
         if (ref1.isEmpty() && ref2.isEmpty() && ref3.isEmpty()) {
             return;
@@ -146,14 +191,25 @@ public class CommonEvents {
         HarpTester harpTester1 = ref1.map(ref -> EntityReference.get(ref, attacker.level(), HarpTester.class)).filter(Entity::isAlive).orElse(null);
         HarpTester harpTester2 = ref2.map(ref -> EntityReference.get(ref, target.level(), HarpTester.class)).filter(Entity::isAlive).orElse(null);
         HarpTester harpTester3 = ref3.map(ref -> EntityReference.get(ref, target.level(), HarpTester.class)).filter(Entity::isAlive).orElse(null);
-        if (harpTester1 == harpTester2 || harpTester1 == harpTester3) {
+        if (ref1.isPresent() && (harpTester1 == harpTester2 || harpTester1 == harpTester3)) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void checkCanAffect(MobEffectEvent.Applicable event) {
+        handleAngelTomPassive2(event);
+        handleTJChaseCharacterSuperArmor(event);
+    }
+
+    private static void handleAngelTomPassive2(MobEffectEvent.Applicable event) {
         if (AngelTomPassive2Owner.hasBuff(event.getEntity()) && event.getEffectInstance().getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
+            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        }
+    }
+
+    private static void handleTJChaseCharacterSuperArmor(MobEffectEvent.Applicable event) {
+        if (event.getEntity() instanceof TJChaseCharacter tj && tj.hasSuperArmor() && event.getEffectInstance().getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }

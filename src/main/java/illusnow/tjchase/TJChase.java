@@ -5,6 +5,7 @@ import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.entity.ModEntities;
 import illusnow.tjchase.entity.ModEntityDataSerializers;
+import illusnow.tjchase.util.ModMolangQueries;
 import illusnow.tjchase.item.ModCreativeModeTabs;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.item.enchantment.ModEnchantmentEffectComponents;
@@ -46,6 +47,7 @@ public class TJChase {
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        ModMolangQueries.register();
     }
 
     public static Identifier prefix(String name) {

@@ -47,14 +47,19 @@ public final class ModLanguageProvider {
             add(getEnchantmentDescriptionId(ModEnchantments.ANGEL_TOM_PASSIVE_2), "Leeching");
             add(getEnchantmentDescriptionId(ModEnchantments.ANGEL_TOM_WEAPON_2), "Auto Creation");
             add(getEnchantmentDescriptionId(ModEnchantments.ANGEL_TOM_WEAPON_3), "Immortal");
-            add(getDamageTypeMsg(ModDamageSources.ORBITING_BLOCK, false), "%1$s was squashed by a flying block");
-            add(getDamageTypeMsg(ModDamageSources.INDIRECT_ORBITING_BLOCK, false), "%1$s was squashed by a block thrown by %2$s");
+            add(getDamageTypeMsg(ModDamageSources.MOB_ATTACK_NO_SCALING), "%1$s was slain by %2$s");
+            add(getDamageTypeMsg(ModDamageSources.MOB_ATTACK_NO_SCALING, "item"), "%1$s was slain by %2$s using %3$s");
+            add(getDamageTypeMsg(ModDamageSources.ORBITING_BLOCK), "%1$s was squashed by a flying block");
+            add(getDamageTypeMsg(ModDamageSources.INDIRECT_ORBITING_BLOCK), "%1$s was squashed by a block thrown by %2$s");
+            add(getDamageTypeMsg(ModDamageSources.YOGA_BALL), "%1$s was squashed by a inflating yoga ball thrown by %2$s");
             add(HarpTester.NAME, "Monster Rush");
             add(HarpTester.NAME_REMAINING, "Monster Rush - %d remaining");
             add(ModEntities.HARP_TESTER.get(), "Harp Tester");
             add(ModEntities.VINE_MANAGER.get(), "Vine Manager");
             add(ModEntities.VINE_SEED.get(), "Vine Seed");
             add(ModEntities.ORBITING_BLOCK.get(), "Flying Block");
+            add(ModEntities.YOGA_BALL.get(), "Yoga Ball");
+            add(ModEntities.ZURI.get(), "Zuri");
             add(ModCreativeModeTabs.RANDOM_CREATIONS_TAB_ID, "TJChase");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "Entity Debug Stick");
             add(EntityDebugStickItem.KILL, "Killed %s");
@@ -75,12 +80,18 @@ public final class ModLanguageProvider {
             add(ModBlockTags.HARD_ORBITING_BLOCK_TAG_SPECIAL, "Special Hard Blocks");
             add(ModBlockTags.SOFT_ORBITING_BLOCK_TAG_SPECIAL, "Special Soft Blocks");
             add(ModItemTags.HARPS, "Harps");
+            add(ModSoundSubtitles.DANCE_TIME, "\"Dance Time\"");
             add(ModSoundSubtitles.HARP_ATTRACT_BLOCKS, "Harp attracts blocks");
             add(ModSoundSubtitles.HARP_THROW_BLOCK, "Block thrown");
             add(ModSoundSubtitles.VINE_GROW, "Vine grows");
             add(ModSoundSubtitles.VINE_SEED_THROW, "Vine seed flies");
             add(ModSoundSubtitles.VINE_HEAL, "Vine heals");
             add(ModSoundSubtitles.VINE_VANISH, "Vine vanishes");
+            add(ModSoundSubtitles.YOGA_BALL_HIT, "Yoga Ball hits");
+            add(ModSoundSubtitles.ZURI_AMBIENT, "Zuri mumbles");
+            add(ModSoundSubtitles.ZURI_ATTACK, "Zuri attacks");
+            add(ModSoundSubtitles.ZURI_HURT, "Zuri hurts");
+            add(ModSoundSubtitles.ZURI_THROW_YOGA_BALL, "Zuri throws Yoga Ball");
         }
     }
 
@@ -101,8 +112,11 @@ public final class ModLanguageProvider {
             add(ModBlocks.TEMPORARY_AZALEA_LEAVES.get(), "临时杜鹃树叶");
             add(ModBlocks.TEMPORARY_MOSS_BLOCK.get(), "临时苔藓块");
             add(ModBlocks.TEMPORARY_VINE.get(), "临时藤蔓");
-            add(getDamageTypeMsg(ModDamageSources.ORBITING_BLOCK, false), "%1$s被飞行的方块砸扁了");
-            add(getDamageTypeMsg(ModDamageSources.INDIRECT_ORBITING_BLOCK, false), "%1$s被%2$s扔出的方块砸扁了");
+            add(getDamageTypeMsg(ModDamageSources.MOB_ATTACK_NO_SCALING), "%1$s被%2$s杀死了");
+            add(getDamageTypeMsg(ModDamageSources.MOB_ATTACK_NO_SCALING, "item"), "%1$s被%2$s用%3$s杀死了");
+            add(getDamageTypeMsg(ModDamageSources.ORBITING_BLOCK), "%1$s被飞行的方块砸扁了");
+            add(getDamageTypeMsg(ModDamageSources.INDIRECT_ORBITING_BLOCK), "%1$s被%2$s扔出的方块砸扁了");
+            add(getDamageTypeMsg(ModDamageSources.YOGA_BALL), "%1$s在%2$s扔出的瑜伽球膨胀时被压扁了");
             add(getEnchantmentDescriptionId(ModEnchantments.FORCEFUL), "重击");
             add(getEnchantmentDescriptionId(ModEnchantments.EXPLOSIVE), "爆裂");
             add(getEnchantmentDescriptionId(ModEnchantments.OVERLOAD), "过载");
@@ -118,6 +132,8 @@ public final class ModLanguageProvider {
             add(ModEntities.VINE_MANAGER.get(), "藤蔓管理器");
             add(ModEntities.VINE_SEED.get(), "藤蔓种子");
             add(ModEntities.ORBITING_BLOCK.get(), "飞行的方块");
+            add(ModEntities.YOGA_BALL.get(), "瑜伽球");
+            add(ModEntities.ZURI.get(), "苏蕊");
             add(ModCreativeModeTabs.RANDOM_CREATIONS_TAB_ID, "猫鼠");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "实体调试棒");
             add(EntityDebugStickItem.KILL, "杀死了%s");
@@ -138,12 +154,18 @@ public final class ModLanguageProvider {
             add(ModBlockTags.HARD_ORBITING_BLOCK_TAG_SPECIAL, "特殊的坚硬方块");
             add(ModBlockTags.SOFT_ORBITING_BLOCK_TAG_SPECIAL, "特殊的柔软方块");
             add(ModItemTags.HARPS, "竖琴");
+            add(ModSoundSubtitles.DANCE_TIME, "“律动时间”");
             add(ModSoundSubtitles.HARP_ATTRACT_BLOCKS, "竖琴：吸引方块");
             add(ModSoundSubtitles.HARP_THROW_BLOCK, "方块：被扔出");
             add(ModSoundSubtitles.VINE_GROW, "藤蔓：生长");
             add(ModSoundSubtitles.VINE_HEAL, "藤蔓：治疗");
             add(ModSoundSubtitles.VINE_SEED_THROW, "藤蔓种子：飞出");
             add(ModSoundSubtitles.VINE_VANISH, "藤蔓：消失");
+            add(ModSoundSubtitles.YOGA_BALL_HIT, "瑜伽球：命中");
+            add(ModSoundSubtitles.ZURI_AMBIENT, "苏蕊：喃喃自语");
+            add(ModSoundSubtitles.ZURI_ATTACK, "苏蕊：攻击");
+            add(ModSoundSubtitles.ZURI_HURT, "苏蕊：受伤");
+            add(ModSoundSubtitles.ZURI_THROW_YOGA_BALL, "苏蕊：投掷瑜伽球");
         }
     }
 }

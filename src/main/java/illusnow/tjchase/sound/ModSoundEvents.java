@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ModSoundEvents {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(Registries.SOUND_EVENT, TJChase.MODID);
+    public static final DeferredHolder<SoundEvent, SoundEvent> DANCE_TIME = register(ModSoundNames.DANCE_TIME);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_ATTRACT_BLOCKS = register(ModSoundNames.HARP_ATTRACT_BLOCKS);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_1 = register(ModSoundNames.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_1);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_2 = register(ModSoundNames.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_2);
@@ -21,6 +22,11 @@ public final class ModSoundEvents {
     public static final DeferredHolder<SoundEvent, SoundEvent> VINE_GROW = register(ModSoundNames.VINE_GROW);
     public static final DeferredHolder<SoundEvent, SoundEvent> VINE_HEAL = register(ModSoundNames.VINE_HEAL);
     public static final DeferredHolder<SoundEvent, SoundEvent> VINE_VANISH = register(ModSoundNames.VINE_VANISH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> YOGA_BALL_HIT = register(ModSoundNames.YOGA_BALL_HIT);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ZURI_AMBIENT = register(ModSoundNames.ZURI_AMBIENT);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ZURI_ATTACK = register(ModSoundNames.ZURI_ATTACK);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ZURI_HURT = register(ModSoundNames.ZURI_HURT);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ZURI_THROW_YOGA_BALL = register(ModSoundNames.ZURI_THROW_YOGA_BALL);
 
     private ModSoundEvents() {}
 

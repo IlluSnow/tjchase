@@ -1,0 +1,22 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"inflate": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.25,
+			"bones": {
+				"ball": {
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.25": {
+							"vector": [2.5, 2.5, 2.5],
+							"easing": "easeInElastic"
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -36,7 +36,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @WrapOperation(method = "handleOnClimbable", at = @At(value = "NEW", target = "(DDD)Lnet/minecraft/world/phys/Vec3;"))
     private Vec3 handleTemporaryVineClimb(double x, double y, double z, Operation<Vec3> original) {
-        if (randomCreations$climbingOnSpeedBoostingVine()) {
+        if (tjChase$climbingOnSpeedBoostingVine()) {
             boolean hasMovementInput = jumping || zza != 0.0F || xxa != 0.0F;
             if (!hasMovementInput) {
                 if (isSuppressingSlidingDownLadder()) {
@@ -58,14 +58,14 @@ public abstract class LivingEntityMixin extends Entity {
     @WrapOperation(method = "handleOnClimbable", at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(DD)D", remap = false))
     private double handleTemporaryVineFall(double a, double b, Operation<Double> original) {
         // b = -0.15
-        if (randomCreations$climbingOnSpeedBoostingVine()) {
+        if (tjChase$climbingOnSpeedBoostingVine()) {
             return original.call(a, b * VineManager.VINE_CLIMBING_GRAVITY_MULTIPLIER);
         }
         return original.call(a, b);
     }
 
     @Unique
-    private boolean randomCreations$climbingOnSpeedBoostingVine() {
+    private boolean tjChase$climbingOnSpeedBoostingVine() {
         if (!VineManager.AFFECTED_BY_VINES.test(this)) {
             return false;
         }

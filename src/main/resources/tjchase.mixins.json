@@ -5,10 +5,13 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "EntityAccessor",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "MobMixin"
   ],
   "client": [
     "client.BlockRenderDispatcherAccessor",
+    "client.EntityRendererMixin",
+    "client.EntityRenderStateMixin",
     "client.ItemInHandRendererAccessor"
   ],
   "injectors": {

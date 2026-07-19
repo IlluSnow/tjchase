@@ -7,13 +7,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class AngelTomPassive2Tracker {
@@ -73,11 +70,7 @@ public class AngelTomPassive2Tracker {
 
     public void triggerPassive2(LivingEntity entity) {
         healTick = entity.level().getGameTime();
-        new ArrayList<>(entity.getActiveEffects()).stream()
-                .map(MobEffectInstance::getEffect)
-                .filter(effect -> effect.value().getCategory() == MobEffectCategory.HARMFUL)
-                .forEach(entity::removeEffect);
-        entity.clearFire();
+        Utils.clearNegativeEffectsAndFire(entity);
         onceTriggered = true;
     }
 

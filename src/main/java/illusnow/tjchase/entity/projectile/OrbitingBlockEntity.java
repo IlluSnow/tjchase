@@ -70,7 +70,7 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
-public class OrbitingBlockEntity extends Projectile implements ItemSupplier {
+public class OrbitingBlockEntity extends Projectile implements ItemSupplier, Seekable {
     private static final EntityDataAccessor<BlockState> DATA_BLOCK_STATE = SynchedEntityData.defineId(
             OrbitingBlockEntity.class, EntityDataSerializers.BLOCK_STATE
     );
@@ -179,6 +179,7 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier {
         }
     }
 
+    @Override
     public boolean canSeek() {
         return getPresetTarget() != null || getProperties().canActivelySeek();
     }
@@ -460,7 +461,8 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier {
         return entity instanceof EndCrystal || entity instanceof LivingEntity;
     }
 
-    protected void trySeek(Entity target) {
+    @Override
+    public void trySeek(Entity target) {
         Vec3 deltaMovement = getDeltaMovement();
         double dx = target.getX() - getX();
         double dy = target.getY(0.5) - getY(0.5);
@@ -470,6 +472,11 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier {
         double seekPower = Mth.clamp(getProperties().seekPower() * movementLen / 2, 0, 1);
         Vec3 newDirection = deltaMovement.scale(1 - seekPower).add(vecToTarget.scale(seekPower));
         setDeltaMovement(newDirection.normalize().scale(movementLen));
+    }
+
+    @Override
+    public double getSeekPower() {
+        return getProperties().seekPower();
     }
 
     private void handleFirstTickBubbleColumn() {

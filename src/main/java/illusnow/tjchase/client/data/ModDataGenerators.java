@@ -33,8 +33,12 @@ public final class ModDataGenerators {
         event.createProvider(ModEnchantmentTagsProvider::new);
     }
 
-    public static String getDamageTypeMsg(ResourceKey<DamageType> key, boolean player) {
-        return "death.attack." + key.identifier().toString().replace(':', '.') + (player ? ".player" : "");
+    public static String getDamageTypeMsg(ResourceKey<DamageType> key) {
+        return getDamageTypeMsg(key, "");
+    }
+
+    public static String getDamageTypeMsg(ResourceKey<DamageType> key, String suffix) {
+        return "death.attack." + key.identifier().toString().replace(':', '.') + (suffix.isEmpty() ? "" : ".") + suffix;
     }
 
     private ModDataGenerators() {}
