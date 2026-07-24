@@ -1,0 +1,38 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.tjchase.overload"
+  },
+  "effects": {
+    "tjchase:additional_orbiting_block_count": {
+      "type": "minecraft:add",
+      "value": {
+        "type": "minecraft:linear",
+        "base": 1.0,
+        "per_level_above_first": 1.0
+      }
+    },
+    "tjchase:use_cooldown_ticks_decrease": {
+      "type": "minecraft:add",
+      "value": {
+        "type": "minecraft:linear",
+        "base": 20.0,
+        "per_level_above_first": 20.0
+      }
+    }
+  },
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 12
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 12
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#tjchase:harps",
+  "weight": 5
+}

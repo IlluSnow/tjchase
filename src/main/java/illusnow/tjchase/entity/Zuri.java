@@ -22,7 +22,10 @@ import illusnow.tjchase.client.renderer.ModDataTickets;
 import illusnow.tjchase.entity.goal.OwnerHurtByTargetGoal;
 import illusnow.tjchase.entity.goal.OwnerHurtTargetGoal;
 import illusnow.tjchase.entity.goal.ZuriAttackGoal;
+import illusnow.tjchase.entity.proficency.ProficiencyMainLevel;
+import illusnow.tjchase.entity.proficency.ProficiencyRelatedValue;
 import illusnow.tjchase.entity.projectile.YogaBall;
+import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.network.PlayDanceTimePayload;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.DancingHelper;
@@ -38,12 +41,16 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -66,12 +73,50 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEntity, RangedAttackMob {
+    private static final ProficiencyRelatedValue RANGED_ATTACK_INTERVAL = ProficiencyRelatedValue.beginner0(80)
+            .whenReached(ProficiencyMainLevel.APPRENTICE, 70)
+            .whenReached(ProficiencyMainLevel.ELITE, 62)
+            .whenReached(ProficiencyMainLevel.EXPERT, 55)
+            .masterCutoff(50)
+            .whenMaster(40)
+            .whenMaster(3, 32)
+            .whenMaster(2, 25)
+            .masterCutoff(1, 16)
+            .whenMaster(1, 12)
+            .build();
+    private static final ProficiencyRelatedValue ATTACK_INACCURACY = ProficiencyRelatedValue.beginner0(15)
+            .whenReached(ProficiencyMainLevel.APPRENTICE, 11)
+            .masterCutoff(7)
+            .whenMaster(5)
+            .masterCutoff(1, 2)
+            .whenMaster(1, 0)
+            .build();
+    private static final ProficiencyRelatedValue MISS_PROBABILITY = ProficiencyRelatedValue.beginner0(0.3)
+            .whenReached(ProficiencyMainLevel.APPRENTICE, 0.2)
+            .whenReached(ProficiencyMainLevel.ELITE, 0.13)
+            .masterCutoff(0.1)
+            .whenMaster(0.05)
+            .whenMaster(1, 0)
+            .build();
+    private static final ProficiencyRelatedValue SEEK_POWER = ProficiencyRelatedValue.beginner0(0)
+            .whenReached(ProficiencyMainLevel.APPRENTICE, 0)
+            .whenReached(ProficiencyMainLevel.ELITE, 1E-3)
+            .whenReached(ProficiencyMainLevel.EXPERT, 5E-3)
+            .masterCutoff(0.01)
+            .whenMaster(0.05)
+            .masterCutoff(2, 0.08)
+            .whenMaster(2, 0.2)
+            .masterCutoff(1, 0.4)
+            .whenMaster(1, 0.99)
+            .build();
+
     public static final RawAnimation ZURI_CLAW_ATTACK = RawAnimation.begin().thenPlay("attack.claw");
     public static final RawAnimation ZURI_IDLE_BOWKNOT = RawAnimation.begin().thenLoop("bowknot");
-    public static final RawAnimation ZURI_IDLE_TAIL = RawAnimation.begin().thenLoop("tail");
-    public static final RawAnimation ZURI_WALKING_TAIL = RawAnimation.begin().thenLoop("tail_walking");
     public static final RawAnimation ZURI_THROW_YOGA_BALL = RawAnimation.begin().thenPlay("attack.throw_yoga_ball");
     public static final RawAnimation ZURI_DANCE = RawAnimation.begin().thenLoop("dance");
+    public static final RawAnimation ZURI_START_WEAK = RawAnimation.begin().thenPlayAndHold("start_weak");
+    public static final RawAnimation ZURI_WEAK = RawAnimation.begin().thenPlayAndHold("weak");
+    public static final RawAnimation ZURI_STOP_WEAK = RawAnimation.begin().thenPlayAndHold("stop_weak");
     public static final double DANCE_TIME_PLAY_RADIUS = 16;
     public static final int DANCING_RADIUS = 7;
     public static final double INFLUENCE_RADIUS = 16;
@@ -83,15 +128,23 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
     public static final String DANCING_MOB_TAG = "DancingMob";
     private static final String DANCING_TARGET_POS_TAG = "DancingTargetPos";
     private static final String DANCING_TARGET_POS_UPDATE_COOLDOWN_TAG = "DancingTargetPosUpdateCooldown";
+    private static final String DEFAULT_CONTROLLER_NAME = "Dance/Walk/Idle";
     private static final String ATTACK_CONTROLLER_NAME = "Attack";
     private static final String THROW_YOGA_BALL_ANIM_NAME = "ThrowYogaBall";
     private static final String CLAW_ATTACK_ANIM_NAME = "ClawAttack";
+    private static final String START_WEAK_ANIM_NAME = "StartWeak";
+    private static final String WEAK_ANIM_NAME = "Weak";
+    private static final String STOP_WEAK_ANIM_NAME = "StopWeak";
     private static final EntityDataAccessor<Integer> DATA_THROW_YOGA_BALL_TICKS = SynchedEntityData.defineId(
             Zuri.class, EntityDataSerializers.INT
     );
     private static final EntityDataAccessor<Boolean> DATA_DANCING = SynchedEntityData.defineId(
             Zuri.class, EntityDataSerializers.BOOLEAN
     );
+    private static final EntityDimensions WEAK_DIMENSIONS = ModEntities.ZURI.get()
+            .getDimensions()
+            .scale(1, 0.64285713f);
+
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private final List<EntityReference<Mob>> dancingMobs = new ArrayList<>();
     @Nullable
@@ -103,11 +156,7 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.3)
-                .add(Attributes.MAX_HEALTH, 20)
-                .add(Attributes.ATTACK_DAMAGE, 15)
-                .add(Attributes.FOLLOW_RANGE, 24);
+        return createTJChaseFriendlyMobAttributes(40, 8);
     }
 
     @Override
@@ -157,8 +206,23 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.is(ModItems.PROFICIENCY_STICK) || stack.is(ModItems.ENTITY_DEBUG_STICK)) {
+            return super.mobInteract(player, hand);
+        }
+        if (isWeak()) {
+            if (stack.is(Items.COOKED_BEEF)) {
+                if (!level().isClientSide() && getRecoverTicks() < 0) {
+                    heal(getMaxHealth());
+                    usePlayerItem(player, hand, stack);
+                    recoverFromWeak();
+                }
+                return InteractionResult.SUCCESS;
+            }
+            return super.mobInteract(player, hand);
+        }
         if (!level().isClientSide()) {
-            setDancing(!isDancing(), false);
+            setDancing(!isDancing());
         }
         return InteractionResult.SUCCESS;
     }
@@ -192,8 +256,14 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
     }
 
     @Override
+    protected EntityDimensions getDefaultDimensions(Pose pose) {
+        return isWeak() ? WEAK_DIMENSIONS : super.getDefaultDimensions(pose);
+    }
+
+    @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
+        refreshDimensions();
     }
 
     public void addDancingMob(Mob mob) {
@@ -242,13 +312,25 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
     }
 
     @Override
+    public float getVoicePitch() {
+        return (random.nextFloat() - random.nextFloat()) * 0.1F + (isBaby() ? 1.5F : 1);
+    }
+
+    @Override
     protected void playAttackSound() {
         playSound(ModSoundEvents.ZURI_ATTACK.get());
     }
 
+    @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSoundEvents.ZURI_AMBIENT.get();
+        return isWeak() ? null : ModSoundEvents.ZURI_AMBIENT.get();
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getWeakSound() {
+        return ModSoundEvents.ZURI_WEAK.get();
     }
 
     @Nullable
@@ -265,7 +347,14 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>("Dance/Walk/Idle",  5, test -> {
+        controllers.add(new AnimationController<>(DEFAULT_CONTROLLER_NAME, test -> {
+            if (isWeak()) {
+                test.setControllerSpeed(1);
+                if (getRecoverTicks() >= 0) {
+                    return test.setAndContinue(ZURI_STOP_WEAK);
+                }
+                return test.setAndContinue(ZURI_WEAK);
+            }
             boolean dancing = test.getDataOrDefault(ModDataTickets.DANCING, false);
             if (dancing) {
                 test.setControllerSpeed(0.9316966F);
@@ -273,7 +362,10 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
             }
             test.setControllerSpeed(1);
             return test.isMoving() ? test.setAndContinue(DefaultAnimations.WALK) : test.setAndContinue(DefaultAnimations.IDLE);
-        }));
+        })
+                .triggerableAnim(START_WEAK_ANIM_NAME, ZURI_START_WEAK)
+                .triggerableAnim(WEAK_ANIM_NAME, ZURI_WEAK)
+                .triggerableAnim(STOP_WEAK_ANIM_NAME, ZURI_STOP_WEAK));
         controllers.add(new AnimationController<>(ATTACK_CONTROLLER_NAME, test -> PlayState.STOP)
                 .triggerableAnim(THROW_YOGA_BALL_ANIM_NAME, ZURI_THROW_YOGA_BALL)
                 .triggerableAnim(CLAW_ATTACK_ANIM_NAME, ZURI_CLAW_ATTACK));
@@ -315,7 +407,11 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
         return entityData.get(DATA_DANCING);
     }
 
-    public void setDancing(boolean dancing, boolean fromEntityLoading) {
+    public void setDancing(boolean dancing) {
+        setDancing(dancing, false);
+    }
+
+    private void setDancing(boolean dancing, boolean fromEntityLoading) {
         entityData.set(DATA_DANCING, dancing);
         if (!level().isClientSide()) {
             updateControlFlags();
@@ -348,14 +444,6 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
     }
 
     @Override
-    protected void updateControlFlags() {
-        super.updateControlFlags();
-        boolean dancing = isDancing();
-//        goalSelector.setControlFlag(Goal.Flag.MOVE, !dancing);
-//        goalSelector.setControlFlag(Goal.Flag.LOOK, !dancing);
-    }
-
-    @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return geoCache;
     }
@@ -374,6 +462,26 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
     }
 
     @Override
+    protected void onWeakStateStartedToChange(boolean weak) {
+        super.onWeakStateStartedToChange(weak);
+        if (weak) {
+            triggerAnim(DEFAULT_CONTROLLER_NAME, START_WEAK_ANIM_NAME);
+        } else {
+            triggerAnim(DEFAULT_CONTROLLER_NAME, STOP_WEAK_ANIM_NAME);
+        }
+        if (weak) {
+            setDeltaMovement(getDeltaMovement().multiply(0.5, 1, 0.5));
+            setDancing(false);
+            getNavigation().stop();
+        }
+    }
+
+    @Override
+    protected void onRecovered() {
+        stopTriggeredAnim(DEFAULT_CONTROLLER_NAME, STOP_WEAK_ANIM_NAME);
+    }
+
+    @Override
     public void performRangedAttack(LivingEntity target, float velocity) {
         double dx = target.getX() - getX();
         double targetY = target.getY(0.5);
@@ -384,8 +492,15 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
         yogaBall.setMaxCheckRange(1);
         yogaBall.setInflateProbabilityInsideRange(1);
         yogaBall.setDeflateTime(-YogaBall.DEFLATE_TICKS);
+        yogaBall.setDamage(yogaBall.getDamage() * DEFAULT_PROFICIENCY_ATTACK_DAMAGE_MODIFIER.floatValue(getProficiencyPoints()));
+        yogaBall.setTarget(target);
+        yogaBall.setSeekPower(SEEK_POWER.doubleValue(getProficiencyPoints()));
         yogaBall.shoot(dx, targetY - yogaBall.getY() + distance * 0.15, dz, 1.5F, getAttackInaccuracy());
-        playSound(ModSoundEvents.ZURI_THROW_YOGA_BALL.get(), 1, 1);
+        if (random.nextDouble() < MISS_PROBABILITY.doubleValue(getProficiencyPoints())) {
+            yogaBall.setMaxCheckRange(yogaBall.getMaxCheckRange() * (1.5 + random.nextDouble() * 2));
+            yogaBall.setInflateProbabilityInsideRange(0.05 + random.nextDouble() * 0.25);
+        }
+        playSound(ModSoundEvents.ZURI_THROW_YOGA_BALL.get());
         if (!isDancing()) {
             triggerAnim(ATTACK_CONTROLLER_NAME, THROW_YOGA_BALL_ANIM_NAME);
         }
@@ -405,22 +520,26 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
         return super.getMeleeAttackRange() * (isDancing() ? 1.5 : 1);
     }
 
-    public int getAttackInterval() {
-        return 20 * (isDancing() ? 2 : 1);
+    public int getYogaBallAttackInterval() {
+        int interval = RANGED_ATTACK_INTERVAL.intValue(getProficiencyPoints());
+        if (isDancing()) {
+            interval = interval * 3 / 2;
+        }
+        return interval;
     }
 
     @Override
     public int getMeleeAttackInterval() {
-        return super.getMeleeAttackInterval() * (isDancing() ? 6 : 1);
+        return DEFAULT_MELEE_ATTACK_INTERVAL.intValue(getProficiencyPoints()) * (isDancing() ? 5 : 1);
     }
 
     @Override
     public float getMeleeAttackDamage() {
-        return (float) (super.getMeleeAttackDamage() * (isDancing() ? 1.5 : 1));
+        return super.getMeleeAttackDamage() * DEFAULT_PROFICIENCY_ATTACK_DAMAGE_MODIFIER.floatValue(getProficiencyPoints()) * (isDancing() ? 2 : 1);
     }
 
-    public int getAttackInaccuracy() {
-        return 10;
+    public float getAttackInaccuracy() {
+        return ATTACK_INACCURACY.floatValue(getProficiencyPoints());
     }
 
     @Override
@@ -429,10 +548,13 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
     }
 
     @Override
-    public float getReducedStartDamage(float damage, float originalDamage) {
+    public float getReducedStartDamage(DamageSource source, float damage, float originalDamage) {
+        float damageReduction = DEFAULT_DAMAGE_REDUCTION_PRE.floatValue(getProficiencyPoints());
+        damage = damage * (1 - damageReduction);
+        float minDamage = Math.min(damage, 1 * (1 - damageReduction));
         if (isDancing()) {
-            return damage - 5;
+            damage = Math.max(minDamage, damage - 5);
         }
-        return super.getReducedStartDamage(damage, originalDamage);
+        return damage;
     }
 }

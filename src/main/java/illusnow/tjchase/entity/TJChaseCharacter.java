@@ -18,6 +18,7 @@
 package illusnow.tjchase.entity;
 
 import illusnow.tjchase.entity.proficency.ProficiencyLevel;
+import net.minecraft.world.damagesource.DamageSource;
 
 public interface TJChaseCharacter {
     int getProficiencyPoints();
@@ -36,11 +37,19 @@ public interface TJChaseCharacter {
         return false;
     }
 
-    default float getReducedStartDamage(float damage, float originalDamage) {
+    default boolean isWeak() {
+        return false;
+    }
+
+    default void setWeak() {}
+
+    default void recoverFromWeak() {}
+
+    default float getReducedStartDamage(DamageSource source, float damage, float originalDamage) {
         return damage;
     }
 
-    default float getReducedFinalDamage(float damage, float originalDamage) {
+    default float getReducedFinalDamage(DamageSource source, float damage, float originalDamage) {
         return damage;
     }
 }

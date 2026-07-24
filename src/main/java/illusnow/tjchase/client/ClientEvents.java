@@ -62,9 +62,13 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof Zuri zuri && zuri.level().isClientSide() && zuri.isDancing() && zuri.tickCount == 1) {
-            if (!zuri.isSilent()) {
-                Minecraft.getInstance().getSoundManager().play(new DanceTimeSoundInstance(zuri));
-            }
+            zuriClientFirstTick(zuri);
+        }
+    }
+
+    private static void zuriClientFirstTick(Zuri zuri) {
+        if (!zuri.isSilent()) {
+            Minecraft.getInstance().getSoundManager().play(new DanceTimeSoundInstance(zuri));
         }
     }
 

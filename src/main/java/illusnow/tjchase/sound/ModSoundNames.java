@@ -39,6 +39,7 @@ public final class ModSoundNames {
     public static final String ZURI_ATTACK = ModEntityNames.ZURI + "_attack";
     public static final String ZURI_HURT = ModEntityNames.ZURI + "_hurt";
     public static final String ZURI_THROW_YOGA_BALL = ModEntityNames.ZURI + "_throw_yoga_ball";
+    public static final String ZURI_WEAK = ModEntityNames.ZURI + "_weak";
 
     private ModSoundNames() {}
 }

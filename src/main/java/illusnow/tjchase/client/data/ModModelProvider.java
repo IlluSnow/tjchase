@@ -86,6 +86,7 @@ public class ModModelProvider extends ModelProvider {
         createHarp(itemModels, ModItems.NETHERITE_HARP.get());
         itemModels.generateFlatItem(ModItems.ENTITY_DEBUG_STICK.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.HARP_TESTER.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.PROFICIENCY_STICK.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
     }
 
     private static Identifier prefixVanillaBlock(String name) {

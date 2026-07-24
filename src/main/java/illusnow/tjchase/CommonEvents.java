@@ -18,6 +18,7 @@
 package illusnow.tjchase;
 
 import illusnow.tjchase.attachment.ModAttachments;
+import illusnow.tjchase.command.TJChaseCommand;
 import illusnow.tjchase.entity.HarpTester;
 import illusnow.tjchase.entity.TJChaseCharacter;
 import illusnow.tjchase.entity.Zuri;
@@ -42,6 +43,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -52,6 +54,11 @@ import java.util.Optional;
 
 @EventBusSubscriber(modid = TJChase.MODID)
 public class CommonEvents {
+    @SubscribeEvent
+    public static void registerCommands(RegisterCommandsEvent event) {
+        TJChaseCommand.register(event.getDispatcher());
+    }
+
     @SubscribeEvent
     public static void onLivingFall(LivingFallEvent event) {
         if (event.getEntity().level().getBlockState(event.getEntity().getOnPos()).is(ModBlockTags.TEMPORARY_BLOCKS_OF_VINES)) {
@@ -92,7 +99,7 @@ public class CommonEvents {
 
     private static void handleTJChaseCharacterDamageReductionStart(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof TJChaseCharacter tj) {
-            event.setAmount(tj.getReducedStartDamage(event.getAmount(), event.getOriginalAmount()));
+            event.setAmount(tj.getReducedStartDamage(event.getSource(), event.getAmount(), event.getOriginalAmount()));
         }
     }
 
@@ -135,7 +142,7 @@ public class CommonEvents {
 
     private static void handleTJChaseCharacterDamageReductionFinal(LivingDamageEvent.Pre event) {
         if (event.getEntity() instanceof TJChaseCharacter tj) {
-            event.setNewDamage(tj.getReducedFinalDamage(event.getNewDamage(), event.getOriginalDamage()));
+            event.setNewDamage(tj.getReducedFinalDamage(event.getSource(), event.getNewDamage(), event.getOriginalDamage()));
         }
     }
 
@@ -179,6 +186,13 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLivingChangeAttackTarget(LivingChangeTargetEvent event) {
         handleHarpTester(event);
+        if (event.getNewAboutToBeSetTarget() instanceof TJChaseCharacter tjc && tjc.isWeak()) {
+            if (event.getEntity() instanceof Mob mob && mob.getTarget() == event.getNewAboutToBeSetTarget()) {
+                event.setNewAboutToBeSetTarget(null);
+            } else {
+                event.setCanceled(true);
+            }
+        }
         if (event.getEntity() instanceof Mob mob && DancingHelper.isTargetingAffectedByZuri(mob) && event.getNewAboutToBeSetTarget() != null) {
             LivingEntity oldTarget = mob.getTarget();
             Zuri zuri = DancingHelper.getZuriDancingWithDirectly(mob);

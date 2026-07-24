@@ -44,6 +44,7 @@ public final class ModSoundEvents {
     public static final DeferredHolder<SoundEvent, SoundEvent> ZURI_ATTACK = register(ModSoundNames.ZURI_ATTACK);
     public static final DeferredHolder<SoundEvent, SoundEvent> ZURI_HURT = register(ModSoundNames.ZURI_HURT);
     public static final DeferredHolder<SoundEvent, SoundEvent> ZURI_THROW_YOGA_BALL = register(ModSoundNames.ZURI_THROW_YOGA_BALL);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ZURI_WEAK = register(ModSoundNames.ZURI_WEAK);
 
     private ModSoundEvents() {}
 

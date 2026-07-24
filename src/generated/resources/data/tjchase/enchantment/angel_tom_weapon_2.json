@@ -1,0 +1,54 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.tjchase.angel_tom_weapon_2"
+  },
+  "effects": {
+    "tjchase:angel_tom_weapon2_block_selector": [
+      {
+        "block_state": {
+          "Name": "minecraft:cobblestone"
+        },
+        "weight": 50
+      },
+      {
+        "block_state": {
+          "Name": "minecraft:dirt"
+        },
+        "weight": 30
+      },
+      {
+        "block_state": {
+          "Name": "minecraft:cobbled_deepslate"
+        },
+        "weight": 20
+      },
+      {
+        "block_state": {
+          "Name": "minecraft:sand"
+        },
+        "weight": 10
+      },
+      {
+        "block_state": {
+          "Name": "minecraft:obsidian"
+        },
+        "weight": 4
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 75,
+    "per_level_above_first": 25
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 25,
+    "per_level_above_first": 25
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#tjchase:harps",
+  "weight": 2
+}

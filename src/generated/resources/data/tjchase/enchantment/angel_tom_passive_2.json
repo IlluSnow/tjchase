@@ -1,0 +1,46 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.tjchase.angel_tom_passive_2"
+  },
+  "effects": {
+    "tjchase:angel_tom_passive2_heal_amount": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": 2.0
+        }
+      }
+    ],
+    "tjchase:angel_tom_passive2_heal_count": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": 3.0
+        }
+      }
+    ],
+    "tjchase:angel_tom_passive2_interval": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": 20.0
+        }
+      }
+    ]
+  },
+  "max_cost": {
+    "base": 75,
+    "per_level_above_first": 25
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 25,
+    "per_level_above_first": 25
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#tjchase:harps",
+  "weight": 2
+}

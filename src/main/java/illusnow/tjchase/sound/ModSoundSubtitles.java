@@ -32,6 +32,7 @@ public final class ModSoundSubtitles {
     public static final String ZURI_ATTACK = prefix(ModSoundNames.ZURI_ATTACK);
     public static final String ZURI_HURT = prefix(ModSoundNames.ZURI_HURT);
     public static final String ZURI_THROW_YOGA_BALL = prefix(ModSoundNames.ZURI_THROW_YOGA_BALL);
+    public static final String ZURI_WEAK = prefix(ModSoundNames.ZURI_WEAK);
 
     private ModSoundSubtitles() {}
 

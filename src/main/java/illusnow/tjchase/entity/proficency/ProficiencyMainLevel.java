@@ -17,32 +17,59 @@
 
 package illusnow.tjchase.entity.proficency;
 
+import com.google.common.collect.ImmutableList;
+import illusnow.tjchase.TJChase;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 public enum ProficiencyMainLevel {
-    BEGINNER("beginner", 0, new int[]{100, 200, 300, 400, 500, 600}),
-    APPRENTICE("apprentice", 1, new int[]{200, 400, 500, 600, 700, 800}),
-    ELITE("elite", 2, new int[]{300, 400, 500, 600, 800, 1000}),
-    EXPERT("expert", 3, new int[]{400, 500, 600, 800, 1000, 1200}),
-    MASTER("master", 4, new int[]{2000, 3000, 5000, 10000, Integer.MAX_VALUE - 20000}, true);
+    BEGINNER("beginner", 0, new int[]{100, 200, 300, 400, 500, 600}, UnaryOperator.identity()),
+    APPRENTICE("apprentice", 1, new int[]{200, 400, 500, 600, 700, 800}, style -> style.withColor(ChatFormatting.GREEN)),
+    ELITE("elite", 2, new int[]{300, 400, 500, 600, 800, 1000}, style -> style.withColor(ChatFormatting.AQUA)),
+    EXPERT("expert", 3, new int[]{400, 500, 600, 800, 1000, 1200}, style -> style.withColor(ChatFormatting.LIGHT_PURPLE)),
+    MASTER("master", 4, new int[]{2000, 3000, 5000, 10000, Integer.MAX_VALUE - 20000}, List.of(
+            style -> style.withColor(0xFFA64D),
+            style -> style.withColor(0xFFA64D),
+            style -> style.withColor(0xFFA64D),
+            style -> style.withColor(0xFF6F26),
+            style -> style.withColor(ChatFormatting.RED)
+    ), true);
 
     public static final List<ProficiencyMainLevel> LEVELS = Arrays.stream(values()).sorted(Comparator.comparing(ProficiencyMainLevel::getId)).toList();
     private final String name;
     private final int id;
     private final int[] pointsRequired;
+    private final List<UnaryOperator<Style>> styleBySublevel;
     private final boolean finalLevel;
     private final int sumOfPointsRequired;
 
-    ProficiencyMainLevel(String name, int id, int[] pointsRequired) {
-        this(name, id, pointsRequired, false);
+    ProficiencyMainLevel(String name, int id, int[] pointsRequired, UnaryOperator<Style> allStyles) {
+        this(name, id, pointsRequired, fillStyleList(pointsRequired.length, allStyles), false);
     }
 
-    ProficiencyMainLevel(String name, int id, int[] pointsRequired, boolean finalLevel) {
+    private static List<UnaryOperator<Style>> fillStyleList(int length, UnaryOperator<Style> allStyles) {
+        ImmutableList.Builder<UnaryOperator<Style>> builder = ImmutableList.builder();
+        for (int i = 0; i < length; i++) {
+            builder.add(allStyles);
+        }
+        return builder.build();
+    }
+
+    ProficiencyMainLevel(String name, int id, int[] pointsRequired, List<UnaryOperator<Style>> styleBySublevel, boolean finalLevel) {
+        if (pointsRequired.length != styleBySublevel.size()) {
+            throw new IllegalArgumentException("Incorrect size of styleBySublevel: %d (should be %d)".formatted(styleBySublevel.size(), pointsRequired.length));
+        }
         this.name = name;
         this.id = id;
         this.pointsRequired = pointsRequired;
+        this.styleBySublevel = styleBySublevel;
         this.finalLevel = finalLevel;
         this.sumOfPointsRequired = isFinalMainLevel()
                 ? Arrays.stream(pointsRequired, 0, pointsRequired.length - 1).sum()
@@ -89,28 +116,31 @@ public enum ProficiencyMainLevel {
     }
 
     public int getSumOfPointsRequiredForSublevel(int sublevel) {
-        if (sublevel < 0 || sublevel >= pointsRequired.length) {
-            throw new IllegalArgumentException("Invalid sublevel: " + sublevel);
-        }
+        checkSublevel(sublevel);
         if (sublevel == 0) {
             return 0;
         }
-        int sublevelIndex = pointsRequired.length - sublevel;
-        return Arrays.stream(pointsRequired, 0, sublevelIndex).sum();
+        return Arrays.stream(pointsRequired, 0, getSublevelIndex(sublevel)).sum();
     }
 
     public int getUpgradeNeed(int sublevel) {
-        if (sublevel < 0 || sublevel >= pointsRequired.length) {
-            throw new IllegalArgumentException("Invalid sublevel: " + sublevel);
-        }
+        checkSublevel(sublevel);
         if (sublevel == 0) {
             return pointsRequired[0];
         }
         if (ProficiencyLevel.isFinalLevel(this, sublevel)) {
             return ProficiencyLevel.UPPER_LIMIT;
         }
-        int sublevelIndex = pointsRequired.length - sublevel;
-        return pointsRequired[sublevelIndex];
+        return pointsRequired[getSublevelIndex(sublevel)];
+    }
+
+    public UnaryOperator<Style> getStyle(int sublevel) {
+        checkSublevel(sublevel);
+        if (sublevel == 0) {
+            return styleBySublevel.getFirst();
+        }
+        int sublevelIndex = getSublevelIndex(sublevel);
+        return styleBySublevel.get(sublevelIndex);
     }
 
     public int getSumOfPointsRequiredBelow() {
@@ -127,6 +157,28 @@ public enum ProficiencyMainLevel {
     @Override
     public String toString() {
         return getName();
+    }
+
+    public String getKey(int sublevel) {
+        checkSublevel(sublevel);
+        return "proficiency." + TJChase.MODID + ".main_level." + getName() + "." + sublevel;
+    }
+
+    public MutableComponent makeDisplayName(int sublevel) {
+        return Component.translatable(getKey(sublevel));
+    }
+
+    private int getSublevelIndex(int sublevel) {
+        if (sublevel == 0) {
+            return 0;
+        }
+        return pointsRequired.length - sublevel;
+    }
+
+    private void checkSublevel(int sublevel) {
+        if (sublevel < 0 || sublevel >= pointsRequired.length) {
+            throw new IllegalArgumentException("Invalid sublevel: " + sublevel);
+        }
     }
 
     public record SublevelAndRemaining(int sublevel, int remainingPoints) {}

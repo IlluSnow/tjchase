@@ -76,7 +76,7 @@ public class ZuriAttackGoal extends Goal {
     public void stop() {
         super.stop();
         seeTime = 0;
-        attackTime = (zuri.getAttackInterval() + zuri.getMeleeAttackInterval()) / 4;
+        attackTime = (zuri.getYogaBallAttackInterval() + zuri.getMeleeAttackInterval()) / 4;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class ZuriAttackGoal extends Goal {
                 if (retreatTime >= maxRetreatTime || distSqr >= safeRadius * safeRadius || zuri.getNavigation().isDone()) {
                     retreating = false;
                     retreatTime = -retreatCD;
-                    attackTime = Math.min(attackTime, zuri.getAttackInterval() / 3);
+                    attackTime = Math.min(attackTime, zuri.getYogaBallAttackInterval() / 3);
                 }
                 return;
             }
@@ -190,7 +190,7 @@ public class ZuriAttackGoal extends Goal {
                 }
                 if (!performedMeleeAttack) {
                     zuri.performRangedAttack(target, 0);
-                    attackTime = zuri.getAttackInterval();
+                    attackTime = zuri.getYogaBallAttackInterval();
                 }
             }
         }

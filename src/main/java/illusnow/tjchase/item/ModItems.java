@@ -18,7 +18,6 @@
 package illusnow.tjchase.item;
 
 import illusnow.tjchase.TJChase;
-import illusnow.tjchase.item.enchantment.EntityDebugStickItem;
 import illusnow.tjchase.util.HarpConstants;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -49,6 +48,9 @@ public final class ModItems {
     public static final DeferredHolder<Item, HarpTesterItem> HARP_TESTER = register(ModItemNames.HARP_TESTER, HarpTesterItem::new,
             properties -> properties.stacksTo(1)
                     .rarity(Rarity.EPIC)
+                    .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
+    public static final DeferredHolder<Item, ProficiencyStickItem> PROFICIENCY_STICK = register(ModItemNames.PROFICIENCY_STICK, ProficiencyStickItem::new,
+            properties -> properties.stacksTo(1)
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
     public static final DeferredHolder<Item, Item> VINE_SEED = register(ModItemNames.VINE_SEED, VineSeedItem::new, UnaryOperator.identity());
 

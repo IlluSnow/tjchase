@@ -1,0 +1,48 @@
+{
+  "anvil_cost": 2,
+  "description": {
+    "translate": "enchantment.tjchase.lightweight"
+  },
+  "effects": {
+    "tjchase:harp_attract_sound": [
+      "tjchase:harp_attract_blocks_lightweight_1",
+      "tjchase:harp_attract_blocks_lightweight_2",
+      "tjchase:harp_attract_blocks_lightweight_3"
+    ],
+    "tjchase:harp_play_sound": [
+      "tjchase:harp_throw_block_lightweight_1",
+      "tjchase:harp_throw_block_lightweight_2",
+      "tjchase:harp_throw_block_lightweight_3"
+    ],
+    "tjchase:play_cooldown_ticks_decrease": {
+      "type": "minecraft:add",
+      "value": {
+        "type": "minecraft:linear",
+        "base": 5.0,
+        "per_level_above_first": 5.0
+      }
+    },
+    "tjchase:play_ticks_decrease": {
+      "type": "minecraft:add",
+      "value": {
+        "type": "minecraft:linear",
+        "base": 8.0,
+        "per_level_above_first": 8.0
+      }
+    }
+  },
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 12
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 12
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#tjchase:harps",
+  "weight": 5
+}

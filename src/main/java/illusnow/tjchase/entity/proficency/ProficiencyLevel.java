@@ -17,8 +17,15 @@
 
 package illusnow.tjchase.entity.proficency;
 
+import illusnow.tjchase.util.ModComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+
+import java.util.function.UnaryOperator;
+
 public record ProficiencyLevel(ProficiencyMainLevel mainLevel, int sublevel, int remaining) implements Comparable<ProficiencyLevel> {
-    public static final int UPPER_LIMIT = 999999;
+    public static final int UPPER_LIMIT = 1000000;
     public static final int UPPER_LIMIT_TOTAL = ProficiencyMainLevel.MASTER.getSumOfPointsRequiredBelow() + ProficiencyMainLevel.MASTER.getSumOfPointsRequired() + UPPER_LIMIT;
 
     public ProficiencyLevel {
@@ -56,6 +63,18 @@ public record ProficiencyLevel(ProficiencyMainLevel mainLevel, int sublevel, int
 
     public static boolean isFinalLevel(ProficiencyMainLevel mainLevel, int sublevel) {
         return mainLevel.isFinalMainLevel() && sublevel == 1;
+    }
+
+    public MutableComponent makeDisplayName() {
+        return mainLevel.makeDisplayName(sublevel)
+                .append(ModComponents.SPACED_LEFT_PARENTHESIS)
+                .append(Component.literal(isFinalLevel() ? Integer.toString(remaining) : "%d/%d".formatted(remaining, mainLevel.getUpgradeNeed(sublevel))))
+                .append(ModComponents.SPACED_RIGHT_PARENTHESIS)
+                .withStyle(getStyle());
+    }
+
+    public UnaryOperator<Style> getStyle() {
+        return mainLevel.getStyle(sublevel);
     }
 
     @Override

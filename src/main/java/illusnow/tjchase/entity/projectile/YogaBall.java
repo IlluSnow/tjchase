@@ -18,6 +18,7 @@
 package illusnow.tjchase.entity.projectile;
 
 import illusnow.tjchase.entity.ModEntities;
+import illusnow.tjchase.entity.ModEntityDataSerializers;
 import illusnow.tjchase.entity.TJChaseFriendlyMob;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.world.ModDamageSources;
@@ -36,21 +37,19 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jspecify.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.object.LoopType;
 import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Optional;
+
 public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity {
-    public static final RawAnimation INFLATE = RawAnimation.begin().then("inflate", LoopType.HOLD_ON_LAST_FRAME);
-    public static final int INFLATE_TICKS = 5;
+    public static final RawAnimation INFLATE = RawAnimation.begin().thenPlayAndHold("inflate");
     public static final int DEFLATE_TICKS = 10;
     public static final float INFLATE_SIZE = 2.5F;
     public static final float DEFAULT_DAMAGE = 10.5F;
@@ -58,18 +57,23 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
     public static final double DEFAULT_INFLATE_PROBABILITY_INSIDE_RANGE = 1;
     private static final EntityDataAccessor<Integer> INFLATE_TIME = SynchedEntityData.defineId(YogaBall.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DEFLATE_TIME = SynchedEntityData.defineId(YogaBall.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Optional<EntityReference<Entity>>> DATA_TARGET = SynchedEntityData.defineId(
+            YogaBall.class, ModEntityDataSerializers.OPTIONAL_ENTITY_REFERENCE.get()
+    );
     private static final String INFLATE_TIME_TAG = "InflateTime";
     private static final String DEFLATE_TIME_TAG = "DeflateTime";
     private static final String DAMAGE_TAG = "Damage";
     private static final String AUTO_INFLATE_TAG = "AutoInflate";
     private static final String MAX_CHECK_RANGE_TAG = "MaxCheckRange";
     private static final String INFLATE_PROBABILITY_INSIDE_RANGE_TAG = "InflateProbabilityInsideRange";
+    private static final String TARGET_TAG = "Target";
+    private static final String SEEK_POWER_TAG = "SeekPower";
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private float damage = 10.5F;
     private double maxCheckRange = DAMAGE_RANGE; // Higher value results in more inaccuracy. Value higher than 0.5 may cause the ball not to hit anything
     private double inflateProbabilityInsideRange = DEFAULT_INFLATE_PROBABILITY_INSIDE_RANGE;
     private boolean autoInflate = true;
-    private static final Logger LOGGER = LogManager.getLogger();
+    private double seekPower = 0;
 
     public YogaBall(EntityType<? extends YogaBall> type, Level level) {
         super(type, level);
@@ -85,6 +89,7 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(INFLATE_TIME, -1);
         builder.define(DEFLATE_TIME, -1);
+        builder.define(DATA_TARGET, Optional.empty());
     }
 
     @Override
@@ -110,7 +115,24 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
 
     @Override
     public double getSeekPower() {
-        return 0;
+        if (isInflated()) {
+            return 0;
+        }
+        return seekPower;
+    }
+
+    public void setSeekPower(double seekPower) {
+        this.seekPower = seekPower;
+    }
+
+    @Nullable
+    @Override
+    public Entity getTarget() {
+        return entityData.get(DATA_TARGET).map(target -> EntityReference.getEntity(target, level())).orElse(null);
+    }
+
+    public void setTarget(@Nullable Entity target) {
+        entityData.set(DATA_TARGET, Optional.ofNullable(EntityReference.of(target)));
     }
 
     @Override
@@ -126,6 +148,12 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
     @Override
     public void tick() {
         super.tick();
+        if (canSeek()) {
+            Entity target = getTarget();
+            if (target != null) {
+                trySeek(target);
+            }
+        }
         if (isInflated()) {
             setInflateTime(getInflateTime() + 1);
         }
@@ -245,7 +273,7 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>("inflate", state -> {
+        controllers.add(new AnimationController<>("Inflate", state -> {
             if (isInflated()) {
                 return state.setAndContinue(INFLATE);
             }
@@ -267,6 +295,8 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
         output.putBoolean(AUTO_INFLATE_TAG, autoInflate);
         output.putDouble(MAX_CHECK_RANGE_TAG, getMaxCheckRange());
         output.putDouble(INFLATE_PROBABILITY_INSIDE_RANGE_TAG, getInflateProbabilityInsideRange());
+        entityData.get(DATA_TARGET).ifPresent(ref -> EntityReference.store(ref, output, TARGET_TAG));
+        output.putDouble(SEEK_POWER_TAG, getSeekPower());
     }
 
     @Override
@@ -278,6 +308,8 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
         autoInflate = input.getBooleanOr(AUTO_INFLATE_TAG, true);
         setMaxCheckRange(input.getDoubleOr(MAX_CHECK_RANGE_TAG, DAMAGE_RANGE));
         setInflateProbabilityInsideRange(input.getDoubleOr(INFLATE_PROBABILITY_INSIDE_RANGE_TAG, DEFAULT_INFLATE_PROBABILITY_INSIDE_RANGE));
+        entityData.set(DATA_TARGET, Optional.ofNullable(EntityReference.read(input, TARGET_TAG)));
+        setSeekPower(input.getDoubleOr(SEEK_POWER_TAG, 0));
     }
 
     public float getDamage() {

@@ -50,7 +50,7 @@ public class ProficiencyRelatedValue {
         this.interpolators = ImmutableSortedMap.copyOf(interpolators);
     }
 
-    private static Map<Integer, Map<ProficiencyLevel, Double>> checkMaps(List<Map<ProficiencyLevel, Double>> valueMaps) {
+    private static SortedMap<Integer, Map<ProficiencyLevel, Double>> checkMaps(List<Map<ProficiencyLevel, Double>> valueMaps) {
         if (valueMaps.isEmpty()) {
             throw new IllegalArgumentException("Value map list cannot be empty.");
         }
@@ -70,7 +70,10 @@ public class ProficiencyRelatedValue {
                 currentTotalPoints = totalPoints;
             }
         }
-        Map<Integer, Map<ProficiencyLevel, Double>> result = new TreeMap<>();
+        if (valueMaps.size() == 1) {
+            return ImmutableSortedMap.of(Integer.MAX_VALUE, valueMaps.getFirst());
+        }
+        SortedMap<Integer, Map<ProficiencyLevel, Double>> result = new TreeMap<>();
         for (int i = 0; i < valueMaps.size() - 1; i++) {
             Map<ProficiencyLevel, Double> currentMap = valueMaps.get(i);
             Map<ProficiencyLevel, Double> nextMap = valueMaps.get(i + 1);
@@ -87,12 +90,20 @@ public class ProficiencyRelatedValue {
         return result;
     }
 
+    public int intValue(ProficiencyLevel level) {
+        return intValue(level.getTotalPoints());
+    }
+
     public float floatValue(ProficiencyLevel level) {
         return (float) doubleValue(level);
     }
 
     public double doubleValue(ProficiencyLevel level) {
         return doubleValue(level.getTotalPoints());
+    }
+
+    public int intValue(int totalPoints) {
+        return Math.round(floatValue(totalPoints));
     }
 
     public float floatValue(int totalPoints) {

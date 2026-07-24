@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.item.enchantment;
+package illusnow.tjchase.item;
 
 import illusnow.tjchase.TJChase;
-import illusnow.tjchase.item.ModItemNames;
+import illusnow.tjchase.entity.TJChaseCharacter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -31,6 +31,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.entity.PartEntity;
 
 public class EntityDebugStickItem extends Item {
     public static final String SET_FACING_SOUTH = makeMsgKey("facing_south");
@@ -48,7 +49,7 @@ public class EntityDebugStickItem extends Item {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
-        if (!(interactionTarget instanceof Mob mob)) {
+        if (!(interactionTarget instanceof Mob mob) || interactionTarget instanceof TJChaseCharacter tjc && tjc.isWeak()) {
             return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
         }
         if (player.isShiftKeyDown() && mob.isNoAi()) {
@@ -88,6 +89,9 @@ public class EntityDebugStickItem extends Item {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (entity.level() instanceof ServerLevel level && entity.isAttackable()) {
+            if (entity instanceof PartEntity<?> partEntity) {
+                entity = partEntity.getParent();
+            }
             if (player.isShiftKeyDown()) {
                 entity.remove(Entity.RemovalReason.KILLED);
                 entity.gameEvent(GameEvent.ENTITY_DIE);
@@ -104,7 +108,7 @@ public class EntityDebugStickItem extends Item {
         return true;
     }
 
-    private static String makeMsgKey(String facing) {
-        return TJChase.prefixMsg(ModItemNames.ENTITY_DEBUG_STICK + "." + facing);
+    private static String makeMsgKey(String suffix) {
+        return TJChase.prefixMsg(ModItemNames.ENTITY_DEBUG_STICK + "." + suffix);
     }
 }

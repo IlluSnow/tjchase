@@ -1,0 +1,125 @@
+{
+  "dance_time": {
+    "sounds": [
+      "tjchase:entity/zuri/dance_time"
+    ],
+    "subtitle": "subtitles.tjchase.dance_time"
+  },
+  "harp_attract_blocks": {
+    "sounds": [
+      "tjchase:item/harp/attract"
+    ],
+    "subtitle": "subtitles.tjchase.harp_attract_blocks"
+  },
+  "harp_attract_blocks_lightweight_1": {
+    "sounds": [
+      "tjchase:item/harp/attract1"
+    ],
+    "subtitle": "subtitles.tjchase.harp_attract_blocks"
+  },
+  "harp_attract_blocks_lightweight_2": {
+    "sounds": [
+      "tjchase:item/harp/attract2"
+    ],
+    "subtitle": "subtitles.tjchase.harp_attract_blocks"
+  },
+  "harp_attract_blocks_lightweight_3": {
+    "sounds": [
+      "tjchase:item/harp/attract3"
+    ],
+    "subtitle": "subtitles.tjchase.harp_attract_blocks"
+  },
+  "harp_throw_block": {
+    "sounds": [
+      "tjchase:item/harp/throw"
+    ],
+    "subtitle": "subtitles.tjchase.harp_throw_block"
+  },
+  "harp_throw_block_lightweight_1": {
+    "sounds": [
+      "tjchase:item/harp/throw1"
+    ],
+    "subtitle": "subtitles.tjchase.harp_throw_block"
+  },
+  "harp_throw_block_lightweight_2": {
+    "sounds": [
+      "tjchase:item/harp/throw2"
+    ],
+    "subtitle": "subtitles.tjchase.harp_throw_block"
+  },
+  "harp_throw_block_lightweight_3": {
+    "sounds": [
+      "tjchase:item/harp/throw3"
+    ],
+    "subtitle": "subtitles.tjchase.harp_throw_block"
+  },
+  "vine_grow": {
+    "sounds": [
+      "tjchase:item/vine_seed/grow1",
+      "tjchase:item/vine_seed/grow2"
+    ],
+    "subtitle": "subtitles.tjchase.vine_grow"
+  },
+  "vine_heal": {
+    "sounds": [
+      "tjchase:item/vine_seed/heal"
+    ],
+    "subtitle": "subtitles.tjchase.vine_heal"
+  },
+  "vine_seed_throw": {
+    "sounds": [
+      "random/bow"
+    ],
+    "subtitle": "subtitles.tjchase.vine_seed_throw"
+  },
+  "vine_vanish": {
+    "sounds": [
+      "tjchase:item/vine_seed/vanish1",
+      "tjchase:item/vine_seed/vanish2"
+    ],
+    "subtitle": "subtitles.tjchase.vine_vanish"
+  },
+  "yoga_ball_hit": {
+    "sounds": [
+      "tjchase:entity/zuri/yoga_ball_hit1",
+      "tjchase:entity/zuri/yoga_ball_hit2",
+      "tjchase:entity/zuri/yoga_ball_hit3"
+    ],
+    "subtitle": "subtitles.tjchase.yoga_ball_hit"
+  },
+  "zuri_ambient": {
+    "sounds": [
+      "tjchase:entity/zuri/idle1",
+      "tjchase:entity/zuri/idle2",
+      "tjchase:entity/zuri/idle3"
+    ],
+    "subtitle": "subtitles.tjchase.zuri_ambient"
+  },
+  "zuri_attack": {
+    "sounds": [
+      "tjchase:entity/tjchase_cat_attack1",
+      "tjchase:entity/tjchase_cat_attack2",
+      "tjchase:entity/tjchase_cat_attack3"
+    ],
+    "subtitle": "subtitles.tjchase.zuri_attack"
+  },
+  "zuri_hurt": {
+    "sounds": [
+      "tjchase:entity/zuri/hurt1",
+      "tjchase:entity/zuri/hurt2"
+    ],
+    "subtitle": "subtitles.tjchase.zuri_hurt"
+  },
+  "zuri_throw_yoga_ball": {
+    "sounds": [
+      "tjchase:entity/tjchase_throw"
+    ],
+    "subtitle": "subtitles.tjchase.zuri_throw_yoga_ball"
+  },
+  "zuri_weak": {
+    "sounds": [
+      "tjchase:entity/tjchase_cat_weak"
+    ],
+    "subtitle": "subtitles.tjchase.zuri_weak"
+  }
+}

@@ -94,6 +94,9 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier, See
     private static final EntityDataAccessor<Properties> DATA_PROPERTIES = SynchedEntityData.defineId(
             OrbitingBlockEntity.class, ModEntityDataSerializers.ORBITING_BLOCK_ENTITY_PROPERTIES.get()
     );
+    private static final EntityDataAccessor<Optional<EntityReference<Entity>>> DATA_PRESET_TARGET = SynchedEntityData.defineId(
+            OrbitingBlockEntity.class, ModEntityDataSerializers.OPTIONAL_ENTITY_REFERENCE.get()
+    );
     private static final EntityDataAccessor<Optional<EntityReference<Entity>>> DATA_CURRENT_TARGET = SynchedEntityData.defineId(
             OrbitingBlockEntity.class, ModEntityDataSerializers.OPTIONAL_ENTITY_REFERENCE.get()
     );
@@ -119,8 +122,6 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier, See
         }
     };
     private boolean usedPortal;
-    @Nullable
-    private EntityReference<Entity> presetTarget;
     private int life;
 
     public OrbitingBlockEntity(EntityType<? extends OrbitingBlockEntity> type, Level level) {
@@ -163,6 +164,7 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier, See
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_BLOCK_STATE, Blocks.AIR.defaultBlockState());
         builder.define(DATA_PROPERTIES, Properties.DEFAULT);
+        builder.define(DATA_PRESET_TARGET, Optional.empty());
         builder.define(DATA_CURRENT_TARGET, Optional.empty());
     }
 
@@ -529,8 +531,9 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier, See
     }
 
     @Nullable
+    @Override
     public Entity getTarget() {
-        if (level().isClientSide() || presetTarget == null) {
+        if (level().isClientSide() || getPresetTarget() == null) {
             return entityData.get(DATA_CURRENT_TARGET).map(ref -> EntityReference.getEntity(ref, level())).orElse(null);
         }
         return getPresetTarget();
@@ -538,11 +541,11 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier, See
 
     @Nullable
     public Entity getPresetTarget() {
-        return EntityReference.getEntity(presetTarget, level());
+        return entityData.get(DATA_PRESET_TARGET).map(target -> EntityReference.getEntity(target, level())).orElse(null);
     }
 
     public void setPresetTarget(@Nullable Entity target) {
-        presetTarget = EntityReference.of(target);
+        entityData.set(DATA_PRESET_TARGET, Optional.ofNullable(EntityReference.of(target)));
         setCurrentTarget(target);
     }
 
@@ -556,9 +559,7 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier, See
         output.putInt(LIFE_TAG, life);
         output.store(BLOCK_STATE_TAG, BlockState.CODEC, getBlockState());
         output.store(PROPERTIES_TAG, Properties.CODEC, getProperties());
-        if (presetTarget != null) {
-            output.store(PRESET_TARGET_TAG, UUIDUtil.CODEC, presetTarget.getUUID());
-        }
+        entityData.get(DATA_PRESET_TARGET).ifPresent(ref -> output.store(PRESET_TARGET_TAG, UUIDUtil.CODEC, ref.getUUID()));
         entityData.get(DATA_CURRENT_TARGET).ifPresent(ref -> output.store(TARGET_TAG, UUIDUtil.CODEC, ref.getUUID()));
     }
 
@@ -568,7 +569,7 @@ public class OrbitingBlockEntity extends Projectile implements ItemSupplier, See
         life = input.getIntOr(LIFE_TAG, 0);
         setBlockState(input.read(BLOCK_STATE_TAG, BlockState.CODEC).orElseGet(Blocks.AIR::defaultBlockState));
         setProperties(input.read(PROPERTIES_TAG, Properties.CODEC).orElse(Properties.DEFAULT));
-        presetTarget = EntityReference.read(input, PRESET_TARGET_TAG);
+        entityData.set(DATA_PRESET_TARGET, Optional.ofNullable(EntityReference.read(input, PRESET_TARGET_TAG)));
         entityData.set(DATA_CURRENT_TARGET, Optional.ofNullable(EntityReference.read(input, TARGET_TAG)));
     }
 

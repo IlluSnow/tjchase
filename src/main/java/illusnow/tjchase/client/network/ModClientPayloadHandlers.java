@@ -22,6 +22,7 @@ import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
 import illusnow.tjchase.entity.Zuri;
 import illusnow.tjchase.network.PlayDanceTimePayload;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.sounds.SoundEngine;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.slf4j.Logger;
 
@@ -36,7 +37,10 @@ public final class ModClientPayloadHandlers {
             Zuri zuri = payload.getZuri(minecraft.level);
             if (zuri != null) {
                 if (!zuri.isSilent()) {
-                    minecraft.getSoundManager().play(new DanceTimeSoundInstance(zuri));
+                    SoundEngine.PlayResult playResult = minecraft.getSoundManager().play(new DanceTimeSoundInstance(zuri));
+                    if (playResult != SoundEngine.PlayResult.STARTED) {
+                        LOGGER.warn("Not played: {}", playResult);
+                    }
                 }
             }
         }

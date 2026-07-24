@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "tjchase:block/temporary_vine",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "tjchase:block/temporary_vine"
+    },
+    "facing=south": {
+      "model": "tjchase:block/temporary_vine",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tjchase:block/temporary_vine",
+      "y": 270
+    }
+  }
+}

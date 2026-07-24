@@ -47,7 +47,7 @@ public class MobMixin {
         if (DancingHelper.getDancingData(self).isPresent()) {
             if (DancingHelper.isAiAffectedByZuri(self)) {
                 Zuri zuri = DancingHelper.getZuriDancingWithDirectly(self);
-                profilerFiller.push("dancingWithZuriTick");
+                profilerFiller.push("danceWithZuriTick");
                 DancingHelper.controlDancingMob(self, zuri);
                 profilerFiller.pop();
                 return;

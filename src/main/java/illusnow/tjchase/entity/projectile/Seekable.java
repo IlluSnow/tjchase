@@ -21,6 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 public interface Seekable {
     private Projectile self() {
@@ -28,6 +29,9 @@ public interface Seekable {
     }
 
     double getSeekPower();
+
+    @Nullable
+    Entity getTarget();
 
     default boolean canSeek() {
         return getSeekPower() > 0;

@@ -22,6 +22,7 @@ import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.entity.ModEntities;
 import illusnow.tjchase.entity.ModEntityDataSerializers;
+import illusnow.tjchase.item.ModDataComponents;
 import illusnow.tjchase.util.ModMolangQueries;
 import illusnow.tjchase.item.ModCreativeModeTabs;
 import illusnow.tjchase.item.ModItems;
@@ -55,6 +56,7 @@ public class TJChase {
         ModAttachments.ATTACHMENT_TYPES.register(bus);
         ModBlocks.BLOCKS.register(bus);
         ModCreativeModeTabs.CREATIVE_MODE_TABS.register(bus);
+        ModDataComponents.DATA_COMPONENTS.register(bus);
         ModEnchantmentEffectComponents.ENCHANTMENT_COMPONENT_TYPES.register(bus);
         ModEntities.ENTITY_TYPES.register(bus);
         ModEntityDataSerializers.ENTITY_DATA_SERIALIZERS.register(bus);
@@ -77,6 +79,10 @@ public class TJChase {
 
     public static String prefixMsg(String name) {
         return prefix("message", name);
+    }
+
+    public static String prefixCommand(String name) {
+        return prefix("commands", name);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

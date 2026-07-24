@@ -85,6 +85,9 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
         add(ModSoundEvents.ZURI_THROW_YOGA_BALL, definition()
                 .subtitle(ModSoundSubtitles.ZURI_THROW_YOGA_BALL)
                 .with(modSound("entity/tjchase_throw")));
+        add(ModSoundEvents.ZURI_WEAK, definition()
+                .subtitle(ModSoundSubtitles.ZURI_WEAK)
+                .with(modSound("entity/tjchase_cat_weak")));
     }
 
     private void harpAttract(Holder<SoundEvent> sound, String suffix) {
