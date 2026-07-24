@@ -15,11 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.entity.proficency;
+package illusnow.tjchase.entity.proficiency;
 
 import com.google.common.collect.ImmutableSortedMap;
-import illusnow.tjchase.entity.proficency.interpolator.CubicSplineInterpolator;
-import illusnow.tjchase.entity.proficency.interpolator.Interpolator;
+import illusnow.tjchase.entity.proficiency.interpolator.CubicSplineInterpolator;
+import illusnow.tjchase.entity.proficiency.interpolator.Interpolator;
 
 import java.util.*;
 

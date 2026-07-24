@@ -17,7 +17,7 @@
 
 package illusnow.tjchase.entity;
 
-import illusnow.tjchase.entity.proficency.ProficiencyLevel;
+import illusnow.tjchase.entity.proficiency.ProficiencyLevel;
 import net.minecraft.world.damagesource.DamageSource;
 
 public interface TJChaseCharacter {

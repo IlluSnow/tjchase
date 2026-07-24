@@ -22,7 +22,7 @@ import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.command.ProficiencyCommand;
 import illusnow.tjchase.entity.HarpTester;
 import illusnow.tjchase.entity.ModEntities;
-import illusnow.tjchase.entity.proficency.ProficiencyMainLevel;
+import illusnow.tjchase.entity.proficiency.ProficiencyMainLevel;
 import illusnow.tjchase.item.ModCreativeModeTabs;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.item.EntityDebugStickItem;

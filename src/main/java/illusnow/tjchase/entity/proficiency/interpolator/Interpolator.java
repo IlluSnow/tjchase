@@ -15,7 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@NullMarked
-package illusnow.tjchase.entity.proficency;
+package illusnow.tjchase.entity.proficiency.interpolator;
 
-import org.jspecify.annotations.NullMarked;
+public interface Interpolator {
+    double interpolate(double targetX);
+
+    static Interpolator singleton(double y) {
+        return targetX -> y;
+    }
+
+    record DataPair(double x, double y) implements Comparable<DataPair> {
+        @Override
+        public int compareTo(DataPair o) {
+            if (Double.compare(x, o.x) == 0) {
+                return Double.compare(y, o.y);
+            }
+            return Double.compare(x, o.x);
+        }
+    }
+}

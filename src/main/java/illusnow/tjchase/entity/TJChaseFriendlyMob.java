@@ -18,9 +18,9 @@
 package illusnow.tjchase.entity;
 
 import com.mojang.logging.LogUtils;
-import illusnow.tjchase.entity.proficency.ProficiencyLevel;
-import illusnow.tjchase.entity.proficency.ProficiencyMainLevel;
-import illusnow.tjchase.entity.proficency.ProficiencyRelatedValue;
+import illusnow.tjchase.entity.proficiency.ProficiencyLevel;
+import illusnow.tjchase.entity.proficiency.ProficiencyMainLevel;
+import illusnow.tjchase.entity.proficiency.ProficiencyRelatedValue;
 import illusnow.tjchase.world.ModDamageSources;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

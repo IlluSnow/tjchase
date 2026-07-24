@@ -19,7 +19,7 @@ package illusnow.tjchase.item;
 
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.entity.TJChaseCharacter;
-import illusnow.tjchase.entity.proficency.ProficiencyLevel;
+import illusnow.tjchase.entity.proficiency.ProficiencyLevel;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.CommonComponents;

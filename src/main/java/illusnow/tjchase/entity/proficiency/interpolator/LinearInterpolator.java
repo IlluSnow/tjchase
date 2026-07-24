@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.entity.proficency.interpolator;
+package illusnow.tjchase.entity.proficiency.interpolator;
 
 import java.util.Arrays;
 import java.util.List;

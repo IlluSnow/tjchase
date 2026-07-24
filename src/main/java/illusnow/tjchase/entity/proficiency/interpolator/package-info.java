@@ -16,6 +16,6 @@
  */
 
 @NullMarked
-package illusnow.tjchase.entity.proficency.interpolator;
+package illusnow.tjchase.entity.proficiency.interpolator;
 
 import org.jspecify.annotations.NullMarked;

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.entity.proficency;
+package illusnow.tjchase.entity.proficiency;
 
 import illusnow.tjchase.util.ModComponents;
 import net.minecraft.network.chat.Component;

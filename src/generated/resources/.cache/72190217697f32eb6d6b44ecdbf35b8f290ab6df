@@ -1,0 +1,16 @@
+// 1.21.11	2026-05-29T00:29:24.5638677	Tags for minecraft:block mod id tjchase
+6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/climbable.json
+24312980296576e28b7d3af48d8f9766aaf287ed data/minecraft/tags/block/dirt.json
+723aeb43f8887050f18a490e6d06034e9cac374f data/minecraft/tags/block/leaves.json
+6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/mangrove_logs_can_grow_through.json
+6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/mangrove_roots_can_grow_through.json
+6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/mineable/axe.json
+376e43775d4f669474ee64396b7d78040a62de73 data/minecraft/tags/block/mineable/hoe.json
+6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/replaceable_by_trees.json
+24312980296576e28b7d3af48d8f9766aaf287ed data/minecraft/tags/block/small_dripleaf_placeable.json
+24312980296576e28b7d3af48d8f9766aaf287ed data/minecraft/tags/block/sniffer_diggable_block.json
+24312980296576e28b7d3af48d8f9766aaf287ed data/minecraft/tags/block/sniffer_egg_hatch_boost.json
+6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/sword_efficient.json
+dc24013f1048ba324f74a0583cc3999d72003eac data/tjchase/tags/block/soft_orbiting_block_tag_special.json
+6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/tjchase/tags/block/speed_boosting_vine.json
+fb61c33dfa1a5069801216c3173f0be18d906ae8 data/tjchase/tags/block/temporary_blocks_of_vines.json

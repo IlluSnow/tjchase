@@ -1,0 +1,4 @@
+// 1.21.11	2026-07-17T19:35:55.4645901	Tags for minecraft:damage_type mod id tjchase
+e182203d17557e4edeb8fe8369e9b29fd2715a73 data/minecraft/tags/damage_type/always_kills_armor_stands.json
+94eb80f2ecf3c85798b8d2c099cd8e6999b9d069 data/minecraft/tags/damage_type/is_projectile.json
+83caa7acb78f49d6945017659ad02a906fc4dd35 data/minecraft/tags/damage_type/panic_causes.json

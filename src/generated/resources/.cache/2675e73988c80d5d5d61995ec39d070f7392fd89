@@ -1,0 +1,5 @@
+// 1.21.11	2026-05-30T22:04:18.3194699	Tags for minecraft:item mod id tjchase
+afff0f63fc725ee6cd0f52ffb438f8e35a6d5922 data/c/tags/item/tools/ranged_weapon.json
+f755377aa125e14fc2208d0fd35bf05e42ad6849 data/minecraft/tags/item/enchantable/durability.json
+f755377aa125e14fc2208d0fd35bf05e42ad6849 data/minecraft/tags/item/enchantable/vanishing.json
+f755377aa125e14fc2208d0fd35bf05e42ad6849 data/tjchase/tags/item/harps.json
