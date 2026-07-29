@@ -50,7 +50,7 @@ public final class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<VineSeed>> VINE_SEED = register(ModEntityNames.VINE_SEED,
             EntityType.Builder.<VineSeed>of(VineSeed::new, MobCategory.MISC).noLootTable().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<YogaBall>> YOGA_BALL = register(ModEntityNames.YOGA_BALL,
-            EntityType.Builder.<YogaBall>of(YogaBall::new, MobCategory.MISC).noLootTable().sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20));
+            EntityType.Builder.<YogaBall>of(YogaBall::new, MobCategory.MISC).noLootTable().sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Zuri>> ZURI = register(ModEntityNames.ZURI,
             EntityType.Builder.of(Zuri::new, MobCategory.CREATURE).sized(0.45F, 1.33F).eyeHeight(1.05F).clientTrackingRange(8));
 

@@ -57,6 +57,7 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
     public static final double DEFAULT_INFLATE_PROBABILITY_INSIDE_RANGE = 1;
     private static final EntityDataAccessor<Integer> INFLATE_TIME = SynchedEntityData.defineId(YogaBall.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DEFLATE_TIME = SynchedEntityData.defineId(YogaBall.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Double> SEEK_POWER = SynchedEntityData.defineId(YogaBall.class, ModEntityDataSerializers.DOUBLE.get());
     private static final EntityDataAccessor<Optional<EntityReference<Entity>>> DATA_TARGET = SynchedEntityData.defineId(
             YogaBall.class, ModEntityDataSerializers.OPTIONAL_ENTITY_REFERENCE.get()
     );
@@ -73,7 +74,6 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
     private double maxCheckRange = DAMAGE_RANGE; // Higher value results in more inaccuracy. Value higher than 0.5 may cause the ball not to hit anything
     private double inflateProbabilityInsideRange = DEFAULT_INFLATE_PROBABILITY_INSIDE_RANGE;
     private boolean autoInflate = true;
-    private double seekPower = 0;
 
     public YogaBall(EntityType<? extends YogaBall> type, Level level) {
         super(type, level);
@@ -90,6 +90,7 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
         builder.define(INFLATE_TIME, -1);
         builder.define(DEFLATE_TIME, -1);
         builder.define(DATA_TARGET, Optional.empty());
+        builder.define(SEEK_POWER, 0.0);
     }
 
     @Override
@@ -118,11 +119,11 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
         if (isInflated()) {
             return 0;
         }
-        return seekPower;
+        return entityData.get(SEEK_POWER);
     }
 
     public void setSeekPower(double seekPower) {
-        this.seekPower = seekPower;
+        entityData.set(SEEK_POWER, seekPower);
     }
 
     @Nullable

@@ -125,6 +125,7 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
 
     protected TJChaseFriendlyMob(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
+        setPersistenceRequired();
     }
 
     protected int initMaxWeakTicks() {
