@@ -17,27 +17,22 @@
 
 package illusnow.tjchase.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
 import illusnow.tjchase.client.util.OrbitingBlocksRenderHelper;
+import illusnow.tjchase.entity.BlueprintManager;
 import illusnow.tjchase.entity.Zuri;
-import illusnow.tjchase.util.DancingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ExtractLevelRenderStateEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
-import org.joml.Quaternionf;
 
 import java.util.Objects;
 
@@ -73,40 +68,39 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onRenderLiving(RenderLivingEvent.Post<?, ?, ?> event) {
-        LivingEntityRenderState renderState = event.getRenderState();
-        DancingHelper.DanceEffectType danceEffectType = ((DanceEffectTypeOperator) renderState).tjChase$getDanceEffectType();
-        if (renderState.isInvisible || danceEffectType == DancingHelper.DanceEffectType.NONE) {
-            return;
-        }
-        Identifier textureLocation = danceEffectType.getTextureLocation();
-        Objects.requireNonNull(textureLocation);
-        PoseStack poseStack = event.getPoseStack();
-        poseStack.pushPose();
-        float yOffset = renderState.boundingBoxHeight * 1.2F + 0.2F;
-        poseStack.translate(0, yOffset, 0);
-        Quaternionf rotation = Minecraft.getInstance().gameRenderer.getMainCamera().rotation();
-        poseStack.mulPose(new Quaternionf(0, rotation.y, 0, rotation.w));
+    public static void onComputeFogColor(ViewportEvent.ComputeFogColor event) {
+        if (isPlayerInBlueprint()) {
+            float r = 0.22f;
+            float g = 0.40f;
+            float b = 0.72f;
 
-        float size = 0.5F;
-        event.getSubmitNodeCollector().submitCustomGeometry(poseStack,
-                RenderTypes.entityCutoutNoCull(textureLocation, false),
-                (pose, consumer) -> {
-                    dancingEffectIconVertex(pose, consumer, renderState, -size / 2, -size / 2, 0, 1);
-                    dancingEffectIconVertex(pose, consumer, renderState, size / 2, -size / 2, 1, 1);
-                    dancingEffectIconVertex(pose, consumer, renderState, size / 2, size / 2, 1, 0);
-                    dancingEffectIconVertex(pose, consumer, renderState, -size / 2, size / 2, 0, 0);
-                }
-        );
-        poseStack.popPose();
+            event.setRed(Mth.lerp(0.7F, event.getRed(), r));
+            event.setGreen(Mth.lerp(0.7F, event.getGreen(), g));
+            event.setBlue(Mth.lerp(0.7F, event.getBlue(), b));
+        }
     }
 
-    private static void dancingEffectIconVertex(PoseStack.Pose pose, VertexConsumer consumer, LivingEntityRenderState renderState, float x, float y, float u, float v) {
-        consumer.addVertex(pose, x, y, 0)
-                .setColor(255, 255, 255, 255)
-                .setUv(u, v)
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(renderState.lightCoords)
-                .setNormal(pose, 0, 1, 0);
+    @SubscribeEvent
+    public static void onRenderFog(ViewportEvent.RenderFog event) {
+        if (isPlayerInBlueprint()) {
+            event.setNearPlaneDistance(Math.min(event.getNearPlaneDistance(), -10));
+            event.setFarPlaneDistance(Math.min(event.getFarPlaneDistance(), 20));
+        }
+    }
+
+    private static boolean isPlayerInBlueprint() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null) {
+            for (BlueprintManager manager : player.level().getEntitiesOfClass(BlueprintManager.class, player.getBoundingBox().inflate(BlueprintManager.MAX_LENGTH_ALLOWED))) {
+                if (manager.isPositionInside(getCameraPosition()) && manager.isValid()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static Vec3 getCameraPosition() {
+        return Minecraft.getInstance().gameRenderer.getMainCamera().position();
     }
 }

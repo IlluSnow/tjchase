@@ -37,6 +37,8 @@ public class ModEntityData {
 
     @SubscribeEvent
     public static void onRegisterAttributes(EntityAttributeCreationEvent event) {
+        event.put(ModEntities.EVILINIA.get(), Linia.createAttributes().build());
+        event.put(ModEntities.LINIA.get(), Linia.createAttributes().build());
         event.put(ModEntities.ZURI.get(), Zuri.createAttributes().build());
     }
 }

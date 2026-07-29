@@ -19,9 +19,7 @@ package illusnow.tjchase;
 
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.command.TJChaseCommand;
-import illusnow.tjchase.entity.HarpTester;
-import illusnow.tjchase.entity.TJChaseCharacter;
-import illusnow.tjchase.entity.Zuri;
+import illusnow.tjchase.entity.*;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.entity.projectile.YogaBall;
 import illusnow.tjchase.item.HarpItem;
@@ -95,6 +93,19 @@ public class CommonEvents {
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
         handleOrbitingBlocksDamageReduction(event);
         handleTJChaseCharacterDamageReductionStart(event);
+        handleBlueprintDamageReduction(event);
+    }
+
+    private static void handleBlueprintDamageReduction(LivingIncomingDamageEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            if (BlueprintManager.getBlueprintOf(player, blueprintManager -> blueprintManager.getOwner() == player) != null) {
+                if (!event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)
+                        && !event.getSource().is(DamageTypeTags.BYPASSES_EFFECTS)
+                        && !event.getSource().is(DamageTypeTags.BYPASSES_RESISTANCE)){
+                    event.setAmount(event.getAmount() * (1 - BlueprintManager.INSIDE_DAMAGE_REDUCTION));
+                }
+            }
+        }
     }
 
     private static void handleTJChaseCharacterDamageReductionStart(LivingIncomingDamageEvent event) {
@@ -138,6 +149,9 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLivingDamagePre(LivingDamageEvent.Pre event) {
         handleTJChaseCharacterDamageReductionFinal(event);
+        if (event.getSource().getEntity() instanceof Linia) {
+            event.setNewDamage(Math.min(event.getNewDamage(), Linia.MAX_ATTACK_DAMAGE));
+        }
     }
 
     private static void handleTJChaseCharacterDamageReductionFinal(LivingDamageEvent.Pre event) {
@@ -159,6 +173,31 @@ public class CommonEvents {
                 float delta = entity.getHealth() - minimum;
                 event.setNewDamage(Math.min(event.getNewDamage(), delta));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDamagePost(LivingDamageEvent.Post event) {
+        if (event.getSource().getEntity() instanceof TJChaseCharacter tjc) {
+            tjc.awardDamageProficiencyPoints(event.getEntity(), event.getNewDamage());
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onLivingDamagePostLowest(LivingDamageEvent.Post event) {
+        handleDamageInBlueprint(event);
+    }
+
+    private static void handleDamageInBlueprint(LivingDamageEvent.Post event) {
+        if (event.getEntity() instanceof Mob mob && BlueprintManager.isEntityInsideBlueprint(mob) && event.getNewDamage() > 0 && Linia.isConvertible(mob)) {
+            Linia.convert(mob);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        if (event.getSource().getEntity() instanceof TJChaseCharacter tjc) {
+            tjc.awardKillProficiencyPoints(event.getEntity(), event.getEntity().getMaxHealth());
         }
     }
 

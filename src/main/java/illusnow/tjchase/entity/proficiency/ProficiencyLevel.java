@@ -68,7 +68,7 @@ public record ProficiencyLevel(ProficiencyMainLevel mainLevel, int sublevel, int
     public MutableComponent makeDisplayName() {
         return mainLevel.makeDisplayName(sublevel)
                 .append(ModComponents.SPACED_LEFT_PARENTHESIS)
-                .append(Component.literal(isFinalLevel() ? Integer.toString(remaining) : "%d/%d".formatted(remaining, mainLevel.getUpgradeNeed(sublevel))))
+                .append(Component.literal(isFinalLevel() ? Integer.toString(remaining) : "%d/%d".formatted(remaining, getUpgradeNeed())))
                 .append(ModComponents.SPACED_RIGHT_PARENTHESIS)
                 .withStyle(getStyle());
     }

@@ -15,9 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.entity;
+package illusnow.tjchase.entity.projectile;
 
 import illusnow.tjchase.block.ModBlocks;
+import illusnow.tjchase.entity.ModEntities;
+import illusnow.tjchase.entity.VineManager;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.VineGenerator;
@@ -98,7 +100,9 @@ public class VineSeed extends ThrowableItemProjectile {
                 vineGenerator.placeVineOfHeight(level(), i, maxHeight, 1.5);
             }
             vineGenerator.placeTop(level(), maxHeight, 1.25, direction);
-            level().playSound(null, bottomCenter, ModSoundEvents.VINE_GROW.get(), SoundSource.AMBIENT, GROW_SOUND_VOLUME, 1.0F);
+            if (!isSilent()) {
+                level().playSound(null, bottomCenter, ModSoundEvents.VINE_GROW.get(), SoundSource.AMBIENT, GROW_SOUND_VOLUME, 1.0F);
+            }
             VineManager vineManager = new VineManager(ModEntities.VINE_MANAGER.get(), level(), vineGenerator);
             vineManager.setPos(Vec3.atBottomCenterOf(bottomCenter));
             level().addFreshEntity(vineManager);

@@ -33,6 +33,7 @@ import java.util.function.UnaryOperator;
 
 public final class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(TJChase.MODID);
+    public static final DeferredHolder<Item, BlueprintItem> BLUEPRINT = register(ModItemNames.BLUEPRINT, BlueprintItem::new, UnaryOperator.identity());
     public static final DeferredHolder<Item, EntityDebugStickItem> ENTITY_DEBUG_STICK = register(ModItemNames.ENTITY_DEBUG_STICK, EntityDebugStickItem::new,
             properties -> properties.stacksTo(1)
                     .rarity(Rarity.EPIC)

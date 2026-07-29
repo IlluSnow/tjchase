@@ -1,9 +1,49 @@
 {
+  "blueprint_fold": {
+    "sounds": [
+      "tjchase:item/blueprint/fold"
+    ],
+    "subtitle": "subtitles.tjchase.blueprint_fold"
+  },
+  "blueprint_release": {
+    "sounds": [
+      "tjchase:item/blueprint/release"
+    ],
+    "subtitle": "subtitles.tjchase.blueprint_release"
+  },
+  "blueprint_throw": {
+    "sounds": [
+      "tjchase:item/blueprint/fold"
+    ],
+    "subtitle": "subtitles.tjchase.blueprint_throw"
+  },
   "dance_time": {
     "sounds": [
       "tjchase:entity/zuri/dance_time"
     ],
     "subtitle": "subtitles.tjchase.dance_time"
+  },
+  "evilinia_ambient": {
+    "sounds": [
+      "tjchase:entity/linia/idle1",
+      "tjchase:entity/linia/idle2",
+      "tjchase:entity/linia/idle3"
+    ],
+    "subtitle": "subtitles.tjchase.evilinia_ambient"
+  },
+  "evilinia_death": {
+    "sounds": [
+      "tjchase:entity/linia/death1",
+      "tjchase:entity/linia/death2"
+    ],
+    "subtitle": "subtitles.tjchase.evilinia_death"
+  },
+  "evilinia_hurt": {
+    "sounds": [
+      "tjchase:entity/linia/hurt1",
+      "tjchase:entity/linia/hurt2"
+    ],
+    "subtitle": "subtitles.tjchase.evilinia_hurt"
   },
   "harp_attract_blocks": {
     "sounds": [
@@ -52,6 +92,28 @@
       "tjchase:item/harp/throw3"
     ],
     "subtitle": "subtitles.tjchase.harp_throw_block"
+  },
+  "linia_ambient": {
+    "sounds": [
+      "tjchase:entity/linia/idle1",
+      "tjchase:entity/linia/idle2",
+      "tjchase:entity/linia/idle3"
+    ],
+    "subtitle": "subtitles.tjchase.linia_ambient"
+  },
+  "linia_death": {
+    "sounds": [
+      "tjchase:entity/linia/death1",
+      "tjchase:entity/linia/death2"
+    ],
+    "subtitle": "subtitles.tjchase.linia_death"
+  },
+  "linia_hurt": {
+    "sounds": [
+      "tjchase:entity/linia/hurt1",
+      "tjchase:entity/linia/hurt2"
+    ],
+    "subtitle": "subtitles.tjchase.linia_hurt"
   },
   "vine_grow": {
     "sounds": [

@@ -19,6 +19,7 @@ package illusnow.tjchase.entity;
 
 import illusnow.tjchase.entity.proficiency.ProficiencyLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 
 public interface TJChaseCharacter {
     int getProficiencyPoints();
@@ -27,6 +28,18 @@ public interface TJChaseCharacter {
 
     default void addProficiencyPoints(int points) {
         setProficiencyPoints(getProficiencyPoints() + points);
+    }
+
+    default void addProficiencyPoints(float points) {
+        addProficiencyPoints(Math.round(points));
+    }
+
+    default void awardDamageProficiencyPoints(LivingEntity entity, float damageDealt) {
+        addProficiencyPoints(Math.min(damageDealt, entity.getMaxHealth()));
+    }
+
+    default void awardKillProficiencyPoints(LivingEntity entity, float maxHealth) {
+        addProficiencyPoints(maxHealth);
     }
 
     default ProficiencyLevel getProficiencyLevel() {

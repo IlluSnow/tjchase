@@ -19,6 +19,7 @@ package illusnow.tjchase.attachment;
 
 public final class ModAttachmentNames {
     public static final String ANGEL_TOM_PASSIVE2_TRACKER = "angel_tom_passive2_tracker";
+    public static final String BLUEPRINT_CONVERSION_IMMUNE_TICKS = "blueprint_conversion_immune_ticks";
     public static final String DANCE_EFFECT_TYPE = "dance_effect_type";
     public static final String DANCING_WITH = "dancing_with";
     public static final String HARP_TESTER = "harp_tester";

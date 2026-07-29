@@ -24,6 +24,7 @@ import illusnow.tjchase.entity.goal.OwnerHurtTargetGoal;
 import illusnow.tjchase.entity.goal.ZuriAttackGoal;
 import illusnow.tjchase.entity.proficiency.ProficiencyMainLevel;
 import illusnow.tjchase.entity.proficiency.ProficiencyRelatedValue;
+import illusnow.tjchase.entity.proficiency.interpolator.LinearInterpolator;
 import illusnow.tjchase.entity.projectile.YogaBall;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.network.PlayDanceTimePayload;
@@ -66,13 +67,10 @@ import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
-public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEntity, RangedAttackMob {
+public class Zuri extends TJChaseFriendlyMob implements GeoEntity, RangedAttackMob {
     private static final ProficiencyRelatedValue RANGED_ATTACK_INTERVAL = ProficiencyRelatedValue.beginner0(80)
             .whenReached(ProficiencyMainLevel.APPRENTICE, 70)
             .whenReached(ProficiencyMainLevel.ELITE, 62)
@@ -90,12 +88,13 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
             .whenMaster(5)
             .masterCutoff(1, 2)
             .whenMaster(1, 0)
-            .build();
+            .build(LinearInterpolator::create);
     private static final ProficiencyRelatedValue MISS_PROBABILITY = ProficiencyRelatedValue.beginner0(0.3)
             .whenReached(ProficiencyMainLevel.APPRENTICE, 0.2)
             .whenReached(ProficiencyMainLevel.ELITE, 0.13)
             .masterCutoff(0.1)
             .whenMaster(0.05)
+            .whenMaster(2, 0.01)
             .whenMaster(1, 0)
             .build();
     private static final ProficiencyRelatedValue SEEK_POWER = ProficiencyRelatedValue.beginner0(0)
@@ -108,7 +107,14 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
             .whenMaster(2, 0.2)
             .masterCutoff(1, 0.4)
             .whenMaster(1, 0.99)
-            .build();
+            .build(LinearInterpolator::create);
+    private static final Map<ProficiencyMainLevel, Integer> PROFICIENCY_POINTS_RANGED_ATTACK = Map.of(
+            ProficiencyMainLevel.BEGINNER, 18,
+            ProficiencyMainLevel.APPRENTICE, 14,
+            ProficiencyMainLevel.ELITE, 10,
+            ProficiencyMainLevel.EXPERT, 6,
+            ProficiencyMainLevel.MASTER, 0
+    );
 
     public static final RawAnimation ZURI_CLAW_ATTACK = RawAnimation.begin().thenPlay("attack.claw");
     public static final RawAnimation ZURI_IDLE_BOWKNOT = RawAnimation.begin().thenLoop("bowknot");
@@ -504,6 +510,7 @@ public class Zuri extends TJChaseFriendlyMob implements TJChaseCharacter, GeoEnt
         if (!isDancing()) {
             triggerAnim(ATTACK_CONTROLLER_NAME, THROW_YOGA_BALL_ANIM_NAME);
         }
+        addProficiencyPoints(PROFICIENCY_POINTS_RANGED_ATTACK.get(getProficiencyLevel().mainLevel()));
         level().addFreshEntity(yogaBall);
     }
 

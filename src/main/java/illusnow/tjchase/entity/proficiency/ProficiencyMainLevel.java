@@ -23,13 +23,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
-public enum ProficiencyMainLevel {
+public enum ProficiencyMainLevel implements StringRepresentable {
     BEGINNER("beginner", 0, new int[]{100, 200, 300, 400, 500, 600}, UnaryOperator.identity()),
     APPRENTICE("apprentice", 1, new int[]{200, 400, 500, 600, 700, 800}, style -> style.withColor(ChatFormatting.GREEN)),
     ELITE("elite", 2, new int[]{300, 400, 500, 600, 800, 1000}, style -> style.withColor(ChatFormatting.AQUA)),
@@ -88,7 +89,7 @@ public enum ProficiencyMainLevel {
         return finalLevel;
     }
 
-    public SublevelAndRemaining getSublevel(int pointsRemaining) {
+    SublevelAndRemaining getSublevel(int pointsRemaining) {
         if (!isFinalMainLevel() && pointsRemaining >= getSumOfPointsRequired()) {
             throw new IllegalArgumentException("Points remaining exceeds or equals the total points required for this main level");
         }
@@ -181,5 +182,10 @@ public enum ProficiencyMainLevel {
         }
     }
 
-    public record SublevelAndRemaining(int sublevel, int remainingPoints) {}
+    @Override
+    public String getSerializedName() {
+        return getName();
+    }
+
+    record SublevelAndRemaining(int sublevel, int remainingPoints) {}
 }

@@ -26,7 +26,13 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ModSoundEvents {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(Registries.SOUND_EVENT, TJChase.MODID);
+    public static final DeferredHolder<SoundEvent, SoundEvent> BLUEPRINT_FOLD = register(ModSoundNames.BLUEPRINT_FOLD);
+    public static final DeferredHolder<SoundEvent, SoundEvent> BLUEPRINT_RELEASE = register(ModSoundNames.BLUEPRINT_RELEASE);
+    public static final DeferredHolder<SoundEvent, SoundEvent> BLUEPRINT_THROW = register(ModSoundNames.BLUEPRINT_THROW);
     public static final DeferredHolder<SoundEvent, SoundEvent> DANCE_TIME = register(ModSoundNames.DANCE_TIME);
+    public static final DeferredHolder<SoundEvent, SoundEvent> EVILINIA_AMBIENT = register(ModSoundNames.EVILINIA_AMBIENT);
+    public static final DeferredHolder<SoundEvent, SoundEvent> EVILINIA_DEATH = register(ModSoundNames.EVILINIA_DEATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> EVILINIA_HURT = register(ModSoundNames.EVILINIA_HURT);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_ATTRACT_BLOCKS = register(ModSoundNames.HARP_ATTRACT_BLOCKS);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_1 = register(ModSoundNames.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_1);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_2 = register(ModSoundNames.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_2);
@@ -35,6 +41,9 @@ public final class ModSoundEvents {
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_THROW_BLOCK_LIGHTWEIGHT_1 = register(ModSoundNames.HARP_THROW_BLOCK_LIGHTWEIGHT_1);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_THROW_BLOCK_LIGHTWEIGHT_2 = register(ModSoundNames.HARP_THROW_BLOCK_LIGHTWEIGHT_2);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_THROW_BLOCK_LIGHTWEIGHT_3 = register(ModSoundNames.HARP_THROW_BLOCK_LIGHTWEIGHT_3);
+    public static final DeferredHolder<SoundEvent, SoundEvent> LINIA_AMBIENT = register(ModSoundNames.LINIA_AMBIENT);
+    public static final DeferredHolder<SoundEvent, SoundEvent> LINIA_DEATH = register(ModSoundNames.LINIA_DEATH);
+    public static final DeferredHolder<SoundEvent, SoundEvent> LINIA_HURT = register(ModSoundNames.LINIA_HURT);
     public static final DeferredHolder<SoundEvent, SoundEvent> VINE_SEED_THROW = register(ModSoundNames.VINE_SEED_THROW);
     public static final DeferredHolder<SoundEvent, SoundEvent> VINE_GROW = register(ModSoundNames.VINE_GROW);
     public static final DeferredHolder<SoundEvent, SoundEvent> VINE_HEAL = register(ModSoundNames.VINE_HEAL);

@@ -15,12 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.client;
+@NullMarked
+package illusnow.tjchase.entity.brain.behavior;
 
-import illusnow.tjchase.util.DancingHelper;
-
-public interface DanceEffectTypeOperator {
-    DancingHelper.DanceEffectType tjChase$getDanceEffectType();
-
-    void tjChase$setDanceEffectType(DancingHelper.DanceEffectType tjChase$danceEffectType);
-}
+import org.jspecify.annotations.NullMarked;

@@ -42,6 +42,8 @@ public final class ModAttachments {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, TJChase.MODID);
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<AngelTomPassive2Tracker>> ANGEL_TOM_PASSIVE2_TRACKER = ATTACHMENT_TYPES.register(ModAttachmentNames.ANGEL_TOM_PASSIVE2_TRACKER, () ->
             AttachmentType.builder(AngelTomPassive2Tracker::createDefault).serialize(AngelTomPassive2Tracker.MAP_CODEC).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> BLUEPRINT_CONVERSION_IMMUNE_TICKS = ATTACHMENT_TYPES.register(ModAttachmentNames.BLUEPRINT_CONVERSION_IMMUNE_TICKS, () ->
+            AttachmentType.builder(() -> 0L).serialize(Codec.LONG.fieldOf(ModAttachmentNames.BLUEPRINT_CONVERSION_IMMUNE_TICKS)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<OrbitingBlockHolder>> ORBITING_BLOCKS = ATTACHMENT_TYPES.register(ModAttachmentNames.ORBITING_BLOCKS, () ->
             AttachmentType.builder(OrbitingBlockHolder::emptyHolder).serialize(OrbitingBlockHolder.Serializer.INSTANCE).sync(OrbitingBlockHolder.STREAM_CODEC).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> VINE_CD = ATTACHMENT_TYPES.register(ModAttachmentNames.VINE_CD, () ->

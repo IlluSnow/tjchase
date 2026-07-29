@@ -21,7 +21,13 @@ import illusnow.tjchase.entity.ModEntityNames;
 import illusnow.tjchase.item.ModItemNames;
 
 public final class ModSoundNames {
+    public static final String BLUEPRINT_FOLD = ModItemNames.BLUEPRINT + "_fold";
+    public static final String BLUEPRINT_RELEASE = ModItemNames.BLUEPRINT + "_release";
+    public static final String BLUEPRINT_THROW = ModItemNames.BLUEPRINT + "_throw";
     public static final String DANCE_TIME = "dance_time";
+    public static final String EVILINIA_AMBIENT = ModEntityNames.EVILINIA + "_ambient";
+    public static final String EVILINIA_HURT = ModEntityNames.EVILINIA + "_hurt";
+    public static final String EVILINIA_DEATH = ModEntityNames.EVILINIA + "_death";
     public static final String HARP_ATTRACT_BLOCKS = ModItemNames.HARP + "_attract_blocks";
     public static final String HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_1 = HARP_ATTRACT_BLOCKS + "_lightweight_1";
     public static final String HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_2 = HARP_ATTRACT_BLOCKS + "_lightweight_2";
@@ -31,6 +37,9 @@ public final class ModSoundNames {
     public static final String HARP_THROW_BLOCK_LIGHTWEIGHT_2 = HARP_THROW_BLOCK + "_lightweight_2";
     public static final String HARP_THROW_BLOCK_LIGHTWEIGHT_3 = HARP_THROW_BLOCK + "_lightweight_3";
     public static final String VINE_SEED_THROW = ModEntityNames.VINE_SEED + "_throw";
+    public static final String LINIA_AMBIENT = ModEntityNames.LINIA + "_ambient";
+    public static final String LINIA_DEATH = ModEntityNames.LINIA + "_death";
+    public static final String LINIA_HURT = ModEntityNames.LINIA + "_hurt";
     public static final String VINE_GROW = "vine_grow";
     public static final String VINE_HEAL = "vine_heal";
     public static final String VINE_VANISH = "vine_vanish";

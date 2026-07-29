@@ -22,6 +22,7 @@ import illusnow.tjchase.entity.ModEntities;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.tags.EntityTypeTags;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
@@ -33,8 +34,12 @@ public class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        tag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED).add(ModEntities.BLUEPRINT_MANAGER.get());
         tag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED).add(ModEntities.HARP_TESTER.get());
         tag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED).add(ModEntities.VINE_MANAGER.get());
+        tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(ModEntities.EVILINIA.get());
+        tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(ModEntities.LINIA.get());
+        tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED).add(ModEntities.BLUEPRINT_MANAGER.get());
         tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED).add(ModEntities.HARP_TESTER.get());
         tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED).add(ModEntities.VINE_MANAGER.get());
     }

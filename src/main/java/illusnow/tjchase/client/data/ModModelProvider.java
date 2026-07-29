@@ -80,6 +80,7 @@ public class ModModelProvider extends ModelProvider {
                 ));
 
         // Item Models
+        itemModels.generateFlatItem(ModItems.BLUEPRINT.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.VINE_SEED.get(), ModelTemplates.FLAT_ITEM);
 
         createHarp(itemModels, ModItems.HARP.get());

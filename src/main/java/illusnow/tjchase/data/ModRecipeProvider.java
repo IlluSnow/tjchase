@@ -32,7 +32,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -44,6 +43,8 @@ public class ModRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes() {
         netheriteSmithing(ModItems.HARP.get(), RecipeCategory.COMBAT, ModItems.NETHERITE_HARP.get());
+        // disabled now
+        /*
         shaped(RecipeCategory.MISC, ModItems.VINE_SEED.get(), 8)
                 .define('#', Tags.Items.SEEDS_WHEAT)
                 .define('.', Items.GHAST_TEAR)
@@ -57,6 +58,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(Items.GHAST_TEAR)
                 .unlockedBy("has_wheat_seeds", has(Tags.Items.SEEDS_WHEAT))
                 .save(output);
+         */
     }
 
     @Override

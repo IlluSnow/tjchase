@@ -28,19 +28,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityReference;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.util.RandomPos;
-import net.minecraft.world.entity.animal.FlyingAnimal;
-import net.minecraft.world.entity.monster.Phantom;
-import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
 import org.jspecify.annotations.Nullable;
@@ -58,6 +52,13 @@ public final class DancingHelper {
         return zuri.canActivelyAttack(mob) && zuri.distanceToSqr(mob) <= Zuri.INFLUENCE_RADIUS * Zuri.INFLUENCE_RADIUS;
     }
 
+    public static boolean canContinueToDanceWithZuri(Mob mob, Zuri zuri) {
+        if (mob instanceof Zuri || mob.getType().is(Tags.EntityTypes.BOSSES)) {
+            return false;
+        }
+        return zuri.canActivelyAttack(mob) && zuri.isAlive() && zuri.isDancing();
+    }
+
     public static DanceEffectType getDanceEffectType(Mob mob) {
         Zuri zuri = getZuriDancingWith(mob).map(ref -> ref.getEntity(mob.level(), Zuri.class)).orElse(null);
         if (zuri == null) {
@@ -67,20 +68,20 @@ public final class DancingHelper {
     }
 
     public static DanceEffectType getDanceEffectType(Mob mob, Zuri zuri) {
-        if (!canDanceWithZuri(mob, zuri)) {
+        if (!canContinueToDanceWithZuri(mob, zuri)) {
             return DanceEffectType.NONE;
         }
         DanceEffectType specifiedDanceEffectType = getSpecifiedDanceEffectType(mob);
         if (specifiedDanceEffectType != null) {
             return specifiedDanceEffectType;
         }
-        if (canFly(mob) || isAquatic(mob)) {
+        if (Utils.canFly(mob) || Utils.isAquatic(mob)) {
             return DanceEffectType.PARTIAL;
         }
         return DanceEffectType.FULL;
     }
 
-    private static @org.jetbrains.annotations.Nullable DanceEffectType getSpecifiedDanceEffectType(Mob mob) {
+    private static @Nullable DanceEffectType getSpecifiedDanceEffectType(Mob mob) {
         boolean fullyControllable = mob.getType().is(ModEntityTypeTags.ZURI_FULLY_CONTROLLABLE);
         if (fullyControllable) {
             return DanceEffectType.FULL;
@@ -137,7 +138,7 @@ public final class DancingHelper {
         }
         Vec3 moveTo = Vec3.atBottomCenterOf(adaptDancingPos(victim, dancingPos));
         double speed = victim.getAttributeValue(Attributes.MOVEMENT_SPEED);
-        if (noPhysics(victim)) {
+        if (Utils.noPhysics(victim)) {
             victim.getMoveControl().setWantedPosition(moveTo.x, moveTo.y, moveTo.z, Zuri.DANCE_SPEED / speed);
         } else {
             victim.getNavigation().moveTo(moveTo.x, moveTo.y, moveTo.z, Zuri.DANCE_SPEED / speed);
@@ -146,34 +147,10 @@ public final class DancingHelper {
 
     @SuppressWarnings("deprecation")
     private static BlockPos adaptDancingPos(Mob victim, BlockPos dancingPos) {
-        if (canFly(victim)) {
+        if (Utils.canFly(victim)) {
             return dancingPos;
         }
         return RandomPos.moveUpOutOfSolid(dancingPos, victim.level().getMaxY(), pos -> victim.level().getBlockState(pos).isSolid());
-    }
-
-    public static boolean noPhysics(LivingEntity entity) {
-        return entity.isNoGravity() || entity.noPhysics;
-    }
-
-    public static boolean canFly(LivingEntity entity) {
-        if (entity instanceof FlyingAnimal) {
-            return true;
-        }
-        if (entity.getAttribute(Attributes.FLYING_SPEED) != null) {
-            return true;
-        }
-        if (entity instanceof Mob mob && mob.getMoveControl() instanceof FlyingMoveControl) {
-            return true;
-        }
-        if (entity instanceof Phantom || entity instanceof Vex) {
-            return true;
-        }
-        return noPhysics(entity);
-    }
-
-    public static boolean isAquatic(Entity entity) {
-        return entity.getType().is(EntityTypeTags.AQUATIC);
     }
 
     public static void clearAttachmentData(Mob mob) {

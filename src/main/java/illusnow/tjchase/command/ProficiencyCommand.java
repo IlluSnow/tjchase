@@ -50,7 +50,7 @@ public final class ProficiencyCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         LiteralArgumentBuilder<CommandSourceStack> nodeSet = literal("set");
-        for (ProficiencyMainLevel mainLevel : ProficiencyMainLevel.values()) {
+        for (ProficiencyMainLevel mainLevel : ProficiencyMainLevel.LEVELS) {
             nodeSet = nodeSet.then(literal(mainLevel.getName()).then(subNode(mainLevel)));
         }
         return literal("proficiency")

@@ -17,13 +17,15 @@
 
 package illusnow.tjchase.entity;
 
-import illusnow.tjchase.item.ModItemNames;
-
 public final class ModEntityNames {
+    public static final String BLUEPRINT = "blueprint";
+    public static final String BLUEPRINT_MANAGER = "blueprint_manager";
+    public static final String EVILINIA = "evilinia";
     public static final String HARP_TESTER = "harp_tester";
+    public static final String LINIA = "linia";
     public static final String ORBITING_BLOCK = "orbiting_block";
     public static final String VINE_MANAGER = "vine_manager";
-    public static final String VINE_SEED = ModItemNames.VINE_SEED;
+    public static final String VINE_SEED = "vine_seed";
     public static final String YOGA_BALL = "yoga_ball";
     public static final String ZURI = "zuri";
 

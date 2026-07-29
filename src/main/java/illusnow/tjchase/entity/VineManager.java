@@ -19,6 +19,7 @@ package illusnow.tjchase.entity;
 
 import com.google.common.collect.ImmutableSortedMap;
 import illusnow.tjchase.attachment.ModAttachments;
+import illusnow.tjchase.entity.projectile.VineSeed;
 import illusnow.tjchase.mixin.EntityAccessor;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.tag.ModBlockTags;
@@ -67,7 +68,6 @@ public class VineManager extends DataEntity {
     private SortedMap<Integer, Set<BlockPos>> vineBlocks = new TreeMap<>();
     private Set<BlockPos> actualTopBlocks = new HashSet<>();
     private int maxY;
-    private int minY;
     private int lifetime;
     private int height;
 
@@ -93,7 +93,7 @@ public class VineManager extends DataEntity {
     private void loadData(BlockPos bottomCenter, Direction direction, Map<Integer, Set<BlockPos>> vineBlocks) {
         this.actualTopBlocks = extractTopBlocks(bottomCenter, direction, vineBlocks);
         this.maxY = extractMaxHeight(vineBlocks);
-        this.minY = extractMinHeight(vineBlocks);
+        int minY = extractMinHeight(vineBlocks);
         this.height = maxY - minY + 1;
     }
 

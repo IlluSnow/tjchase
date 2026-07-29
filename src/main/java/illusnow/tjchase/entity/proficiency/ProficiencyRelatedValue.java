@@ -22,11 +22,12 @@ import illusnow.tjchase.entity.proficiency.interpolator.CubicSplineInterpolator;
 import illusnow.tjchase.entity.proficiency.interpolator.Interpolator;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class ProficiencyRelatedValue {
     private final SortedMap<Integer, Interpolator> interpolators;
 
-    ProficiencyRelatedValue(List<Map<ProficiencyLevel, Double>> valueMaps) {
+    ProficiencyRelatedValue(List<Map<ProficiencyLevel, Double>> valueMaps, Function<? super List<Interpolator.DataPair>, ? extends Interpolator> interpolatorFactory) {
         var maps = checkMaps(valueMaps);
         SortedMap<Integer, Interpolator> interpolators = new TreeMap<>();
         for (var entry : maps.entrySet()) {
@@ -44,7 +45,7 @@ public class ProficiencyRelatedValue {
                 double y1 = dataPairs.get(1).y();
                 dataPairs.add(1, new Interpolator.DataPair((x0 + x1) / 2, Math.sqrt(y0 * y1)));
             }
-            Interpolator interpolator = length == 1 ? Interpolator.singleton(dataPairs.get(0).y()) : CubicSplineInterpolator.createClamped(dataPairs);
+            Interpolator interpolator = length == 1 ? Interpolator.singleton(dataPairs.get(0).y()) : interpolatorFactory.apply(dataPairs);
             interpolators.put(totalPoints, interpolator);
         }
         this.interpolators = ImmutableSortedMap.copyOf(interpolators);
@@ -172,7 +173,11 @@ public class ProficiencyRelatedValue {
         }
 
         public ProficiencyRelatedValue build() {
-            return new ProficiencyRelatedValue(valueMap);
+            return build(CubicSplineInterpolator::createClamped);
+        }
+
+        public ProficiencyRelatedValue build(Function<? super List<Interpolator.DataPair>, ? extends Interpolator> interpolatorFactory) {
+            return new ProficiencyRelatedValue(valueMap, interpolatorFactory);
         }
     }
 }

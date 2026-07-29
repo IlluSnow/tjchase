@@ -39,6 +39,16 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
                 .subtitle(ModSoundSubtitles.DANCE_TIME)
                 .with(modSound("entity/" + ModEntityNames.ZURI + "/dance_time")));
 
+        add(ModSoundEvents.BLUEPRINT_FOLD, definition()
+                .subtitle(ModSoundSubtitles.BLUEPRINT_FOLD)
+                .with(modSound("item/%s/fold".formatted(ModItemNames.BLUEPRINT))));
+        add(ModSoundEvents.BLUEPRINT_RELEASE, definition()
+                .subtitle(ModSoundSubtitles.BLUEPRINT_RELEASE)
+                .with(modSound("item/%s/release".formatted(ModItemNames.BLUEPRINT))));
+        add(ModSoundEvents.BLUEPRINT_THROW, definition()
+                .subtitle(ModSoundSubtitles.BLUEPRINT_THROW)
+                .with(modSound("item/%s/fold".formatted(ModItemNames.BLUEPRINT))));
+
         harpAttract(ModSoundEvents.HARP_ATTRACT_BLOCKS, "");
         harpAttract(ModSoundEvents.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_1, "1");
         harpAttract(ModSoundEvents.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_2, "2");
@@ -49,6 +59,7 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
         harpThrow(ModSoundEvents.HARP_THROW_BLOCK_LIGHTWEIGHT_2, "2");
         harpThrow(ModSoundEvents.HARP_THROW_BLOCK_LIGHTWEIGHT_3, "3");
 
+        String catAttack = "tjchase_cat_attack";
         add(ModSoundEvents.VINE_SEED_THROW, definition()
                 .subtitle(ModSoundSubtitles.VINE_SEED_THROW)
                 .with(sound("random/bow")));
@@ -68,26 +79,47 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
                 .with(modSound("entity/%s/yoga_ball_hit1".formatted(ModEntityNames.ZURI)))
                 .with(modSound("entity/%s/yoga_ball_hit2".formatted(ModEntityNames.ZURI)))
                 .with(modSound("entity/%s/yoga_ball_hit3".formatted(ModEntityNames.ZURI))));
-        add(ModSoundEvents.ZURI_AMBIENT, definition()
-                .subtitle(ModSoundSubtitles.ZURI_AMBIENT)
-                .with(modSound("entity/%s/idle1".formatted(ModEntityNames.ZURI)))
-                .with(modSound("entity/%s/idle2".formatted(ModEntityNames.ZURI)))
-                .with(modSound("entity/%s/idle3".formatted(ModEntityNames.ZURI))));
-        add(ModSoundEvents.ZURI_ATTACK, definition()
-                .subtitle(ModSoundSubtitles.ZURI_ATTACK)
-                .with(modSound("entity/tjchase_cat_attack1"))
-                .with(modSound("entity/tjchase_cat_attack2"))
-                .with(modSound("entity/tjchase_cat_attack3")));
-        add(ModSoundEvents.ZURI_HURT, definition()
-                .subtitle(ModSoundSubtitles.ZURI_HURT)
-                .with(modSound("entity/%s/hurt1".formatted(ModEntityNames.ZURI)))
-                .with(modSound("entity/%s/hurt2".formatted(ModEntityNames.ZURI))));
+
+        modIdleSound(ModSoundEvents.ZURI_AMBIENT, ModSoundSubtitles.ZURI_AMBIENT, ModEntityNames.ZURI, 3);
+        modEntitySoundWithType(ModSoundEvents.ZURI_ATTACK, catAttack, ModSoundSubtitles.ZURI_ATTACK, "", 3);
+        modHurtSound(ModSoundEvents.ZURI_HURT, ModSoundSubtitles.ZURI_HURT, ModEntityNames.ZURI, 2);
+
+        modIdleSound(ModSoundEvents.LINIA_AMBIENT, ModSoundSubtitles.LINIA_AMBIENT, ModEntityNames.LINIA, 3);
+        modDeathSound(ModSoundEvents.LINIA_DEATH, ModSoundSubtitles.LINIA_DEATH, ModEntityNames.LINIA, 2);
+        modHurtSound(ModSoundEvents.LINIA_HURT, ModSoundSubtitles.LINIA_HURT, ModEntityNames.LINIA, 2);
+        modIdleSound(ModSoundEvents.EVILINIA_AMBIENT, ModSoundSubtitles.EVILINIA_AMBIENT, ModEntityNames.LINIA, 3);
+        modDeathSound(ModSoundEvents.EVILINIA_DEATH, ModSoundSubtitles.EVILINIA_DEATH, ModEntityNames.LINIA, 2);
+        modHurtSound(ModSoundEvents.EVILINIA_HURT, ModSoundSubtitles.EVILINIA_HURT, ModEntityNames.LINIA, 2);
+
         add(ModSoundEvents.ZURI_THROW_YOGA_BALL, definition()
                 .subtitle(ModSoundSubtitles.ZURI_THROW_YOGA_BALL)
                 .with(modSound("entity/tjchase_throw")));
         add(ModSoundEvents.ZURI_WEAK, definition()
                 .subtitle(ModSoundSubtitles.ZURI_WEAK)
                 .with(modSound("entity/tjchase_cat_weak")));
+    }
+
+    private void modIdleSound(Holder<SoundEvent> sound, String subtitle, String name, int count) {
+        modEntitySoundWithType(sound, "idle", subtitle, name, count);
+    }
+
+    private void modHurtSound(Holder<SoundEvent> sound, String subtitle, String name, int count) {
+        modEntitySoundWithType(sound, "hurt", subtitle, name, count);
+    }
+
+    private void modDeathSound(Holder<SoundEvent> sound, String subtitle, String name, int count) {
+        modEntitySoundWithType(sound, "death", subtitle, name, count);
+    }
+
+    private void modEntitySoundWithType(Holder<SoundEvent> sound, String type, String subtitle, String name, int count) {
+        if (count < 2) {
+            throw new IllegalArgumentException("Count must not be less than 2");
+        }
+        SoundDefinition def = definition().subtitle(subtitle);
+        for (int i = 1; i <= count; i++) {
+            def.with(modSound("entity%s/%s%d".formatted(name.isEmpty() ? "" : "/" + name, type, i)));
+        }
+        add(sound, def);
     }
 
     private void harpAttract(Holder<SoundEvent> sound, String suffix) {

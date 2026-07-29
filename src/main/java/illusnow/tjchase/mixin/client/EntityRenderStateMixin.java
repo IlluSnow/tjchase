@@ -17,16 +17,18 @@
 
 package illusnow.tjchase.mixin.client;
 
-import illusnow.tjchase.client.DanceEffectTypeOperator;
+import illusnow.tjchase.client.RenderStateAdditions;
 import illusnow.tjchase.util.DancingHelper;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(EntityRenderState.class)
-public class EntityRenderStateMixin implements DanceEffectTypeOperator {
+public class EntityRenderStateMixin implements RenderStateAdditions {
     @Unique
     private DancingHelper.DanceEffectType tjChase$danceEffectType = DancingHelper.DanceEffectType.NONE;
+    @Unique
+    private boolean tjChase$insideBlueprint;
 
     @Unique
     @Override
@@ -38,5 +40,17 @@ public class EntityRenderStateMixin implements DanceEffectTypeOperator {
     @Override
     public void tjChase$setDanceEffectType(DancingHelper.DanceEffectType tjChase$danceEffectType) {
         this.tjChase$danceEffectType = tjChase$danceEffectType;
+    }
+
+    @Unique
+    @Override
+    public boolean tjChase$isInsideBlueprint() {
+        return tjChase$insideBlueprint;
+    }
+
+    @Unique
+    @Override
+    public void tjChase$setInsideBlueprint(boolean tjChase$insideBlueprint) {
+        this.tjChase$insideBlueprint = tjChase$insideBlueprint;
     }
 }

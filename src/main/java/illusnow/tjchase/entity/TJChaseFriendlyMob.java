@@ -47,9 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class TJChaseFriendlyMob extends PathfinderMob implements OwnableEntity, TJChaseCharacter {
     protected static final ProficiencyRelatedValue DEFAULT_PROFICIENCY_ATTACK_DAMAGE_MODIFIER = ProficiencyRelatedValue.beginner0(1)
@@ -62,10 +60,13 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
             .whenMaster(3, 2.4)
             .masterCutoff(2, 2.6)
             .whenMaster(2, 3)
-            .masterCutoff(1, 3.2)
+            .masterCutoff(1, 3.4)
             .whenMaster(1, 4)
             .build();
     protected static final ProficiencyRelatedValue DEFAULT_DAMAGE_REDUCTION_PRE = ProficiencyRelatedValue.beginner0(0)
+            .whenReached(ProficiencyMainLevel.APPRENTICE, 0.1)
+            .whenReached(ProficiencyMainLevel.ELITE, 0.2)
+            .whenReached(ProficiencyMainLevel.EXPERT, 0.3)
             .masterCutoff(0.4)
             .whenMaster(0.5)
             .masterCutoff(2, 0.625)
@@ -83,6 +84,27 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
             .whenMaster(2, 15)
             .whenMaster(1, 12)
             .build();
+    private static final Map<ProficiencyMainLevel, Integer> PROFICIENCY_POINTS_MELEE = Map.of(
+            ProficiencyMainLevel.BEGINNER, 8,
+            ProficiencyMainLevel.APPRENTICE, 6,
+            ProficiencyMainLevel.ELITE, 4,
+            ProficiencyMainLevel.EXPERT, 3,
+            ProficiencyMainLevel.MASTER, 0
+    );
+    private static final Map<ProficiencyMainLevel, Float> PROFICIENCY_POINTS_MUL_DAMAGE = Map.of(
+            ProficiencyMainLevel.BEGINNER, 1F,
+            ProficiencyMainLevel.APPRENTICE, 0.9F,
+            ProficiencyMainLevel.ELITE, 0.8F,
+            ProficiencyMainLevel.EXPERT, 0.7F,
+            ProficiencyMainLevel.MASTER, 0.5F
+    );
+    private static final Map<ProficiencyMainLevel, Float> PROFICIENCY_POINTS_MUL_KILL = Map.of(
+            ProficiencyMainLevel.BEGINNER, 1F,
+            ProficiencyMainLevel.APPRENTICE, 1F,
+            ProficiencyMainLevel.ELITE, 0.9F,
+            ProficiencyMainLevel.EXPERT, 0.9F,
+            ProficiencyMainLevel.MASTER, 0.8F
+    );
 
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final String PROFICIENCY_TAG = "Proficiency";
@@ -271,7 +293,12 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
         for (LivingEntity target : targets) {
             hurt |= doHurtTarget((ServerLevel) level(), target);
         }
+        awardMeleeProficiencyPoints(targets);
         return hurt;
+    }
+
+    protected void awardMeleeProficiencyPoints(List<LivingEntity> targets) {
+        addProficiencyPoints(PROFICIENCY_POINTS_MELEE.get(getProficiencyLevel().mainLevel()));
     }
 
     @Override
@@ -348,12 +375,15 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
             return false;
         }
         if (target == getTarget()) {
-            return true;
+            return canAttack(target);
         }
         if (target instanceof Enemy) {
             return canAttack(target);
         }
         LivingEntity owner = getOwner();
+        if (target != owner && target == getLastHurtByMob()) {
+            return super.canAttack(target);
+        }
         if (owner != null && (target == owner.getLastHurtByMob() || target == owner.getLastHurtMob())) {
             return canAttack(target);
         }
@@ -374,6 +404,20 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
             return true;
         }
         return super.considersEntityAsAlly(entity);
+    }
+
+    @Override
+    public void awardDamageProficiencyPoints(LivingEntity entity, float damageDealt) {
+        if (!isOwnedBy(entity)) {
+            TJChaseCharacter.super.awardDamageProficiencyPoints(entity, damageDealt * PROFICIENCY_POINTS_MUL_DAMAGE.get(getProficiencyLevel().mainLevel()));
+        }
+    }
+
+    @Override
+    public void awardKillProficiencyPoints(LivingEntity entity, float maxHealth) {
+        if (!isOwnedBy(entity)) {
+            TJChaseCharacter.super.awardKillProficiencyPoints(entity, maxHealth * PROFICIENCY_POINTS_MUL_KILL.get(getProficiencyLevel().mainLevel()));
+        }
     }
 
     public boolean isOwnedBy(LivingEntity entity) {

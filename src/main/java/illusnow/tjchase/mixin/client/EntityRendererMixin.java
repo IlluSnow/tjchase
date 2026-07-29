@@ -17,11 +17,16 @@
 
 package illusnow.tjchase.mixin.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import illusnow.tjchase.attachment.ModAttachments;
-import illusnow.tjchase.client.DanceEffectTypeOperator;
+import illusnow.tjchase.client.ClientUtils;
+import illusnow.tjchase.client.RenderStateAdditions;
+import illusnow.tjchase.entity.BlueprintManager;
 import illusnow.tjchase.util.DancingHelper;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,6 +38,12 @@ public class EntityRendererMixin<T extends Entity, S extends EntityRenderState> 
     @Inject(method = "extractRenderState", at = @At("TAIL"))
     private void extractDanceEffectType(T entity, S reusedState, float partialTick, CallbackInfo ci) {
         DancingHelper.DanceEffectType danceEffectType = entity.getData(ModAttachments.DANCE_EFFECT_TYPE.get());
-        ((DanceEffectTypeOperator) reusedState).tjChase$setDanceEffectType(danceEffectType);
+        ((RenderStateAdditions) reusedState).tjChase$setDanceEffectType(danceEffectType);
+        ((RenderStateAdditions) reusedState).tjChase$setInsideBlueprint(BlueprintManager.isEntityInsideBlueprint(entity));
+    }
+
+    @Inject(method = "submit", at = @At("TAIL"))
+    private void renderDancingIcon(S renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState, CallbackInfo ci) {
+        ClientUtils.renderDancingIcon(poseStack, nodeCollector, renderState);
     }
 }

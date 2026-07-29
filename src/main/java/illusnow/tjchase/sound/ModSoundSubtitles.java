@@ -20,9 +20,18 @@ package illusnow.tjchase.sound;
 import illusnow.tjchase.TJChase;
 
 public final class ModSoundSubtitles {
+    public static final String BLUEPRINT_FOLD = prefix(ModSoundNames.BLUEPRINT_FOLD);
+    public static final String BLUEPRINT_RELEASE = prefix(ModSoundNames.BLUEPRINT_RELEASE);
+    public static final String BLUEPRINT_THROW = prefix(ModSoundNames.BLUEPRINT_THROW);
     public static final String DANCE_TIME = prefix(ModSoundNames.DANCE_TIME);
+    public static final String EVILINIA_AMBIENT = prefix(ModSoundNames.EVILINIA_AMBIENT);
+    public static final String EVILINIA_DEATH = prefix(ModSoundNames.EVILINIA_DEATH);
+    public static final String EVILINIA_HURT = prefix(ModSoundNames.EVILINIA_HURT);
     public static final String HARP_ATTRACT_BLOCKS = prefix(ModSoundNames.HARP_ATTRACT_BLOCKS);
     public static final String HARP_THROW_BLOCK = prefix(ModSoundNames.HARP_THROW_BLOCK);
+    public static final String LINIA_AMBIENT = prefix(ModSoundNames.LINIA_AMBIENT);
+    public static final String LINIA_DEATH = prefix(ModSoundNames.LINIA_DEATH);
+    public static final String LINIA_HURT = prefix(ModSoundNames.LINIA_HURT);
     public static final String VINE_SEED_THROW = prefix(ModSoundNames.VINE_SEED_THROW);
     public static final String VINE_GROW = prefix(ModSoundNames.VINE_GROW);
     public static final String VINE_HEAL = prefix(ModSoundNames.VINE_HEAL);

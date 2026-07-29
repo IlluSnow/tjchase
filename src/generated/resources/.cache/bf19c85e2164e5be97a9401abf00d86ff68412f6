@@ -1,7 +1,3 @@
-// 1.21.11	2026-05-31T00:03:51.7742333	TJChase Recipes
+// 1.21.11	2026-07-28T19:19:38.9099975	TJChase Recipes
 d722c70e531ac0c05ef9a42af0f45aca40330e29 data/tjchase/advancement/recipes/combat/netherite_harp_smithing.json
-8d2883872d97a9420560ae9e6966773d2a7fa51d data/tjchase/advancement/recipes/misc/vine_seed.json
-0ba78b9dc08029820e5edf13ae54fc1e1fa1d135 data/tjchase/advancement/recipes/misc/vine_seed_economical.json
 740c365f5dc985a245da9ff3b9b26a8ba9d9f667 data/tjchase/recipe/netherite_harp_smithing.json
-9df8779632d37d946cc59f6144ebc74ccd01fc64 data/tjchase/recipe/vine_seed.json
-276fae3fcaef7f51ee00f2770dff08d78edfc759 data/tjchase/recipe/vine_seed_economical.json
