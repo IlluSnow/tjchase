@@ -24,6 +24,7 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.sound.ModSoundEvents;
+import illusnow.tjchase.tag.ModEntityTypeTags;
 import illusnow.tjchase.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -79,7 +80,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Linia extends PathfinderMob implements GeoEntity {
+public class Linia extends PathfinderMob implements GeoEntity, HealthLockable {
     private static final String STORED_ENTITY_TYPE_TAG = "StoredEntityType";
     private static final String ENTITY_DATA_TAG = "AdditionalEntityData";
     private static final String LIFE_TAG = "Life";
@@ -131,8 +132,7 @@ public class Linia extends PathfinderMob implements GeoEntity {
             life--;
             ServerLevel level = (ServerLevel) level();
             if (life == 0) {
-                if (storedEntityType != null && EventHooks.canLivingConvert(this, storedEntityType, timer -> {
-                })) {
+                if (storedEntityType != null && EventHooks.canLivingConvert(this, storedEntityType, timer -> {})) {
                     try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(LOGGER)) {
                         LivingEntity target = getTarget();
                         Mob mob = (Mob) EntityType.loadEntityRecursive(storedEntityType, TagValueInput.create(reporter, level.registryAccess(), tag), level(), EntitySpawnReason.CONVERSION, EntityProcessor.NOP);
@@ -179,6 +179,9 @@ public class Linia extends PathfinderMob implements GeoEntity {
         if (mob.getType().is(Tags.EntityTypes.BOSSES)) {
             return false;
         }
+        if (mob.isInvulnerable() || !mob.attackable()) {
+            return false;
+        }
         if (mob instanceof OwnableEntity ownable && BlueprintManager.getBlueprintOf(ownable.getOwner(), blueprintManager -> blueprintManager.getOwner() == ownable.getOwner()) != null) {
             return false;
         }
@@ -197,8 +200,7 @@ public class Linia extends PathfinderMob implements GeoEntity {
     @Nullable
     public static Linia convert(Mob mob) {
         EntityType<? extends Linia> liniaType = mob instanceof Enemy ? ModEntities.EVILINIA.get() : ModEntities.LINIA.get();
-        if (mob.level().isClientSide() || !EventHooks.canLivingConvert(mob, liniaType, timer -> {
-        })) {
+        if (mob.level().isClientSide() || !EventHooks.canLivingConvert(mob, liniaType, timer -> {})) {
             return null;
         }
         ServerLevel level = (ServerLevel) mob.level();
@@ -240,6 +242,11 @@ public class Linia extends PathfinderMob implements GeoEntity {
 
     protected AttributeInstance getNonnullAttribute(Holder<Attribute> attribute) {
         return Objects.requireNonNull(getAttribute(attribute));
+    }
+
+    @Override
+    public boolean requiresCustomPersistence() {
+        return true;
     }
 
     @Nullable
@@ -450,5 +457,13 @@ public class Linia extends PathfinderMob implements GeoEntity {
     @Override
     protected SoundEvent getDeathSound() {
         return ModSoundEvents.LINIA_DEATH.get();
+    }
+
+    @Override
+    public float getLockedHealth() {
+        if (storedEntityType != null && storedEntityType.is(ModEntityTypeTags.TJCHASE_FRIENDLY_MOBS)) {
+            return TJChaseFriendlyMob.MINIMUM_HEALTH;
+        }
+        return 0;
     }
 }

@@ -47,9 +47,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-public abstract class TJChaseFriendlyMob extends PathfinderMob implements OwnableEntity, TJChaseCharacter {
+public abstract class TJChaseFriendlyMob extends PathfinderMob implements OwnableEntity, TJChaseCharacter, HealthLockable {
     protected static final ProficiencyRelatedValue DEFAULT_PROFICIENCY_ATTACK_DAMAGE_MODIFIER = ProficiencyRelatedValue.beginner0(1)
             .whenReached(ProficiencyMainLevel.APPRENTICE, 1.2)
             .whenReached(ProficiencyMainLevel.ELITE, 1.4)
@@ -120,7 +123,7 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     );
     protected static final int DEFAULT_MELEE_ATTACK_RANGE = 5;
     protected static final int DEFAULT_MAX_WEAK_TICKS = 15;
-    private static final float MINIMUM_HEALTH = 0.001F;
+    protected static final float MINIMUM_HEALTH = 0.001F;
     protected final int maxWeakTicks = initMaxWeakTicks();
 
     protected TJChaseFriendlyMob(EntityType<? extends PathfinderMob> type, Level level) {
@@ -342,6 +345,11 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     }
 
     @Override
+    public boolean requiresCustomPersistence() {
+        return true;
+    }
+
+    @Override
     protected abstract void playAttackSound();
 
     @Nullable
@@ -504,4 +512,14 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     }
 
     protected abstract void onRecovered();
+
+    @Override
+    public float getLockedHealth() {
+        return MINIMUM_HEALTH;
+    }
+
+    @Override
+    public boolean processDamageInEventListeners() {
+        return false;
+    }
 }

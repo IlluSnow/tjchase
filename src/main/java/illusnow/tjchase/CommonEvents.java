@@ -76,7 +76,7 @@ public class CommonEvents {
         Entity entity = event.getEntity();
         if (entity instanceof LivingEntity livingEntity && !entity.level().isClientSide()) {
             AngelTomPassive2Owner.mayUpdate(livingEntity);
-            if (healthLocked((ServerLevel) livingEntity.level(), livingEntity, livingEntity.getMainHandItem(), null)) {
+            if (getLockedHealthFromAngelTomWeapon3((ServerLevel) livingEntity.level(), livingEntity, livingEntity.getMainHandItem()) > 0) {
                 Utils.sendTJChaseBuffParticles(livingEntity, 0.6F, 1, 1);
             }
         }
@@ -206,6 +206,17 @@ public class CommonEvents {
     }
 
     private static float getMinimumHealth(ServerLevel level, LivingEntity entity, ItemStack stack) {
+        float lockedHealthFromAngelTomWeapon3 = getLockedHealthFromAngelTomWeapon3(level, entity, stack);
+        if (lockedHealthFromAngelTomWeapon3 > 0) {
+            return lockedHealthFromAngelTomWeapon3;
+        }
+        if (entity instanceof HealthLockable healthLockable && healthLockable.processDamageInEventListeners()) {
+            return healthLockable.getLockedHealth();
+        }
+        return 0;
+    }
+
+    private static float getLockedHealthFromAngelTomWeapon3(ServerLevel level, LivingEntity entity, ItemStack stack) {
         if (!entity.getData(ModAttachments.ORBITING_BLOCKS).isEmpty()) {
             return Utils.getItemEnchantmentValue(level, stack, 0, ModEnchantmentEffectComponents.MINIMUM_HEALTH_WHEN_BLOCKS_ORBITING.get());
         }
