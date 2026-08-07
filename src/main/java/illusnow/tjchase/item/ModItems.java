@@ -33,17 +33,17 @@ import java.util.function.UnaryOperator;
 
 public final class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(TJChase.MODID);
-    public static final DeferredHolder<Item, BlueprintItem> BLUEPRINT = register(ModItemNames.BLUEPRINT, BlueprintItem::new, UnaryOperator.identity());
+    public static final DeferredHolder<Item, BlueprintItem> BLUEPRINT = register(ModItemNames.BLUEPRINT, BlueprintItem::new, properties -> properties.stacksTo(16).rarity(ModRarities.BLUEPRINT_CUSTOM.getValue()));
     public static final DeferredHolder<Item, EntityDebugStickItem> ENTITY_DEBUG_STICK = register(ModItemNames.ENTITY_DEBUG_STICK, EntityDebugStickItem::new,
             properties -> properties.stacksTo(1)
                     .rarity(Rarity.EPIC)
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
     public static final DeferredHolder<Item, HarpItem> HARP = ITEMS.register(ModItemNames.HARP, () ->
-            new HarpItem(new Item.Properties().setId(createItemId(ModItemNames.HARP)).durability(HarpConstants.DURABILITY).enchantable(HarpConstants.ENCHANTMENT_VALUE).repairable(ItemTags.GOLD_TOOL_MATERIALS),
+            new HarpItem(new Item.Properties().setId(createItemId(ModItemNames.HARP)).rarity(ModRarities.HARP_CUSTOM.getValue()).durability(HarpConstants.DURABILITY).enchantable(HarpConstants.ENCHANTMENT_VALUE).repairable(ItemTags.GOLD_TOOL_MATERIALS),
                     HarpConstants.BASE_ORBITING_BLOCK_COUNT,
                     0));
     public static final DeferredHolder<Item, HarpItem> NETHERITE_HARP = ITEMS.register(ModItemNames.NETHERITE_HARP, () ->
-            new HarpItem(new Item.Properties().setId(createItemId(ModItemNames.NETHERITE_HARP)).fireResistant().durability(HarpConstants.DURABILITY_NETHERITE).enchantable(HarpConstants.ENCHANTMENT_VALUE_NETHERITE).repairable(ItemTags.NETHERITE_TOOL_MATERIALS),
+            new HarpItem(new Item.Properties().setId(createItemId(ModItemNames.NETHERITE_HARP)).fireResistant().rarity(ModRarities.NETHERITE_HARP_CUSTOM.getValue()).durability(HarpConstants.DURABILITY_NETHERITE).enchantable(HarpConstants.ENCHANTMENT_VALUE_NETHERITE).repairable(ItemTags.NETHERITE_TOOL_MATERIALS),
                     HarpConstants.BASE_ORBITING_BLOCK_COUNT + HarpConstants.ORBITING_BLOCK_COUNT_NETHERITE_BONUS,
                     HarpConstants.ORBITING_BLOCK_DAMAGE_NETHERITE_BONUS));
     public static final DeferredHolder<Item, HarpTesterItem> HARP_TESTER = register(ModItemNames.HARP_TESTER, HarpTesterItem::new,
@@ -53,7 +53,7 @@ public final class ModItems {
     public static final DeferredHolder<Item, ProficiencyStickItem> PROFICIENCY_STICK = register(ModItemNames.PROFICIENCY_STICK, ProficiencyStickItem::new,
             properties -> properties.stacksTo(1)
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
-    public static final DeferredHolder<Item, Item> VINE_SEED = register(ModItemNames.VINE_SEED, VineSeedItem::new, UnaryOperator.identity());
+    public static final DeferredHolder<Item, Item> VINE_SEED = register(ModItemNames.VINE_SEED, VineSeedItem::new, properties -> properties.stacksTo(16).rarity(ModRarities.VINE_SEED_CUSTOM.getValue()));
 
     private ModItems() {}
 

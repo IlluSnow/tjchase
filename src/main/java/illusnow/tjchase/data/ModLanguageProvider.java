@@ -127,8 +127,8 @@ public final class ModLanguageProvider {
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "Entity Debug Stick");
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
-            add(ModItems.HARP.get(), "Harp");
-            add(ModItems.NETHERITE_HARP.get(), "Netherite Harp");
+            add(ModItems.HARP.get(), "Angel Tom's Harp");
+            add(ModItems.NETHERITE_HARP.get(), "Angel Tom's Netherite Harp");
             add(ModItems.PROFICIENCY_STICK.get(), "Proficiency Stick");
             add(ModItems.VINE_SEED.get(), "Robin Hood Tuffy's Bean");
             add(EntityDebugStickItem.KILL, "Killed %s");
@@ -258,8 +258,8 @@ public final class ModLanguageProvider {
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "实体调试棒");
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");
-            add(ModItems.HARP.get(), "竖琴");
-            add(ModItems.NETHERITE_HARP.get(), "下界合金竖琴");
+            add(ModItems.HARP.get(), "天使汤姆的竖琴");
+            add(ModItems.NETHERITE_HARP.get(), "天使汤姆的下界合金竖琴");
             add(ModItems.PROFICIENCY_STICK.get(), "专精度设置棒");
             add(ModItems.VINE_SEED.get(), "罗宾汉泰菲的藤蔓种子");
             add(EntityDebugStickItem.KILL, "杀死了%s");

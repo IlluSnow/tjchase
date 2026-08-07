@@ -20,7 +20,7 @@ package illusnow.tjchase.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import illusnow.tjchase.TJChase;
-import illusnow.tjchase.client.renderer.ModRenderTypes;
+import illusnow.tjchase.client.ClientUtils;
 import illusnow.tjchase.entity.BlueprintManager;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -46,18 +46,52 @@ public class BlueprintManagerRenderer extends EntityRenderer<BlueprintManager, B
 
     @Override
     public void submit(BlueprintManagerRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (ClientUtils.isRenderingShadowPass()) {
+            return;
+        }
+
         AABB blueprintAABB = renderState.getBlueprintAABB();
-        double minX = (renderState.x - cameraRenderState.pos.x) + (blueprintAABB.minX - renderState.x);
-        double minY = (renderState.y - cameraRenderState.pos.y) + (blueprintAABB.minY - renderState.y);
-        double minZ = (renderState.z - cameraRenderState.pos.z) + (blueprintAABB.minZ - renderState.z);
-        double maxX = (renderState.x - cameraRenderState.pos.x) + (blueprintAABB.maxX - renderState.x);
-        double maxY = (renderState.y - cameraRenderState.pos.y) + (blueprintAABB.maxY - renderState.y);
-        double maxZ = (renderState.z - cameraRenderState.pos.z) + (blueprintAABB.maxZ - renderState.z);
+        double minX = blueprintAABB.minX - cameraRenderState.pos.x;
+        double minY = blueprintAABB.minY - cameraRenderState.pos.y;
+        double minZ = blueprintAABB.minZ - cameraRenderState.pos.z;
+        double maxX = blueprintAABB.maxX - cameraRenderState.pos.x;
+        double maxY = blueprintAABB.maxY - cameraRenderState.pos.y;
+        double maxZ = blueprintAABB.maxZ - cameraRenderState.pos.z;
         double xLen = maxX - minX;
         double yLen = maxY - minY;
         double zLen = maxZ - minZ;
 
         poseStack.pushPose();
+        drawSurfaces(renderState, poseStack, nodeCollector, (float) minX, (float) minY, (float) minZ, (float) maxZ, (float) maxX, (float) maxY, (float) xLen, (float) zLen, (float) yLen);
+        drawEdges(renderState, poseStack, nodeCollector, minX, minY, minZ, maxZ, maxX, maxY);
+        poseStack.popPose();
+        super.submit(renderState, poseStack, nodeCollector, cameraRenderState);
+    }
+
+    private void drawSurfaces(BlueprintManagerRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, float minX, float minY, float minZ, float maxZ, float maxX, float maxY, float xLen, float zLen, float yLen) {
+        nodeCollector.submitCustomGeometry(
+                poseStack,
+                RenderTypes.entityNoOutline(TEXTURE),
+                (pose, consumer) -> {
+                    float x1 = minX, y1 = minY, z1 = minZ;
+                    float x2 = minX, y2 = minY, z2 = maxZ;
+                    float x3 = maxX, y3 = minY, z3 = maxZ;
+                    float x4 = maxX, y4 = minY, z4 = minZ;
+                    float x5 = minX, y5 = maxY, z5 = minZ;
+                    float x6 = minX, y6 = maxY, z6 = maxZ;
+                    float x7 = maxX, y7 = maxY, z7 = maxZ;
+                    float x8 = maxX, y8 = maxY, z8 = minZ;
+                    drawQuad(consumer, renderState, x2, y2, z2, x1, y1, z1, x4, y4, z4, x3, y3, z3, xLen, zLen);
+                    drawQuad(consumer, renderState, x5, y5, z5, x6, y6, z6, x7, y7, z7, x8, y8, z8, xLen, zLen);
+                    drawQuad(consumer, renderState, x5, y5, z5, x1, y1, z1, x2, y2, z2, x6, y6, z6, zLen, yLen);
+                    drawQuad(consumer, renderState, x7, y7, z7, x3, y3, z3, x4, y4, z4, x8, y8, z8, zLen, yLen);
+                    drawQuad(consumer, renderState, x8, y8, z8, x4, y4, z4, x1, y1, z1, x5, y5, z5, xLen, yLen);
+                    drawQuad(consumer, renderState, x6, y6, z6, x2, y2, z2, x3, y3, z3, x7, y7, z7, xLen, yLen);
+                }
+        );
+    }
+
+    private void drawEdges(BlueprintManagerRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, double minX, double minY, double minZ, double maxZ, double maxX, double maxY) {
         nodeCollector.submitCustomGeometry(
                 poseStack,
                 RenderTypes.lines(),
@@ -80,39 +114,20 @@ public class BlueprintManagerRenderer extends EntityRenderer<BlueprintManager, B
                     drawEdge(pose, consumer, renderState, maxX + d, maxY + d, minZ - d, maxX + d, maxY + d, maxZ + d);
                 }
         );
-        nodeCollector.submitCustomGeometry(
-                poseStack,
-                ModRenderTypes.blueprint(TEXTURE),
-                (pose, consumer) -> {
-                    float x1 = (float) minX, y1 = (float) minY, z1 = (float) minZ;
-                    float x2 = (float) minX, y2 = (float) minY, z2 = (float) maxZ;
-                    float x3 = (float) maxX, y3 = (float) minY, z3 = (float) maxZ;
-                    float x4 = (float) maxX, y4 = (float) minY, z4 = (float) minZ;
-                    float x5 = (float) minX, y5 = (float) maxY, z5 = (float) minZ;
-                    float x6 = (float) minX, y6 = (float) maxY, z6 = (float) maxZ;
-                    float x7 = (float) maxX, y7 = (float) maxY, z7 = (float) maxZ;
-                    float x8 = (float) maxX, y8 = (float) maxY, z8 = (float) minZ;
-                    drawQuad(consumer, renderState, x2, y2, z2, x1, y1, z1, x4, y4, z4, x3, y3, z3, (float) xLen, (float) zLen);
-                    drawQuad(consumer, renderState, x5, y5, z5, x6, y6, z6, x7, y7, z7, x8, y8, z8, (float) xLen, (float) zLen);
-                    drawQuad(consumer, renderState, x5, y5, z5, x1, y1, z1, x2, y2, z2, x6, y6, z6, (float) zLen, (float) yLen);
-                    drawQuad(consumer, renderState, x7, y7, z7, x3, y3, z3, x4, y4, z4, x8, y8, z8, (float) zLen, (float) yLen);
-                    drawQuad(consumer, renderState, x8, y8, z8, x4, y4, z4, x1, y1, z1, x5, y5, z5, (float) xLen, (float) yLen);
-                    drawQuad(consumer, renderState, x6, y6, z6, x2, y2, z2, x3, y3, z3, x7, y7, z7, (float) xLen, (float) yLen);
-                }
-        );
-        poseStack.popPose();
-        super.submit(renderState, poseStack, nodeCollector, cameraRenderState);
     }
 
     private void drawEdge(PoseStack.Pose pose, VertexConsumer consumer, BlueprintManagerRenderState renderState, double x1, double y1, double z1, double x2, double y2, double z2) {
         Vector3f normal = new Vector3f((float) (x2 - x1), (float) (y2 - y1), (float) (z2 - z1)).normalize();
-        double distance1 = Math.sqrt(x1 * x1 + y1 * y1 + z1 * z1);
-        double distance2 = Math.sqrt(x2 * x2 + y2 * y2 + z2 * z2);
-        double referenceDistance = 10;
-        float calculatedWidth1 = (float) (4.0 * (referenceDistance / distance1));
-        float calculatedWidth2 = (float) (4.0 * (referenceDistance / distance2));
-        float finalLineWidth1 = Math.max(1.0f, Math.min(12.0f, calculatedWidth1)) * 1.5F;
-        float finalLineWidth2 = Math.max(1.0f, Math.min(12.0f, calculatedWidth2)) * 1.5F;
+        double avgX = (x1 + x2) / 2;
+        double avgY = (y1 + y2) / 2;
+        double avgZ = (z1 + z2) / 2;
+        double distance1 = Math.sqrt(avgX * avgX + avgY * avgY + avgZ * avgZ);
+        double distance2 = Math.sqrt(avgX * avgX + avgY * avgY + avgZ * avgZ);
+        double referenceDistance = 8;
+        float calculatedWidth1 = (float) (14 * (referenceDistance / distance1));
+        float calculatedWidth2 = (float) (14 * (referenceDistance / distance2));
+        float finalLineWidth1 = Math.max(1.5F, Math.min(14, calculatedWidth1));
+        float finalLineWidth2 = Math.max(1.5F, Math.min(14, calculatedWidth2));
         consumer.addVertex((float) x1, (float) y1, (float) z1).setColor(1, 1, 1, renderState.getLineAlpha()).setLineWidth(finalLineWidth1).setNormal(pose, normal);
         consumer.addVertex((float) x2, (float) y2, (float) z2).setColor(1, 1, 1, renderState.getLineAlpha()).setLineWidth(finalLineWidth2).setNormal(pose, normal);
     }

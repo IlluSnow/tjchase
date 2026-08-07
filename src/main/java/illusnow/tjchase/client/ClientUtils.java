@@ -67,4 +67,14 @@ public final class ClientUtils {
                 .setLight(renderState.lightCoords)
                 .setNormal(pose, 0, 1, 0);
     }
+
+    public static boolean isRenderingShadowPass() {
+        try {
+            Class<?> apiClass = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
+            Object apiInstance = apiClass.getMethod("getInstance").invoke(null);
+            return (boolean) apiClass.getMethod("isRenderingShadowPass").invoke(apiInstance);
+        } catch (Throwable ignored) {
+            return false;
+        }
+    }
 }
