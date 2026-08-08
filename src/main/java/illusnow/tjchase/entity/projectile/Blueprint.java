@@ -59,6 +59,9 @@ public class Blueprint extends ThrowableItemProjectile {
         if (!level().isClientSide()) {
             double delta = 0.01;
             Vec3 location = result.getLocation();
+            if (result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity().onGround()) {
+                location = entityHitResult.getEntity().position();
+            }
             double minY = location.y + delta;
             double maxY = minY + HEIGHT;
             double minX = location.x - WIDTH / 2;

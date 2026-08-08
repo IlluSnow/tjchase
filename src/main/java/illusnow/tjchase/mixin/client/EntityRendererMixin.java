@@ -21,7 +21,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.client.ClientUtils;
 import illusnow.tjchase.client.RenderStateAdditions;
-import illusnow.tjchase.entity.BlueprintManager;
 import illusnow.tjchase.util.DancingHelper;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -36,10 +35,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(EntityRenderer.class)
 public class EntityRendererMixin<T extends Entity, S extends EntityRenderState> {
     @Inject(method = "extractRenderState", at = @At("TAIL"))
-    private void extractDanceEffectType(T entity, S reusedState, float partialTick, CallbackInfo ci) {
+    private void extractAdditionalRenderState(T entity, S reusedState, float partialTick, CallbackInfo ci) {
         DancingHelper.DanceEffectType danceEffectType = entity.getData(ModAttachments.DANCE_EFFECT_TYPE.get());
         ((RenderStateAdditions) reusedState).tjChase$setDanceEffectType(danceEffectType);
-        ((RenderStateAdditions) reusedState).tjChase$setInsideBlueprint(BlueprintManager.isEntityInsideBlueprint(entity));
     }
 
     @Inject(method = "submit", at = @At("TAIL"))

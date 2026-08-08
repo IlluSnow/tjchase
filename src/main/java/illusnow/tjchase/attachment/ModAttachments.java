@@ -25,6 +25,7 @@ import illusnow.tjchase.entity.Zuri;
 import illusnow.tjchase.util.AngelTomPassive2Tracker;
 import illusnow.tjchase.util.DancingHelper;
 import illusnow.tjchase.util.OrbitingBlockHolder;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -54,6 +55,10 @@ public final class ModAttachments {
             AttachmentType.<Optional<EntityReference<Zuri>>>builder(Optional::empty).serialize(optionalSerializer(EntityReference.codec())).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<DancingHelper.DanceEffectType>> DANCE_EFFECT_TYPE = ATTACHMENT_TYPES.register(ModAttachmentNames.DANCE_EFFECT_TYPE, () ->
             AttachmentType.builder(holder -> DancingHelper.DanceEffectType.NONE).serialize(DancingHelper.DanceEffectType.MAP_CODEC).sync(DancingHelper.DanceEffectType.STREAM_CODEC).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Boolean>> POSITIVE_EFFECT_BLUEPRINT = ATTACHMENT_TYPES.register(ModAttachmentNames.POSITIVE_EFFECT_BLUEPRINT, () ->
+            AttachmentType.builder(holder -> false).serialize(Codec.BOOL.fieldOf(ModAttachmentNames.POSITIVE_EFFECT_BLUEPRINT)).sync(ByteBufCodecs.BOOL).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Boolean>> NEGATIVE_EFFECT_BLUEPRINT = ATTACHMENT_TYPES.register(ModAttachmentNames.NEGATIVE_EFFECT_BLUEPRINT, () ->
+            AttachmentType.builder(holder -> false).serialize(Codec.BOOL.fieldOf(ModAttachmentNames.NEGATIVE_EFFECT_BLUEPRINT)).sync(ByteBufCodecs.BOOL).build());
 
     private ModAttachments() {}
 

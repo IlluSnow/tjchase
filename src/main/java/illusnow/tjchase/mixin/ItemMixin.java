@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class ItemMixin {
     @WrapOperation(method = "getUseDuration", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/Consumable;consumeTicks()I"))
     private int modifyConsumeTicks(Consumable instance, Operation<Integer> original, @Local(argsOnly = true) LivingEntity entity) {
-        if (entity instanceof Player player && BlueprintManager.getBlueprintOf(player, blueprintManager -> blueprintManager.getOwner() == player) != null) {
+        if (entity instanceof Player player && BlueprintManager.isEntityInsideOwnedBlueprint(player)) {
             return original.call(instance) / BlueprintManager.CONSUME_TICKS_DIVISOR;
         }
         return original.call(instance);

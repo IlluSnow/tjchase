@@ -18,16 +18,9 @@
 package illusnow.tjchase.client;
 
 import illusnow.tjchase.util.DancingHelper;
-import org.spongepowered.asm.mixin.Unique;
 
 public interface RenderStateAdditions {
     DancingHelper.DanceEffectType tjChase$getDanceEffectType();
 
     void tjChase$setDanceEffectType(DancingHelper.DanceEffectType tjChase$danceEffectType);
-
-    @Unique
-    boolean tjChase$isInsideBlueprint();
-
-    @Unique
-    void tjChase$setInsideBlueprint(boolean tjChase$insideBlueprint);
 }

@@ -20,16 +20,14 @@ package illusnow.tjchase.entity;
 import com.google.common.base.Predicates;
 import com.google.common.primitives.Ints;
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.Utils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityReference;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -41,10 +39,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 
 public class BlueprintManager extends DataEntity implements TraceableEntity {
@@ -69,7 +65,6 @@ public class BlueprintManager extends DataEntity implements TraceableEntity {
     public static final double MAX_LENGTH_ALLOWED = 30;
     @Nullable
     private EntityReference<Player> owner;
-    private final Set<Player> playersInside = new HashSet<>();
     private int life;
 
     public BlueprintManager(EntityType<?> entityType, Level level) {
@@ -77,32 +72,71 @@ public class BlueprintManager extends DataEntity implements TraceableEntity {
     }
 
     public static boolean isEntityInsideBlueprint(@Nullable Entity entity) {
-        return getBlueprintOf(entity) != null;
+        return !getAllBlueprintsOf(entity).isEmpty();
     }
 
-    @Nullable
-    public static BlueprintManager getBlueprintOf(@Nullable Entity entity) {
-        return getBlueprintOf(entity, Predicates.alwaysTrue());
+    public static boolean isEntityInsideOwnedBlueprint(@Nullable Entity entity) {
+        return getBlueprintOf(entity, blueprintManager -> blueprintManager.getOwner() == entity) != null;
+    }
+
+    public static List<BlueprintManager> getAllBlueprintsOf(@Nullable Entity entity) {
+        return getBlueprintsOf(entity, Predicates.alwaysTrue());
+    }
+
+    public static List<BlueprintManager> getBlueprintsOf(@Nullable Entity entity, Predicate<? super BlueprintManager> condition) {
+        List<BlueprintManager> blueprintManagers = new ArrayList<>();
+        if (entity != null) {
+            for (BlueprintManager manager : getNearbyBlueprints(entity.level(), entity.getBoundingBox().inflate(BlueprintManager.MAX_LENGTH_ALLOWED))) {
+                if (manager.isEntityInside(entity) && manager.isValid() && condition.test(manager)) {
+                    blueprintManagers.add(manager);
+                }
+            }
+        }
+        return blueprintManagers;
     }
 
     @Nullable
     public static BlueprintManager getBlueprintOf(@Nullable Entity entity, Predicate<? super BlueprintManager> condition) {
-        if (entity != null) {
-            for (BlueprintManager manager : getNearbyBlueprints(entity.level(), entity.getBoundingBox().inflate(BlueprintManager.MAX_LENGTH_ALLOWED))) {
-                if (manager.isEntityInside(entity) && manager.isValid() && condition.test(manager)) {
-                    return manager;
-                }
-            }
-        }
-        return null;
+        List<BlueprintManager> blueprints = getBlueprintsOf(entity, condition);
+        return blueprints.isEmpty() ? null : blueprints.getFirst();
     }
 
     public static List<BlueprintManager> getNearbyBlueprints(Level level, AABB range) {
         return level.getEntitiesOfClass(BlueprintManager.class, range);
     }
 
+    public static void updateBlueprintData(LivingEntity livingEntity) {
+        List<BlueprintManager> blueprints = getAllBlueprintsOf(livingEntity);
+        boolean insideOwnedBlueprint = blueprints.stream().anyMatch(blueprintManager -> blueprintManager.getOwner() == livingEntity);
+        if (!blueprints.isEmpty()) {
+            mobInsideBlueprint(livingEntity, insideOwnedBlueprint);
+        }
+        boolean hadNegativeEffect = livingEntity.getData(ModAttachments.NEGATIVE_EFFECT_BLUEPRINT);
+        boolean hadPositiveEffect = livingEntity.getData(ModAttachments.POSITIVE_EFFECT_BLUEPRINT);
+        boolean shouldHavePositiveEffect = insideOwnedBlueprint;
+        boolean shouldHaveNegativeEffect = !blueprints.isEmpty() && !insideOwnedBlueprint;
+        livingEntity.setData(ModAttachments.NEGATIVE_EFFECT_BLUEPRINT, shouldHaveNegativeEffect);
+        livingEntity.setData(ModAttachments.POSITIVE_EFFECT_BLUEPRINT, shouldHavePositiveEffect);
+        if (hadNegativeEffect && !shouldHaveNegativeEffect) {
+            mobLeaves(livingEntity, false, true);
+        }
+        if (hadPositiveEffect && !shouldHavePositiveEffect) {
+            mobLeaves(livingEntity, true, false);
+        }
+        if (!hadNegativeEffect && shouldHaveNegativeEffect) {
+            mobEnters(livingEntity, false, true);
+        }
+        if (!hadPositiveEffect && shouldHavePositiveEffect) {
+            mobEnters(livingEntity, true, false);
+        }
+    }
+
     public <T extends Entity> List<T> getEntitiesInsideOfClass(Class<T> type) {
-        return level().getEntitiesOfClass(type, getBlueprintAABB());
+        return level().getEntitiesOfClass(type, getBlueprintAABB(), entity -> entity.isAlive() && !entity.isSpectator());
+    }
+
+    private boolean outsideOtherBlueprints(Entity entity) {
+        return getBlueprintOf(entity, blueprintManager -> blueprintManager != this) == null;
     }
 
     @Override
@@ -111,16 +145,11 @@ public class BlueprintManager extends DataEntity implements TraceableEntity {
         if (!level().isClientSide()) {
             if (getConstructTime() > CONSTRUCT_TIME_LINE + CONSTRUCT_TIME_MAIN) {
                 if (life > 0) {
-                    Set<Player> actualPlayersInside = new HashSet<>(getEntitiesInsideOfClass(Player.class));
-                    updatePlayersInside(actualPlayersInside);
-                    actualPlayersInside.forEach(this::playerInside);
                     life--;
                 }
                 if (life <= 0) {
                     if (life == 0) {
                         resetDisappearTimestamp();
-                        playersInside.forEach(this::playerLeaves);
-                        playersInside.clear();
                         playSound(ModSoundEvents.BLUEPRINT_FOLD.get());
                         life = -1;
                     }
@@ -134,52 +163,36 @@ public class BlueprintManager extends DataEntity implements TraceableEntity {
         }
     }
 
-    private void updatePlayersInside(Set<Player> actualPlayersInside) {
-        for (Iterator<Player> iterator = playersInside.iterator(); iterator.hasNext(); ) {
-            Player originalPlayer = iterator.next();
-            if (!actualPlayersInside.contains(originalPlayer)) {
-                iterator.remove();
-                playerLeaves(originalPlayer);
-            }
-        }
-        for (Player newPlayer : actualPlayersInside) {
-            if (!playersInside.contains(newPlayer)) {
-                playersInside.add(newPlayer);
-                playerEnters(newPlayer);
+    public static void mobInsideBlueprint(LivingEntity entity, boolean positiveEffects) {
+        if (positiveEffects) {
+            Utils.sendTJChaseBuffParticles(entity, 0.6F, 0.8F, 1);
+            if (entity.tickCount % HEAL_INTERVAL == 0) {
+                entity.heal(1);
             }
         }
     }
 
-    private void playerInside(Player player) {
-        if (player == getOwner()) {
-            Utils.sendTJChaseBuffParticles(player, 0.6F, 0.8F, 1);
-            if (player.tickCount % HEAL_INTERVAL == 0) {
-                player.heal(1);
+    public static void mobLeaves(LivingEntity entity, boolean removePositiveEffects, boolean removeNegativeEffects) {
+        if (removePositiveEffects) {
+            AttributeInstance speed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (speed != null && speed.hasModifier(SPEED_MODIFIER_OWNER_INSIDE_ID)) {
+                speed.removeModifier(SPEED_MODIFIER_OWNER_INSIDE);
             }
+        }
+        if (removeNegativeEffects) {
+            // Currently unused
         }
     }
 
-    private void playerLeaves(Player player) {
-        if (player == getOwner()) {
-            if (getNearbyBlueprints(player.level(), player.getBoundingBox().inflate(BlueprintManager.MAX_LENGTH_ALLOWED))
-                    .stream()
-                    .filter(BlueprintManager::isValid)
-                    .filter(blueprintManager -> blueprintManager != this && blueprintManager.isEntityInside(player))
-                    .noneMatch(blueprintManager -> blueprintManager.getOwner() == player)) {
-                AttributeInstance speed = player.getAttribute(Attributes.MOVEMENT_SPEED);
-                if (speed != null && speed.hasModifier(SPEED_MODIFIER_OWNER_INSIDE_ID)) {
-                    speed.removeModifier(SPEED_MODIFIER_OWNER_INSIDE);
-                }
-            }
-        }
-    }
-
-    private void playerEnters(Player player) {
-        if (player == getOwner()) {
-            AttributeInstance speed = player.getAttribute(Attributes.MOVEMENT_SPEED);
+    public static void mobEnters(LivingEntity entity, boolean addPositiveEffects, boolean addNegativeEffects) {
+        if (addPositiveEffects) {
+            AttributeInstance speed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
             if (speed != null && !speed.hasModifier(SPEED_MODIFIER_OWNER_INSIDE_ID)) {
                 speed.addTransientModifier(SPEED_MODIFIER_OWNER_INSIDE);
             }
+        }
+        if (addNegativeEffects) {
+            // Currently unused
         }
     }
 

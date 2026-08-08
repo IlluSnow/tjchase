@@ -23,7 +23,9 @@ public final class ModAttachmentNames {
     public static final String DANCE_EFFECT_TYPE = "dance_effect_type";
     public static final String DANCING_WITH = "dancing_with";
     public static final String HARP_TESTER = "harp_tester";
+    public static final String NEGATIVE_EFFECT_BLUEPRINT = "negative_effect_blueprint";
     public static final String ORBITING_BLOCKS = "orbiting_blocks";
+    public static final String POSITIVE_EFFECT_BLUEPRINT = "positive_effect_blueprint";
     public static final String VINE_CD = "vine_cd";
 
     private ModAttachmentNames() {}

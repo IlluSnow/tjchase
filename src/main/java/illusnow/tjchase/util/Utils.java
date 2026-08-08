@@ -21,6 +21,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import illusnow.tjchase.particle.ModParticleTypes;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -45,9 +47,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.jetbrains.annotations.Nullable;
 
@@ -177,5 +181,19 @@ public final class Utils {
 
     public static boolean isAquatic(Entity entity) {
         return entity.getType().is(EntityTypeTags.AQUATIC);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static Vec3 tryMoveDownToGround(Level level, Vec3 pos, int maxTries) {
+        BlockPos.MutableBlockPos blockPos = BlockPos.containing(pos).mutable();
+        int tries = 0;
+        while (!level.getBlockState(blockPos.below()).isSolid()) {
+            blockPos.move(Direction.DOWN);
+            tries++;
+            if (tries > maxTries) {
+                return pos;
+            }
+        }
+        return new Vec3(pos.x, blockPos.getY(), pos.z);
     }
 }

@@ -42,15 +42,4 @@ public class EntityRenderStateMixin implements RenderStateAdditions {
         this.tjChase$danceEffectType = tjChase$danceEffectType;
     }
 
-    @Unique
-    @Override
-    public boolean tjChase$isInsideBlueprint() {
-        return tjChase$insideBlueprint;
-    }
-
-    @Unique
-    @Override
-    public void tjChase$setInsideBlueprint(boolean tjChase$insideBlueprint) {
-        this.tjChase$insideBlueprint = tjChase$insideBlueprint;
-    }
 }

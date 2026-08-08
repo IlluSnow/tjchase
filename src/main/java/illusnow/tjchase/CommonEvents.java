@@ -79,6 +79,7 @@ public class CommonEvents {
             if (getLockedHealthFromAngelTomWeapon3((ServerLevel) livingEntity.level(), livingEntity, livingEntity.getMainHandItem()) > 0) {
                 Utils.sendTJChaseBuffParticles(livingEntity, 0.6F, 1, 1);
             }
+            BlueprintManager.updateBlueprintData(livingEntity);
         }
     }
 
@@ -98,7 +99,7 @@ public class CommonEvents {
 
     private static void handleBlueprintDamageReduction(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
-            if (BlueprintManager.getBlueprintOf(player, blueprintManager -> blueprintManager.getOwner() == player) != null) {
+            if (BlueprintManager.isEntityInsideOwnedBlueprint(player)) {
                 if (!event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)
                         && !event.getSource().is(DamageTypeTags.BYPASSES_EFFECTS)
                         && !event.getSource().is(DamageTypeTags.BYPASSES_RESISTANCE)){

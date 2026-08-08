@@ -27,7 +27,6 @@ import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.tag.ModEntityTypeTags;
 import illusnow.tjchase.util.Utils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -142,9 +141,10 @@ public class Linia extends PathfinderMob implements GeoEntity, HealthLockable {
                             mob.setHealth(getHealth());
                             mob.setAbsorptionAmount(getAbsorptionAmount());
                             mob.setData(ModAttachments.BLUEPRINT_CONVERSION_IMMUNE_TICKS.get(), level().getGameTime() + IMMUNE_TICKS);
+                            BlueprintManager.updateBlueprintData(mob);
                             EventHooks.onLivingConvert(this, mob);
                             if (!Utils.canFly(mob)) {
-                                mob.snapTo(tryMoveDownToGround(mob, mob.position(), 12));
+                                mob.snapTo(Utils.tryMoveDownToGround(mob.level(), mob.position(), 12));
                             }
                             if (level().addFreshEntity(mob)) {
                                 discard();
@@ -156,20 +156,6 @@ public class Linia extends PathfinderMob implements GeoEntity, HealthLockable {
                 }
             }
         }
-    }
-
-    @SuppressWarnings("deprecation")
-    private Vec3 tryMoveDownToGround(Mob mob, Vec3 pos, int maxTries) {
-        BlockPos.MutableBlockPos blockPos = BlockPos.containing(pos).mutable();
-        int tries = 0;
-        while (!level().getBlockState(blockPos.below()).isSolid()) {
-            blockPos.move(Direction.DOWN);
-            tries++;
-            if (tries > maxTries) {
-                return pos;
-            }
-        }
-        return new Vec3(pos.x, blockPos.getY(), pos.z);
     }
 
     public static boolean isConvertible(Mob mob) {
