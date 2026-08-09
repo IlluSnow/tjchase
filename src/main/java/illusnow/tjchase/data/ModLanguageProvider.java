@@ -123,7 +123,7 @@ public final class ModLanguageProvider {
             add(ModEntities.ORBITING_BLOCK.get(), "Flying Block");
             add(ModEntities.YOGA_BALL.get(), "Yoga Ball");
             add(ModEntities.ZURI.get(), "Zuri");
-            add(ModCreativeModeTabs.RANDOM_CREATIONS_TAB_ID, "TJChase");
+            add(ModCreativeModeTabs.TAB_ID, "TJChase");
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "Entity Debug Stick");
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
@@ -254,7 +254,7 @@ public final class ModLanguageProvider {
             add(ModEntities.ORBITING_BLOCK.get(), "飞行的方块");
             add(ModEntities.YOGA_BALL.get(), "瑜伽球");
             add(ModEntities.ZURI.get(), "苏蕊");
-            add(ModCreativeModeTabs.RANDOM_CREATIONS_TAB_ID, "猫鼠");
+            add(ModCreativeModeTabs.TAB_ID, "猫鼠");
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "实体调试棒");
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");

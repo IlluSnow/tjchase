@@ -37,19 +37,19 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class Blueprint extends ThrowableItemProjectile {
+public class ThrownBlueprint extends ThrowableItemProjectile {
     private static final double HEIGHT = 8;
     private static final double WIDTH = 12;
 
-    public Blueprint(EntityType<? extends ThrowableItemProjectile> type, Level level) {
+    public ThrownBlueprint(EntityType<? extends ThrowableItemProjectile> type, Level level) {
         super(type, level);
     }
 
-    public Blueprint(Level level, double x, double y, double z, ItemStack item) {
+    public ThrownBlueprint(Level level, double x, double y, double z, ItemStack item) {
         super(ModEntities.BLUEPRINT.get(), x, y, z, level, item);
     }
 
-    public Blueprint(Level level, LivingEntity owner, ItemStack item) {
+    public ThrownBlueprint(Level level, LivingEntity owner, ItemStack item) {
         super(ModEntities.BLUEPRINT.get(), owner, level, item);
     }
 

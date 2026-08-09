@@ -18,7 +18,7 @@
 package illusnow.tjchase.entity;
 
 import illusnow.tjchase.TJChase;
-import illusnow.tjchase.entity.projectile.Blueprint;
+import illusnow.tjchase.entity.projectile.ThrownBlueprint;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.entity.projectile.VineSeed;
 import illusnow.tjchase.entity.projectile.YogaBall;
@@ -33,8 +33,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, TJChase.MODID);
-    public static final DeferredHolder<EntityType<?>, EntityType<Blueprint>> BLUEPRINT = register(ModEntityNames.BLUEPRINT,
-            EntityType.Builder.<Blueprint>of(Blueprint::new, MobCategory.MISC).noLootTable().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<ThrownBlueprint>> BLUEPRINT = register(ModEntityNames.BLUEPRINT,
+            EntityType.Builder.<ThrownBlueprint>of(ThrownBlueprint::new, MobCategory.MISC).noLootTable().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<BlueprintManager>> BLUEPRINT_MANAGER = register(ModEntityNames.BLUEPRINT_MANAGER,
             EntityType.Builder.of(BlueprintManager::new, MobCategory.MISC).noLootTable().noSummon().sized(0, 0).clientTrackingRange(8).updateInterval(20));
     public static final DeferredHolder<EntityType<?>, EntityType<Evilinia>> EVILINIA = register(ModEntityNames.EVILINIA,

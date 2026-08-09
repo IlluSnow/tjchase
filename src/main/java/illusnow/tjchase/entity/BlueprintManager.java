@@ -108,13 +108,10 @@ public class BlueprintManager extends DataEntity implements TraceableEntity {
     public static void updateBlueprintData(LivingEntity livingEntity) {
         List<BlueprintManager> blueprints = getAllBlueprintsOf(livingEntity);
         boolean insideOwnedBlueprint = blueprints.stream().anyMatch(blueprintManager -> blueprintManager.getOwner() == livingEntity);
-        if (!blueprints.isEmpty()) {
-            mobInsideBlueprint(livingEntity, insideOwnedBlueprint);
-        }
         boolean hadNegativeEffect = livingEntity.getData(ModAttachments.NEGATIVE_EFFECT_BLUEPRINT);
         boolean hadPositiveEffect = livingEntity.getData(ModAttachments.POSITIVE_EFFECT_BLUEPRINT);
         boolean shouldHavePositiveEffect = insideOwnedBlueprint;
-        boolean shouldHaveNegativeEffect = !blueprints.isEmpty() && !insideOwnedBlueprint;
+        boolean shouldHaveNegativeEffect = !blueprints.isEmpty() && blueprints.stream().anyMatch(blueprintManager -> blueprintManager.getOwner() != livingEntity);
         livingEntity.setData(ModAttachments.NEGATIVE_EFFECT_BLUEPRINT, shouldHaveNegativeEffect);
         livingEntity.setData(ModAttachments.POSITIVE_EFFECT_BLUEPRINT, shouldHavePositiveEffect);
         if (hadNegativeEffect && !shouldHaveNegativeEffect) {
@@ -129,14 +126,9 @@ public class BlueprintManager extends DataEntity implements TraceableEntity {
         if (!hadPositiveEffect && shouldHavePositiveEffect) {
             mobEnters(livingEntity, true, false);
         }
-    }
-
-    public <T extends Entity> List<T> getEntitiesInsideOfClass(Class<T> type) {
-        return level().getEntitiesOfClass(type, getBlueprintAABB(), entity -> entity.isAlive() && !entity.isSpectator());
-    }
-
-    private boolean outsideOtherBlueprints(Entity entity) {
-        return getBlueprintOf(entity, blueprintManager -> blueprintManager != this) == null;
+        if (!blueprints.isEmpty()) {
+            mobInsideBlueprint(livingEntity, shouldHavePositiveEffect);
+        }
     }
 
     @Override

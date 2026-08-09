@@ -17,7 +17,7 @@
 
 package illusnow.tjchase.item;
 
-import illusnow.tjchase.entity.projectile.Blueprint;
+import illusnow.tjchase.entity.projectile.ThrownBlueprint;
 import illusnow.tjchase.sound.ModSoundEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -34,12 +34,12 @@ public class BlueprintItem extends TJChaseProjectileItem {
 
     @Override
     protected Projectile createProjectileFromPos(Level level, double x, double y, double z, ItemStack stack) {
-        return new Blueprint(level, x, y, z, stack);
+        return new ThrownBlueprint(level, x, y, z, stack);
     }
 
     @Override
     protected Projectile createProjectileFromOwner(ServerLevel level, LivingEntity owner, ItemStack stack) {
-        return new Blueprint(level, owner, stack);
+        return new ThrownBlueprint(level, owner, stack);
     }
 
     @Override

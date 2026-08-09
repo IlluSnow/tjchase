@@ -39,7 +39,7 @@ public final class ModClientPayloadHandlers {
                 if (!zuri.isSilent()) {
                     SoundEngine.PlayResult playResult = minecraft.getSoundManager().play(new DanceTimeSoundInstance(zuri));
                     if (playResult != SoundEngine.PlayResult.STARTED) {
-                        LOGGER.warn("Not played: {}", playResult);
+                        LOGGER.warn("Zuri was found, but Dance Time was not played normally: {}", playResult);
                     }
                 }
             }

@@ -330,7 +330,7 @@ public class Linia extends PathfinderMob implements GeoEntity, HealthLockable {
     protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {}
 
     public boolean isPassive() {
-        return true;
+        return storedEntityType == null || storedEntityType.getCategory() != MobCategory.MONSTER;
     }
 
     Optional<LivingEntity> getHurtByIfNotPassive() {

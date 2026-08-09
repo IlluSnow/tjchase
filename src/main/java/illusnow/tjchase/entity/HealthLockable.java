@@ -20,10 +20,6 @@ package illusnow.tjchase.entity;
 public interface HealthLockable {
     float getLockedHealth();
 
-    default boolean deathImmune() {
-        return getLockedHealth() > 0;
-    }
-
     default boolean processDamageInEventListeners() {
         return true;
     }
