@@ -36,6 +36,7 @@ public final class ModSoundNames {
     public static final String HARP_THROW_BLOCK_LIGHTWEIGHT_1 = HARP_THROW_BLOCK + "_lightweight_1";
     public static final String HARP_THROW_BLOCK_LIGHTWEIGHT_2 = HARP_THROW_BLOCK + "_lightweight_2";
     public static final String HARP_THROW_BLOCK_LIGHTWEIGHT_3 = HARP_THROW_BLOCK + "_lightweight_3";
+    public static final String REMOTE_CONTROL_PRESS = ModItemNames.REMOTE_CONTROL + "_press";
     public static final String VINE_SEED_THROW = ModEntityNames.VINE_SEED + "_throw";
     public static final String LINIA_AMBIENT = ModEntityNames.LINIA + "_ambient";
     public static final String LINIA_DEATH = ModEntityNames.LINIA + "_death";

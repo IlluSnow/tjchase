@@ -31,20 +31,31 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import software.bernie.geckolib.animatable.GeoItem;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class ModModelProvider extends ModelProvider {
     public static final String CUTOUT = Identifier.DEFAULT_NAMESPACE + ":" + "cutout";
 
     public ModModelProvider(PackOutput output) {
         super(output, TJChase.MODID);
+    }
+
+    @Override
+    protected Stream<? extends Holder<Item>> getKnownItems() {
+        return BuiltInRegistries.ITEM.listElements()
+                .filter(item -> !(item.value() instanceof GeoItem))
+                .filter(id -> id.getKey() != null && id.getKey().identifier().getNamespace().equals(modId));
     }
 
     @Override

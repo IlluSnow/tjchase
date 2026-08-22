@@ -24,6 +24,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -41,6 +42,8 @@ public final class ModEntityDataSerializers {
             = ENTITY_DATA_SERIALIZERS.register("orbiting_block_entity_properties", () -> EntityDataSerializer.forValueType(OrbitingBlockEntity.Properties.STREAM_CODEC));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Optional<EntityReference<Entity>>>> OPTIONAL_ENTITY_REFERENCE
             = ENTITY_DATA_SERIALIZERS.register("optional_entity_reference", () -> EntityDataSerializer.forValueType(EntityReference.<Entity>streamCodec().apply(ByteBufCodecs::optional)));
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Optional<EntityReference<Player>>>> OPTIONAL_PLAYER_REFERENCE
+            = ENTITY_DATA_SERIALIZERS.register("optional_player_reference", () -> EntityDataSerializer.forValueType(EntityReference.<Player>streamCodec().apply(ByteBufCodecs::optional)));
 
     private ModEntityDataSerializers() {}
 }

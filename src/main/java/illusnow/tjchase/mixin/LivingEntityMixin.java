@@ -17,9 +17,11 @@
 
 package illusnow.tjchase.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import illusnow.tjchase.entity.VineManager;
+import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.tag.ModBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -87,5 +89,13 @@ public abstract class LivingEntityMixin extends Entity {
             return false;
         }
         return lastClimbablePos.map(level()::getBlockState).filter(state -> state.is(ModBlockTags.SPEED_BOOSTING_VINE)).isPresent();
+    }
+
+    @WrapMethod(method = "lerpHeadTo")
+    private void cancelLerp(float yaw, int pitch, Operation<Void> original) {
+        if (this instanceof Controllable controllable && !controllable.canMoveFreely()) {
+            return;
+        }
+        original.call(yaw, pitch);
     }
 }

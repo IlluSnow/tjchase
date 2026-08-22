@@ -17,7 +17,11 @@
 
 package illusnow.tjchase.entity;
 
+import com.google.common.base.Predicates;
 import com.mojang.logging.LogUtils;
+import illusnow.tjchase.entity.controllable.Controllable;
+import illusnow.tjchase.entity.controllable.WrappedLookControl;
+import illusnow.tjchase.entity.controllable.WrappedMoveControl;
 import illusnow.tjchase.entity.proficiency.ProficiencyLevel;
 import illusnow.tjchase.entity.proficiency.ProficiencyMainLevel;
 import illusnow.tjchase.entity.proficiency.ProficiencyRelatedValue;
@@ -26,6 +30,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
@@ -35,6 +40,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -52,7 +58,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class TJChaseFriendlyMob extends PathfinderMob implements OwnableEntity, TJChaseCharacter, HealthLockable {
+public abstract class TJChaseFriendlyMob extends PathfinderMob implements OwnableEntity, TJChaseCharacter, HealthLockable, Controllable {
     protected static final ProficiencyRelatedValue DEFAULT_PROFICIENCY_ATTACK_DAMAGE_MODIFIER = ProficiencyRelatedValue.beginner0(1)
             .whenReached(ProficiencyMainLevel.APPRENTICE, 1.2)
             .whenReached(ProficiencyMainLevel.ELITE, 1.4)
@@ -113,7 +119,7 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     private static final String PROFICIENCY_TAG = "Proficiency";
     private static final String WEAK_TAG = "Weak";
     private static final String RECOVER_TICKS_TAG = "RecoverTicks";
-    private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> DATA_OWNER_UUID = SynchedEntityData.defineId(
+    private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> DATA_OWNER_REF = SynchedEntityData.defineId(
             TJChaseFriendlyMob.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE
     );
     private static final EntityDataAccessor<Integer> DATA_PROFICIENCY_POINTS = SynchedEntityData.defineId(TJChaseFriendlyMob.class, EntityDataSerializers.INT);
@@ -121,14 +127,18 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     private static final EntityDataAccessor<Boolean> DATA_WEAK = SynchedEntityData.defineId(
             TJChaseFriendlyMob.class, EntityDataSerializers.BOOLEAN
     );
+    private static final EntityDataAccessor<Optional<EntityReference<Player>>> DATA_CONTROLLER_REF = SynchedEntityData.defineId(TJChaseFriendlyMob.class, ModEntityDataSerializers.OPTIONAL_PLAYER_REFERENCE.get());
     protected static final int DEFAULT_MELEE_ATTACK_RANGE = 5;
     protected static final int DEFAULT_MAX_WEAK_TICKS = 15;
     protected static final float MINIMUM_HEALTH = 0.001F;
     protected final int maxWeakTicks = initMaxWeakTicks();
+    private boolean reloadedControlledEntity;
 
     protected TJChaseFriendlyMob(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
         setPersistenceRequired();
+        moveControl = new WrappedMoveControl(this, this::canMoveFreely);
+        lookControl = new WrappedLookControl(this, this::canMoveFreely);
     }
 
     protected int initMaxWeakTicks() {
@@ -169,10 +179,11 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_OWNER_UUID, Optional.empty());
+        builder.define(DATA_OWNER_REF, Optional.empty());
         builder.define(DATA_PROFICIENCY_POINTS, 0);
         builder.define(DATA_WEAK, false);
         builder.define(DATA_RECOVER_TICKS, -1);
+        builder.define(DATA_CONTROLLER_REF, Optional.empty());
     }
 
     protected int getRecoverTicks() {
@@ -196,15 +207,53 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     @Nullable
     @Override
     public EntityReference<LivingEntity> getOwnerReference() {
-        return entityData.get(DATA_OWNER_UUID).orElse(null);
+        return entityData.get(DATA_OWNER_REF).orElse(null);
     }
 
     public void setOwner(@Nullable LivingEntity owner) {
-        this.entityData.set(DATA_OWNER_UUID, Optional.ofNullable(owner).map(EntityReference::of));
+        this.entityData.set(DATA_OWNER_REF, Optional.ofNullable(owner).map(EntityReference::of));
     }
 
     public void setOwnerReference(@Nullable EntityReference<LivingEntity> ownerReference) {
-        entityData.set(DATA_OWNER_UUID, Optional.ofNullable(ownerReference));
+        entityData.set(DATA_OWNER_REF, Optional.ofNullable(ownerReference));
+    }
+
+    @Nullable
+    @Override
+    public EntityReference<Player> getControllerRef() {
+        return entityData.get(DATA_CONTROLLER_REF).orElse(null);
+    }
+
+    @Override
+    public void setControllerRef(@Nullable EntityReference<Player> controllerRef) {
+        entityData.set(DATA_CONTROLLER_REF, Optional.ofNullable(controllerRef));
+    }
+
+    @Override
+    public void startBeingControlled(ServerPlayer controller) {
+        Controllable.super.startBeingControlled(controller);
+        disableMovementRelatedControlFlags();
+        goalSelector.removeAllGoals(Predicates.alwaysTrue());
+        targetSelector.removeAllGoals(Predicates.alwaysTrue());
+    }
+
+    private void disableMovementRelatedControlFlags() {
+        goalSelector.disableControlFlag(Goal.Flag.MOVE);
+        goalSelector.disableControlFlag(Goal.Flag.LOOK);
+        goalSelector.disableControlFlag(Goal.Flag.JUMP);
+    }
+
+    @Override
+    public void stopBeingControlled(ServerPlayer player) {
+        Controllable.super.stopBeingControlled(player);
+        enableMovementRelatedControlFlags();
+        registerGoals();
+    }
+
+    private void enableMovementRelatedControlFlags() {
+        goalSelector.enableControlFlag(Goal.Flag.MOVE);
+        goalSelector.enableControlFlag(Goal.Flag.LOOK);
+        goalSelector.enableControlFlag(Goal.Flag.JUMP);
     }
 
     @Override
@@ -238,11 +287,30 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     }
 
     @Override
+    public boolean canStartToBeControlledBy(Player player) {
+        return !isWeak() && Controllable.super.canStartToBeControlledBy(player);
+    }
+
+    @Override
+    public boolean canContinueToBeControlledBy(@org.jetbrains.annotations.Nullable Player player) {
+        return !isWeak() && Controllable.super.canContinueToBeControlledBy(player);
+    }
+
+    @Override
     protected void updateControlFlags() {
         super.updateControlFlags();
         goalSelector.setControlFlag(Goal.Flag.MOVE, !isWeak());
         goalSelector.setControlFlag(Goal.Flag.JUMP, !isWeak());
         goalSelector.setControlFlag(Goal.Flag.LOOK, !isWeak());
+    }
+
+    @Override
+    protected void tickHeadTurn(float yBodyRot) {
+        if (canMoveFreely()) {
+            super.tickHeadTurn(yBodyRot);
+        } else {
+            handleBodyRotationIfBeingControlled(yBodyRot, getMaxHeadRotationRelativeToBody());
+        }
     }
 
     @Override
@@ -257,7 +325,7 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
 
     @Override
     public boolean fireImmune() {
-        return super.fireImmune() || hasSuperArmor();
+        return super.fireImmune() || hasSuperArmor() || isWeak();
     }
 
     public boolean meleeAttack(LivingEntity attackTarget, double attackRange) {
@@ -436,29 +504,39 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
-        EntityReference<LivingEntity> ownerRef = this.getOwnerReference();
+        EntityReference<LivingEntity> ownerRef = getOwnerReference();
         EntityReference.store(ownerRef, output, "Owner");
         output.putInt(PROFICIENCY_TAG, getProficiencyPoints());
         output.putBoolean(WEAK_TAG, isWeak());
         output.putInt(RECOVER_TICKS_TAG, getRecoverTicks());
+        EntityReference.store(getControllerRef(), output, "Controller");
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
-        EntityReference<LivingEntity> ownerRef = EntityReference.readWithOldOwnerConversion(input, "Owner", level());
+        loadEntity(input, "Owner", DATA_OWNER_REF);
+        loadEntity(input, "Controller", DATA_CONTROLLER_REF);
+        entityData.set(DATA_PROFICIENCY_POINTS, input.getIntOr(PROFICIENCY_TAG, 0));
+        setWeak(input.getBooleanOr(WEAK_TAG, false), true);
+        setRecoverTicks(input.getIntOr(RECOVER_TICKS_TAG, -1));
+        if (getControllerRef() != null) {
+            disableMovementRelatedControlFlags();
+            removeAllGoals(Predicates.alwaysTrue());
+        }
+    }
+
+    private <T extends LivingEntity> void loadEntity(ValueInput input, String tagName, EntityDataAccessor<Optional<EntityReference<T>>> data) {
+        EntityReference<T> ownerRef = EntityReference.readWithOldOwnerConversion(input, tagName, level());
         if (ownerRef != null) {
             try {
-                entityData.set(DATA_OWNER_UUID, Optional.of(ownerRef));
+                entityData.set(data, Optional.of(ownerRef));
             } catch (Throwable throwable) {
                 LOGGER.error("Failed to read owner of {}:", getDisplayName(), throwable);
             }
         } else {
-            entityData.set(DATA_OWNER_UUID, Optional.empty());
+            entityData.set(data, Optional.empty());
         }
-        entityData.set(DATA_PROFICIENCY_POINTS, input.getIntOr(PROFICIENCY_TAG, 0));
-        setWeak(input.getBooleanOr(WEAK_TAG, false), true);
-        setRecoverTicks(input.getIntOr(RECOVER_TICKS_TAG, -1));
     }
 
     public float getMeleeAttackDamage() {

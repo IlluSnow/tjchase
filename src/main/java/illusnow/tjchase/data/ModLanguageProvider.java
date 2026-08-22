@@ -130,6 +130,7 @@ public final class ModLanguageProvider {
             add(ModItems.HARP.get(), "Angel Tom's Harp");
             add(ModItems.NETHERITE_HARP.get(), "Angel Tom's Netherite Harp");
             add(ModItems.PROFICIENCY_STICK.get(), "Proficiency Stick");
+            add(ModItems.REMOTE_CONTROL.get(), "Remote Control");
             add(ModItems.VINE_SEED.get(), "Robin Hood Tuffy's Bean");
             add(EntityDebugStickItem.KILL, "Killed %s");
             add(EntityDebugStickItem.REMOVE, "Removed %s");
@@ -161,6 +162,7 @@ public final class ModLanguageProvider {
             add(ModSoundSubtitles.LINIA_AMBIENT, "Linia screams");
             add(ModSoundSubtitles.LINIA_DEATH, "Linia dies");
             add(ModSoundSubtitles.LINIA_HURT, "Linia hurts");
+            add(ModSoundSubtitles.REMOTE_CONTROL_PRESS, "Remote Control's button pressed");
             add(ModSoundSubtitles.VINE_GROW, "Beanstalk grows");
             add(ModSoundSubtitles.VINE_SEED_THROW, "Bean flies");
             add(ModSoundSubtitles.VINE_HEAL, "Bean heals");
@@ -261,6 +263,7 @@ public final class ModLanguageProvider {
             add(ModItems.HARP.get(), "天使汤姆的竖琴");
             add(ModItems.NETHERITE_HARP.get(), "天使汤姆的下界合金竖琴");
             add(ModItems.PROFICIENCY_STICK.get(), "专精度设置棒");
+            add(ModItems.REMOTE_CONTROL.get(), "遥控器");
             add(ModItems.VINE_SEED.get(), "罗宾汉泰菲的藤蔓种子");
             add(EntityDebugStickItem.KILL, "杀死了%s");
             add(EntityDebugStickItem.REMOVE, "移除了%s");
@@ -292,6 +295,7 @@ public final class ModLanguageProvider {
             add(ModSoundSubtitles.LINIA_AMBIENT, "线灵：尖叫");
             add(ModSoundSubtitles.LINIA_DEATH, "线灵：死亡");
             add(ModSoundSubtitles.LINIA_HURT, "线灵：受伤");
+            add(ModSoundSubtitles.REMOTE_CONTROL_PRESS, "遥控器按钮：按下");
             add(ModSoundSubtitles.VINE_GROW, "藤蔓：生长");
             add(ModSoundSubtitles.VINE_HEAL, "藤蔓：治疗");
             add(ModSoundSubtitles.VINE_SEED_THROW, "藤蔓种子：飞出");

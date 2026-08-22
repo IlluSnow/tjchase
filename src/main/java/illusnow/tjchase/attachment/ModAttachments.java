@@ -22,6 +22,7 @@ import com.mojang.serialization.Codec;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.entity.HarpTester;
 import illusnow.tjchase.entity.Zuri;
+import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.util.AngelTomPassive2Tracker;
 import illusnow.tjchase.util.DancingHelper;
 import illusnow.tjchase.util.OrbitingBlockHolder;
@@ -45,6 +46,8 @@ public final class ModAttachments {
             AttachmentType.builder(AngelTomPassive2Tracker::createDefault).serialize(AngelTomPassive2Tracker.MAP_CODEC).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> BLUEPRINT_CONVERSION_IMMUNE_TICKS = ATTACHMENT_TYPES.register(ModAttachmentNames.BLUEPRINT_CONVERSION_IMMUNE_TICKS, () ->
             AttachmentType.builder(() -> 0L).serialize(Codec.LONG.fieldOf(ModAttachmentNames.BLUEPRINT_CONVERSION_IMMUNE_TICKS)).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Controllable.Holder>> CONTROLLING_ENTITY = ATTACHMENT_TYPES.register(ModAttachmentNames.CONTROLLING_ENTITY, () ->
+            AttachmentType.builder(() -> Controllable.Holder.EMPTY).serialize(Controllable.Holder.Serializer.INSTANCE).sync(Controllable.Holder.Syncer.INSTANCE).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<OrbitingBlockHolder>> ORBITING_BLOCKS = ATTACHMENT_TYPES.register(ModAttachmentNames.ORBITING_BLOCKS, () ->
             AttachmentType.builder(OrbitingBlockHolder::emptyHolder).serialize(OrbitingBlockHolder.Serializer.INSTANCE).sync(OrbitingBlockHolder.STREAM_CODEC).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> VINE_CD = ATTACHMENT_TYPES.register(ModAttachmentNames.VINE_CD, () ->

@@ -63,6 +63,9 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
         add(ModSoundEvents.VINE_SEED_THROW, definition()
                 .subtitle(ModSoundSubtitles.VINE_SEED_THROW)
                 .with(sound("random/bow")));
+        add(ModSoundEvents.REMOTE_CONTROL_PRESS, definition()
+                .subtitle(ModSoundSubtitles.REMOTE_CONTROL_PRESS)
+                .with(modSound("item/%s/press".formatted(ModItemNames.REMOTE_CONTROL))));
         add(ModSoundEvents.VINE_GROW, definition()
                 .subtitle(ModSoundSubtitles.VINE_GROW)
                 .with(modSound("item/%s/grow1".formatted(ModItemNames.VINE_SEED)))

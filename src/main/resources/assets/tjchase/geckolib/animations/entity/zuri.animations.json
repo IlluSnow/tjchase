@@ -1774,6 +1774,11 @@
 						"vector": [0, 0, "(math.cos(query.life_time * 103.2) * 2.865) + 2.865"]
 					}
 				},
+				"head": {
+					"rotation": {
+						"vector": ["query.head_x_rotation", "query.head_y_rotation", 0]
+					}
+				},
 				"tail1": {
 					"rotation": {
 						"0.0": {
@@ -1910,6 +1915,11 @@
 							},
 							"lerp_mode": "catmullrom"
 						}
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": ["query.head_x_rotation", "query.head_y_rotation", 0]
 					}
 				},
 				"tail1": {

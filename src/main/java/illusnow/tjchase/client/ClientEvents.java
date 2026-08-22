@@ -22,16 +22,28 @@ import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
 import illusnow.tjchase.client.util.OrbitingBlocksRenderHelper;
 import illusnow.tjchase.entity.BlueprintManager;
 import illusnow.tjchase.entity.Zuri;
+import illusnow.tjchase.entity.controllable.Controllable;
+import illusnow.tjchase.entity.controllable.ControllableMovementHandler;
+import illusnow.tjchase.mixin.client.ClientInputAccessor;
+import illusnow.tjchase.network.UpdateInputPayload;
+import illusnow.tjchase.util.OriginalInputAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Input;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ExtractLevelRenderStateEvent;
+import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.Objects;
@@ -56,12 +68,21 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Post event) {
-        if (event.getEntity() instanceof Zuri zuri && zuri.level().isClientSide() && zuri.isDancing() && zuri.tickCount == 1) {
-            zuriClientFirstTick(zuri);
+        Entity entity = event.getEntity();
+        if (entity.level().isClientSide() && entity.tickCount == 1) {
+            if (entity instanceof Zuri zuri && zuri.isDancing()) {
+                tryPlayDanceTimeFirstTick(zuri);
+            }
+            if (entity instanceof Controllable controllable && controllable.isControllingPlayerValid()) {
+                Player controller = controllable.getPlayerController();
+                if (Objects.requireNonNull(controller).isLocalPlayer()) {
+                    Minecraft.getInstance().setCameraEntity(entity);
+                }
+            }
         }
     }
 
-    private static void zuriClientFirstTick(Zuri zuri) {
+    private static void tryPlayDanceTimeFirstTick(Zuri zuri) {
         if (!zuri.isSilent()) {
             Minecraft.getInstance().getSoundManager().play(new DanceTimeSoundInstance(zuri));
         }
@@ -85,6 +106,22 @@ public class ClientEvents {
         if (isPlayerInBlueprint()) {
             event.setNearPlaneDistance(Math.min(event.getNearPlaneDistance(), -10));
             event.setFarPlaneDistance(Math.min(event.getFarPlaneDistance(), 20));
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onMovementInputFirstlyUpdate(MovementInputUpdateEvent event) {
+        ((OriginalInputAccessor) event.getInput()).tjChase$setOriginalInput(event.getInput().keyPresses);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onMovementInputUpdate(MovementInputUpdateEvent event) {
+        Controllable controlling = Controllable.getControllingMob(event.getEntity());
+        if (controlling != null) {
+            ControllableMovementHandler.updateControlledMobMovement(controlling, event.getEntity(), event.getInput().keyPresses);
+            ClientPacketDistributor.sendToServer(new UpdateInputPayload(controlling.getSelfAsEntity().getId(), event.getInput().keyPresses));
+            event.getInput().keyPresses = Input.EMPTY;
+            ((ClientInputAccessor) event.getInput()).setMoveVector(Vec2.ZERO);
         }
     }
 

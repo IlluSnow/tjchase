@@ -8,14 +8,23 @@
     "EntityAccessor",
     "EntityMixin",
     "ItemMixin",
+    "LivingEntityAccessor",
     "LivingEntityMixin",
+    "LookControlAccessor",
     "MobMixin"
   ],
   "client": [
+    "ClientInputMixin",
+    "client.AbstractClientPlayerMixin",
     "client.BlockRenderDispatcherAccessor",
+    "client.ClientInputAccessor",
+    "client.ClientPacketListenerMixin",
     "client.EntityRendererMixin",
     "client.EntityRenderStateMixin",
-    "client.ItemInHandRendererAccessor"
+    "client.GameRendererMixin",
+    "client.ItemInHandRendererAccessor",
+    "client.LocalPlayerMixin",
+    "client.MouseHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

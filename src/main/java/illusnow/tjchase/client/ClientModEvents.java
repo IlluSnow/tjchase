@@ -29,6 +29,7 @@ import illusnow.tjchase.client.util.HarpAnimation;
 import illusnow.tjchase.item.HarpItem;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.network.PlayDanceTimePayload;
+import illusnow.tjchase.network.UpdateControlledEntityPayload;
 import illusnow.tjchase.particle.ModParticleTypes;
 import illusnow.tjchase.tag.ModItemTags;
 import net.minecraft.client.Minecraft;
@@ -61,10 +62,14 @@ public class ClientModEvents {
     public static void onClientSetup(FMLClientSetupEvent event) {}
 
     @SubscribeEvent // on the mod event bus only on the physical client
-    public static void register(RegisterClientPayloadHandlersEvent event) {
+    public static void registerClientPayloadHandlers(RegisterClientPayloadHandlersEvent event) {
         event.register(
                 PlayDanceTimePayload.TYPE,
                 ModClientPayloadHandlers::handlePlayDanceTime
+        );
+        event.register(
+                UpdateControlledEntityPayload.TYPE,
+                ModClientPayloadHandlers::handleUpdateControlledEntity
         );
     }
 

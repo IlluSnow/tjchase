@@ -20,6 +20,7 @@ package illusnow.tjchase;
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.command.TJChaseCommand;
 import illusnow.tjchase.entity.*;
+import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.entity.projectile.YogaBall;
 import illusnow.tjchase.item.HarpItem;
@@ -69,6 +70,9 @@ public class CommonEvents {
         Player player = event.getEntity();
         // Does not need to sync here because the event is fired on both sides
         player.getData(ModAttachments.ORBITING_BLOCKS.get()).update();
+        if (!player.level().isClientSide()) {
+            Controllable.checkCanContinueToControl(player);
+        }
     }
 
     @SubscribeEvent
@@ -199,6 +203,9 @@ public class CommonEvents {
     public static void onLivingDeath(LivingDeathEvent event) {
         if (event.getSource().getEntity() instanceof TJChaseCharacter tjc) {
             tjc.awardKillProficiencyPoints(event.getEntity(), event.getEntity().getMaxHealth());
+        }
+        if (event.getEntity() instanceof Player player && !player.level().isClientSide()) {
+            Controllable.control(player, null);
         }
     }
 

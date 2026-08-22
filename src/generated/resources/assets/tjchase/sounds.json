@@ -115,6 +115,12 @@
     ],
     "subtitle": "subtitles.tjchase.linia_hurt"
   },
+  "remote_control_press": {
+    "sounds": [
+      "tjchase:item/remote_control/press"
+    ],
+    "subtitle": "subtitles.tjchase.remote_control_press"
+  },
   "vine_grow": {
     "sounds": [
       "tjchase:item/vine_seed/grow1",

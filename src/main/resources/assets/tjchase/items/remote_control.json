@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "tjchase:item/remote_control",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

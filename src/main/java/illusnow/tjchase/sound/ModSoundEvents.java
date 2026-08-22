@@ -44,6 +44,7 @@ public final class ModSoundEvents {
     public static final DeferredHolder<SoundEvent, SoundEvent> LINIA_AMBIENT = register(ModSoundNames.LINIA_AMBIENT);
     public static final DeferredHolder<SoundEvent, SoundEvent> LINIA_DEATH = register(ModSoundNames.LINIA_DEATH);
     public static final DeferredHolder<SoundEvent, SoundEvent> LINIA_HURT = register(ModSoundNames.LINIA_HURT);
+    public static final DeferredHolder<SoundEvent, SoundEvent> REMOTE_CONTROL_PRESS = register(ModSoundNames.REMOTE_CONTROL_PRESS);
     public static final DeferredHolder<SoundEvent, SoundEvent> VINE_SEED_THROW = register(ModSoundNames.VINE_SEED_THROW);
     public static final DeferredHolder<SoundEvent, SoundEvent> VINE_GROW = register(ModSoundNames.VINE_GROW);
     public static final DeferredHolder<SoundEvent, SoundEvent> VINE_HEAL = register(ModSoundNames.VINE_HEAL);

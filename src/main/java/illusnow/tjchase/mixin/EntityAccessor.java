@@ -25,4 +25,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface EntityAccessor {
     @Invoker
     boolean callIsAffectedByBlocks();
+
+    @Invoker
+    float callGetBlockJumpFactor();
 }

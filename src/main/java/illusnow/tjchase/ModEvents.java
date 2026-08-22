@@ -19,7 +19,7 @@ package illusnow.tjchase;
 
 import illusnow.tjchase.item.ModCreativeModeTabs;
 import illusnow.tjchase.item.ModItems;
-import illusnow.tjchase.network.PlayDanceTimePayload;
+import illusnow.tjchase.network.*;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -35,6 +35,20 @@ public class ModEvents {
                 PlayDanceTimePayload.TYPE,
                 PlayDanceTimePayload.STREAM_CODEC
         );
+        registrar.playToClient(
+                UpdateControlledEntityPayload.TYPE,
+                UpdateControlledEntityPayload.STREAM_CODEC
+        );
+        registrar.playToServer(
+                UpdateInputPayload.TYPE,
+                UpdateInputPayload.STREAM_CODEC,
+                ModServerPayloadHandlers::handleUpdateInput
+        );
+        registrar.playToServer(
+                UpdateControlledEntityRotationPayload.TYPE,
+                UpdateControlledEntityRotationPayload.STREAM_CODEC,
+                ModServerPayloadHandlers::handleUpdateControlledEntityRotation
+        );
     }
 
     @SubscribeEvent
@@ -44,6 +58,7 @@ public class ModEvents {
             event.accept(ModItems.HARP.get());
             event.accept(ModItems.NETHERITE_HARP.get());
             event.accept(ModItems.VINE_SEED.get());
+            event.accept(ModItems.REMOTE_CONTROL.get());
         }
     }
 }

@@ -212,8 +212,11 @@ public class Zuri extends TJChaseFriendlyMob implements GeoEntity, RangedAttackM
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.OFF_HAND) {
+            return super.mobInteract(player, hand);
+        }
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.is(ModItems.PROFICIENCY_STICK) || stack.is(ModItems.ENTITY_DEBUG_STICK)) {
+        if (stack.is(ModItems.PROFICIENCY_STICK) || stack.is(ModItems.ENTITY_DEBUG_STICK) || stack.is(ModItems.REMOTE_CONTROL)) {
             return super.mobInteract(player, hand);
         }
         if (isWeak()) {

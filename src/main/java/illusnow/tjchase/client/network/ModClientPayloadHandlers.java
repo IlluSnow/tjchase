@@ -20,7 +20,9 @@ package illusnow.tjchase.client.network;
 import com.mojang.logging.LogUtils;
 import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
 import illusnow.tjchase.entity.Zuri;
+import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.network.PlayDanceTimePayload;
+import illusnow.tjchase.network.UpdateControlledEntityPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.sounds.SoundEngine;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -42,6 +44,19 @@ public final class ModClientPayloadHandlers {
                         LOGGER.warn("Zuri was found, but Dance Time was not played normally: {}", playResult);
                     }
                 }
+            }
+        }
+    }
+
+    public static void handleUpdateControlledEntity(UpdateControlledEntityPayload payload, IPayloadContext context) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level != null) {
+            Controllable controllable = payload.getEntity(minecraft.level);
+            if (controllable != null && payload.start()) {
+                minecraft.setCameraEntity(controllable.getSelfAsEntity());
+            }
+            if (!payload.start()) {
+                minecraft.setCameraEntity(context.player());
             }
         }
     }

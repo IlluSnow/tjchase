@@ -22,13 +22,15 @@ import illusnow.tjchase.entity.ModEntities;
 import illusnow.tjchase.entity.Zuri;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jspecify.annotations.Nullable;
+import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.base.GeoRenderState;
 
 public class ZuriRenderer<R extends EntityRenderState & GeoRenderState> extends GeoEntityRenderer<Zuri, R> {
     public ZuriRenderer(EntityRendererProvider.Context context) {
-        super(context, ModEntities.ZURI.get());
+        super(context, new DefaultedEntityGeoModel<>(BuiltInRegistries.ENTITY_TYPE.getKey(ModEntities.ZURI.get()), "head"));
     }
 
     @Override

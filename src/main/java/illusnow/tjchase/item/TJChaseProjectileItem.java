@@ -53,7 +53,7 @@ public abstract class TJChaseProjectileItem extends Item implements ProjectileIt
                     player.getY(),
                     player.getZ(),
                     sound,
-                    SoundSource.NEUTRAL,
+                    SoundSource.PLAYERS,
                     0.5F,
                     1
             );
