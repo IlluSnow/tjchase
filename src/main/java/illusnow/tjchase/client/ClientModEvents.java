@@ -21,6 +21,7 @@ import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
+import illusnow.tjchase.client.editablevalue.ClientEditableValueHelper;
 import illusnow.tjchase.client.model.ModArmPoses;
 import illusnow.tjchase.client.network.ModClientPayloadHandlers;
 import illusnow.tjchase.client.particle.HarpPlayedNoteParticle;
@@ -28,8 +29,10 @@ import illusnow.tjchase.client.particle.TJChaseBuffParticle;
 import illusnow.tjchase.client.util.HarpAnimation;
 import illusnow.tjchase.item.HarpItem;
 import illusnow.tjchase.item.ModItems;
-import illusnow.tjchase.network.PlayDanceTimePayload;
-import illusnow.tjchase.network.UpdateControlledEntityPayload;
+import illusnow.tjchase.network.s2c.OpenGameplayObjectEditScreenForInGameEntityPayload;
+import illusnow.tjchase.network.s2c.PlayDanceTimePayload;
+import illusnow.tjchase.network.s2c.PlayFuseSoundPayload;
+import illusnow.tjchase.network.s2c.UpdateControlledEntityPayload;
 import illusnow.tjchase.particle.ModParticleTypes;
 import illusnow.tjchase.tag.ModItemTags;
 import net.minecraft.client.Minecraft;
@@ -44,6 +47,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -58,8 +62,11 @@ import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(modid = TJChase.MODID, value = Dist.CLIENT)
 public class ClientModEvents {
-    @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {}
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        ClientEditableValueHelper.registerFactories();
+        event.enqueueWork(ModPlayerAnimationRegistry::registerPlayerAnimations);
+    }
 
     @SubscribeEvent // on the mod event bus only on the physical client
     public static void registerClientPayloadHandlers(RegisterClientPayloadHandlersEvent event) {
@@ -68,8 +75,16 @@ public class ClientModEvents {
                 ModClientPayloadHandlers::handlePlayDanceTime
         );
         event.register(
+                PlayFuseSoundPayload.TYPE,
+                ModClientPayloadHandlers::handlePlayFuseSound
+        );
+        event.register(
                 UpdateControlledEntityPayload.TYPE,
                 ModClientPayloadHandlers::handleUpdateControlledEntity
+        );
+        event.register(
+                OpenGameplayObjectEditScreenForInGameEntityPayload.TYPE,
+                ModClientPayloadHandlers::handleOpenGameObjectEditScreen
         );
     }
 

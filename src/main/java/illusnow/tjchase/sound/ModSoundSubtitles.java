@@ -32,7 +32,9 @@ public final class ModSoundSubtitles {
     public static final String LINIA_AMBIENT = prefix(ModSoundNames.LINIA_AMBIENT);
     public static final String LINIA_DEATH = prefix(ModSoundNames.LINIA_DEATH);
     public static final String LINIA_HURT = prefix(ModSoundNames.LINIA_HURT);
+    public static final String PRIMED_ROCKET = prefix(ModSoundNames.PRIMED_ROCKET);
     public static final String REMOTE_CONTROL_PRESS = prefix(ModSoundNames.REMOTE_CONTROL_PRESS);
+    public static final String ROCKET_LAUNCH = prefix(ModSoundNames.ROCKET_LAUNCH);
     public static final String VINE_SEED_THROW = prefix(ModSoundNames.VINE_SEED_THROW);
     public static final String VINE_GROW = prefix(ModSoundNames.VINE_GROW);
     public static final String VINE_HEAL = prefix(ModSoundNames.VINE_HEAL);

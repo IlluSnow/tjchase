@@ -20,7 +20,7 @@ package illusnow.tjchase.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import illusnow.tjchase.entity.controllable.Controllable;
-import illusnow.tjchase.network.UpdateControlledEntityRotationPayload;
+import illusnow.tjchase.network.c2s.UpdateControlledEntityRotationPayload;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;

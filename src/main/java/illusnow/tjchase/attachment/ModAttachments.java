@@ -20,22 +20,28 @@ package illusnow.tjchase.attachment;
 import com.google.common.base.Predicates;
 import com.mojang.serialization.Codec;
 import illusnow.tjchase.TJChase;
-import illusnow.tjchase.entity.HarpTester;
 import illusnow.tjchase.entity.Zuri;
 import illusnow.tjchase.entity.controllable.Controllable;
+import illusnow.tjchase.entity.dataentity.HarpTester;
 import illusnow.tjchase.util.AngelTomPassive2Tracker;
 import illusnow.tjchase.util.DancingHelper;
 import illusnow.tjchase.util.OrbitingBlockHolder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.attachment.AttachmentSyncHandler;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -62,6 +68,10 @@ public final class ModAttachments {
             AttachmentType.builder(holder -> false).serialize(Codec.BOOL.fieldOf(ModAttachmentNames.POSITIVE_EFFECT_BLUEPRINT)).sync(ByteBufCodecs.BOOL).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Boolean>> NEGATIVE_EFFECT_BLUEPRINT = ATTACHMENT_TYPES.register(ModAttachmentNames.NEGATIVE_EFFECT_BLUEPRINT, () ->
             AttachmentType.builder(holder -> false).serialize(Codec.BOOL.fieldOf(ModAttachmentNames.NEGATIVE_EFFECT_BLUEPRINT)).sync(ByteBufCodecs.BOOL).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Optional<EntityReference<Entity>>>> TIED_TO = ATTACHMENT_TYPES.register(ModAttachmentNames.TIED_TO, () ->
+            AttachmentType.<Optional<EntityReference<Entity>>>builder(Optional::empty).serialize(optionalSerializer(EntityReference.codec())).sync(optionalSyncer(EntityReference.streamCodec())).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Optional<EntityReference<Player>>>> TYING = ATTACHMENT_TYPES.register(ModAttachmentNames.TYING, () ->
+            AttachmentType.<Optional<EntityReference<Player>>>builder(Optional::empty).serialize(optionalSerializer(EntityReference.codec())).sync(optionalSyncer(EntityReference.streamCodec())).build());
 
     private ModAttachments() {}
 
@@ -100,6 +110,24 @@ public final class ModAttachments {
 
             private RuntimeException buildException(final String operation) {
                 return new IllegalStateException("Unable to " + operation + " attachment due to an internal codec error.");
+            }
+        };
+    }
+
+    private static <T> AttachmentSyncHandler<Optional<T>> optionalSyncer(StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec) {
+        return new AttachmentSyncHandler<>() {
+            @Override
+            public void write(RegistryFriendlyByteBuf buf, Optional<T> attachment, boolean initialSync) {
+                buf.writeBoolean(attachment.isPresent());
+                attachment.ifPresent(at -> streamCodec.encode(buf, at));
+            }
+
+            @Override
+            public Optional<T> read(IAttachmentHolder holder, RegistryFriendlyByteBuf buf, @Nullable Optional<T> previousValue) {
+                if (!buf.readBoolean()) {
+                    return Optional.empty();
+                }
+                return Optional.of(streamCodec.decode(buf));
             }
         };
     }

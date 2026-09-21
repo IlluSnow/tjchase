@@ -18,7 +18,7 @@
 package illusnow.tjchase.entity.controllable;
 
 import illusnow.tjchase.attachment.ModAttachments;
-import illusnow.tjchase.network.UpdateControlledEntityPayload;
+import illusnow.tjchase.network.s2c.UpdateControlledEntityPayload;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;

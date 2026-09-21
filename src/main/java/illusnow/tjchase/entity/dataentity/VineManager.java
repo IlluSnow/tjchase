@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.entity;
+package illusnow.tjchase.entity.dataentity;
 
 import com.google.common.collect.ImmutableSortedMap;
 import illusnow.tjchase.attachment.ModAttachments;

@@ -36,6 +36,7 @@ public final class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.HARP_TESTER.get(), DummyEntityRenderer::new);
         event.registerEntityRenderer(ModEntities.LINIA.get(), context -> new GeoEntityRenderer<>(context, ModEntities.LINIA.get()));
         event.registerEntityRenderer(ModEntities.ORBITING_BLOCK.get(), OrbitingBlockRenderer::new);
+        event.registerEntityRenderer(ModEntities.ROCKET.get(), RocketRenderer::new);
         event.registerEntityRenderer(ModEntities.VINE_MANAGER.get(), DummyEntityRenderer::new);
         event.registerEntityRenderer(ModEntities.VINE_SEED.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntities.YOGA_BALL.get(), context -> new YogaBallRenderer<>(context).withScale(0.5F));

@@ -100,6 +100,13 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
         add(ModSoundEvents.ZURI_WEAK, definition()
                 .subtitle(ModSoundSubtitles.ZURI_WEAK)
                 .with(modSound("entity/tjchase_cat_weak")));
+
+        add(ModSoundEvents.PRIMED_ROCKET, definition()
+                .subtitle(ModSoundSubtitles.PRIMED_ROCKET)
+                .with(modSound("entity/%s/primed".formatted(ModEntityNames.ROCKET))));
+        add(ModSoundEvents.ROCKET_LAUNCH, definition()
+                .subtitle(ModSoundSubtitles.ROCKET_LAUNCH)
+                .with(modSound("entity/%s/launch".formatted(ModEntityNames.ROCKET))));
     }
 
     private void modIdleSound(Holder<SoundEvent> sound, String subtitle, String name, int count) {

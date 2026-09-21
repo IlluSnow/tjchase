@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.entity;
+package illusnow.tjchase.entity.dataentity;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -44,6 +44,11 @@ public abstract class DataEntity extends Entity {
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
         return false;
+    }
+
+    @Override
+    public boolean fireImmune() {
+        return true;
     }
 
     @Override

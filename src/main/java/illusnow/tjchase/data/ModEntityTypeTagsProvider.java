@@ -36,14 +36,16 @@ public class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
     @SuppressWarnings("unchecked")
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED).add(ModEntities.BLUEPRINT_MANAGER.get());
-        tag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED).add(ModEntities.HARP_TESTER.get());
-        tag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED).add(ModEntities.VINE_MANAGER.get());
+        tag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED).add(ModEntities.BLUEPRINT_MANAGER.get(),
+                ModEntities.HARP_TESTER.get(),
+                ModEntities.ROCKET.get(),
+                ModEntities.VINE_MANAGER.get());
         tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(ModEntities.EVILINIA.get());
         tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(ModEntities.LINIA.get());
-        tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED).add(ModEntities.BLUEPRINT_MANAGER.get());
-        tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED).add(ModEntities.HARP_TESTER.get());
-        tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED).add(ModEntities.VINE_MANAGER.get());
+        tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED).add(ModEntities.BLUEPRINT_MANAGER.get(),
+                ModEntities.HARP_TESTER.get(),
+                ModEntities.ROCKET.get(),
+                ModEntities.VINE_MANAGER.get());
         tag(ModEntityTypeTags.TJCHASE_FRIENDLY_CATS).add(ModEntities.ZURI.get());
         tag(ModEntityTypeTags.TJCHASE_FRIENDLY_MICE);
         tag(ModEntityTypeTags.TJCHASE_FRIENDLY_MOBS).addTags(ModEntityTypeTags.TJCHASE_FRIENDLY_MICE, ModEntityTypeTags.TJCHASE_FRIENDLY_CATS);

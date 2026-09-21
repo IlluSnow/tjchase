@@ -18,6 +18,7 @@
 package illusnow.tjchase.entity;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.util.Utils;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -44,6 +45,8 @@ public final class ModEntityDataSerializers {
             = ENTITY_DATA_SERIALIZERS.register("optional_entity_reference", () -> EntityDataSerializer.forValueType(EntityReference.<Entity>streamCodec().apply(ByteBufCodecs::optional)));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Optional<EntityReference<Player>>>> OPTIONAL_PLAYER_REFERENCE
             = ENTITY_DATA_SERIALIZERS.register("optional_player_reference", () -> EntityDataSerializer.forValueType(EntityReference.<Player>streamCodec().apply(ByteBufCodecs::optional)));
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Rocket.FuseDisplayDirection>> FUSE_DISPLAY_DIRECTION
+            = ENTITY_DATA_SERIALIZERS.register("fuse_display_direction", () -> EntityDataSerializer.forValueType(Rocket.FuseDisplayDirection.STREAM_CODEC));
 
     private ModEntityDataSerializers() {}
 }

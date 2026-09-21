@@ -2,6 +2,7 @@
   "values": [
     "tjchase:blueprint_manager",
     "tjchase:harp_tester",
+    "tjchase:rocket",
     "tjchase:vine_manager"
   ]
 }

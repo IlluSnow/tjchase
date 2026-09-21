@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.network;
+package illusnow.tjchase.network.s2c;
 
 import illusnow.tjchase.TJChase;
-import illusnow.tjchase.entity.controllable.Controllable;
+import illusnow.tjchase.entity.Zuri;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -26,12 +26,11 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public record UpdateControlledEntityPayload(int id, boolean start) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<UpdateControlledEntityPayload> TYPE = new CustomPacketPayload.Type<>(TJChase.prefix("update_controlled_entity"));
-    public static final StreamCodec<ByteBuf, UpdateControlledEntityPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, UpdateControlledEntityPayload::id,
-            ByteBufCodecs.BOOL, UpdateControlledEntityPayload::start,
-            UpdateControlledEntityPayload::new
+public record PlayDanceTimePayload(int zuriId) implements CustomPacketPayload {
+    public static final Type<PlayDanceTimePayload> TYPE = new Type<>(TJChase.prefix("play_dance_time"));
+    public static final StreamCodec<ByteBuf, PlayDanceTimePayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, PlayDanceTimePayload::zuriId,
+            PlayDanceTimePayload::new
     );
 
     @Override
@@ -40,7 +39,7 @@ public record UpdateControlledEntityPayload(int id, boolean start) implements Cu
     }
 
     @Nullable
-    public Controllable getEntity(Level level) {
-        return level.getEntity(id) instanceof Controllable controllable ? controllable : null;
+    public Zuri getZuri(Level level) {
+        return level.getEntity(zuriId) instanceof Zuri zuri ? zuri : null;
     }
 }

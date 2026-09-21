@@ -20,7 +20,7 @@ package illusnow.tjchase.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import illusnow.tjchase.entity.BlueprintManager;
+import illusnow.tjchase.entity.dataentity.BlueprintManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;

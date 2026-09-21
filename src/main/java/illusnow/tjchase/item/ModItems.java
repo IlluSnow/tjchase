@@ -18,7 +18,9 @@
 package illusnow.tjchase.item;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.entity.ModEntities;
 import illusnow.tjchase.util.HarpConstants;
+import illusnow.tjchase.world.gameplay.object.ModGameplayObjectTypes;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -55,6 +57,7 @@ public final class ModItems {
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
     public static final DeferredHolder<Item, RemoteControlItem> REMOTE_CONTROL = register(ModItemNames.REMOTE_CONTROL, RemoteControlItem::new,
             properties -> properties.stacksTo(1));
+    public static final DeferredHolder<Item, Item> ROCKET_EDITOR = register(ModItemNames.ROCKET_EDITOR, properties -> new InGamePlacedEntityEditorItem<>(properties, ModEntities.ROCKET, ModGameplayObjectTypes.ROCKET), properties -> properties.stacksTo(1).rarity(Rarity.RARE));
     public static final DeferredHolder<Item, Item> VINE_SEED = register(ModItemNames.VINE_SEED, VineSeedItem::new, properties -> properties.stacksTo(16).rarity(ModRarities.VINE_SEED_CUSTOM.getValue()));
 
     private ModItems() {}

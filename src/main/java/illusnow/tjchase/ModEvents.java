@@ -19,12 +19,24 @@ package illusnow.tjchase;
 
 import illusnow.tjchase.item.ModCreativeModeTabs;
 import illusnow.tjchase.item.ModItems;
-import illusnow.tjchase.network.*;
+import illusnow.tjchase.network.ModServerPayloadHandlers;
+import illusnow.tjchase.network.bidirectional.SyncInGameEntityPayload;
+import illusnow.tjchase.network.c2s.LoadTemplatePayload;
+import illusnow.tjchase.network.c2s.UpdateControlledEntityPositionPayload;
+import illusnow.tjchase.network.c2s.UpdateControlledEntityRotationPayload;
+import illusnow.tjchase.network.c2s.UpdateInputPayload;
+import illusnow.tjchase.network.s2c.OpenGameplayObjectEditScreenForInGameEntityPayload;
+import illusnow.tjchase.network.s2c.PlayDanceTimePayload;
+import illusnow.tjchase.network.s2c.PlayFuseSoundPayload;
+import illusnow.tjchase.network.s2c.UpdateControlledEntityPayload;
+import illusnow.tjchase.util.ModRegistries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.HandlerThread;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 @EventBusSubscriber(modid = TJChase.MODID)
 public class ModEvents {
@@ -34,6 +46,10 @@ public class ModEvents {
         registrar.playToClient(
                 PlayDanceTimePayload.TYPE,
                 PlayDanceTimePayload.STREAM_CODEC
+        );
+        registrar.playToClient(
+                PlayFuseSoundPayload.TYPE,
+                PlayFuseSoundPayload.STREAM_CODEC
         );
         registrar.playToClient(
                 UpdateControlledEntityPayload.TYPE,
@@ -49,6 +65,27 @@ public class ModEvents {
                 UpdateControlledEntityRotationPayload.STREAM_CODEC,
                 ModServerPayloadHandlers::handleUpdateControlledEntityRotation
         );
+        registrar.playToServer(
+                UpdateControlledEntityPositionPayload.TYPE,
+                UpdateControlledEntityPositionPayload.STREAM_CODEC,
+                ModServerPayloadHandlers::handleUpdateControlledEntityPosition
+        );
+        registrar.playToClient(
+                OpenGameplayObjectEditScreenForInGameEntityPayload.TYPE,
+                OpenGameplayObjectEditScreenForInGameEntityPayload.STREAM_CODEC
+        );
+        registrar.playToServer(
+                LoadTemplatePayload.TYPE,
+                LoadTemplatePayload.STREAM_CODEC,
+                ModServerPayloadHandlers::handleLoadTemplate
+        );
+        registrar = registrar.executesOn(HandlerThread.NETWORK);
+        registrar.playBidirectional(
+                SyncInGameEntityPayload.TYPE,
+                SyncInGameEntityPayload.STREAM_CODEC,
+                ModServerPayloadHandlers::handleSyncInGameEntity,
+                ModServerPayloadHandlers::handleSyncInGameEntity
+        );
     }
 
     @SubscribeEvent
@@ -60,5 +97,14 @@ public class ModEvents {
             event.accept(ModItems.VINE_SEED.get());
             event.accept(ModItems.REMOTE_CONTROL.get());
         }
+        if (event.getTab() == ModCreativeModeTabs.GAMEPLAY_TAB.get()) {
+            event.accept(ModItems.ROCKET_EDITOR.get());
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerRegistries(NewRegistryEvent event) {
+        event.register(ModRegistries.EDITABLE_VALUES);
+        event.register(ModRegistries.GAMEPLAY_OBJECT_TYPES);
     }
 }

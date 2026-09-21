@@ -11,7 +11,8 @@
     "LivingEntityAccessor",
     "LivingEntityMixin",
     "LookControlAccessor",
-    "MobMixin"
+    "MobMixin",
+    "PlayerListMixin"
   ],
   "client": [
     "ClientInputMixin",
@@ -31,5 +32,6 @@
   },
   "overwrites": {
     "requireAnnotations": true
-  }
+  },
+  "mixinextras": {"minVersion": "0.5.3"}
 }

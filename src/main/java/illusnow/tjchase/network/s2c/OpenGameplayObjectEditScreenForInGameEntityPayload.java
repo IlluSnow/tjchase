@@ -15,24 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.network;
+package illusnow.tjchase.network.s2c;
 
 import illusnow.tjchase.TJChase;
-import illusnow.tjchase.entity.controllable.Controllable;
-import net.minecraft.network.FriendlyByteBuf;
+import illusnow.tjchase.entity.gameplay.InGamePlacedEntity;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-public record UpdateInputPayload(int controllingMobId, Input input) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<UpdateInputPayload> TYPE = new CustomPacketPayload.Type<>(TJChase.prefix("update_input"));
-    public static final StreamCodec<FriendlyByteBuf, UpdateInputPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, UpdateInputPayload::controllingMobId,
-            Input.STREAM_CODEC, UpdateInputPayload::input,
-            UpdateInputPayload::new
+public record OpenGameplayObjectEditScreenForInGameEntityPayload(int entityId) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<OpenGameplayObjectEditScreenForInGameEntityPayload> TYPE = new CustomPacketPayload.Type<>(TJChase.prefix("open_gameplay_object_edit_screen_for_in_game_entity"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, OpenGameplayObjectEditScreenForInGameEntityPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, OpenGameplayObjectEditScreenForInGameEntityPayload::entityId,
+            OpenGameplayObjectEditScreenForInGameEntityPayload::new
     );
 
     @Override
@@ -41,7 +39,7 @@ public record UpdateInputPayload(int controllingMobId, Input input) implements C
     }
 
     @Nullable
-    public Controllable getControllingMob(Level level) {
-        return level.getEntity(controllingMobId) instanceof Controllable controllable ? controllable : null;
+    public InGamePlacedEntity<?> getEntity(Level level) {
+        return level.getEntity(entityId) instanceof InGamePlacedEntity<?> inGamePlacedEntity ? inGamePlacedEntity : null;
     }
 }

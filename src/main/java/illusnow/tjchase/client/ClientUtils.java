@@ -43,9 +43,7 @@ public final class ClientUtils {
         poseStack.pushPose();
         float yOffset = renderState.boundingBoxHeight * 1.2F + 0.2F;
         poseStack.translate(0, yOffset, 0);
-        Quaternionf rotation = Minecraft.getInstance().gameRenderer.getMainCamera().rotation();
-        poseStack.mulPose(new Quaternionf(0, rotation.y, 0, rotation.w));
-
+        facePlayerHorizontally(poseStack);
         float size = 0.5F;
         collector.submitCustomGeometry(poseStack,
                 RenderTypes.entityCutoutNoCull(textureLocation, false),
@@ -57,6 +55,11 @@ public final class ClientUtils {
                 }
         );
         poseStack.popPose();
+    }
+
+    public static void facePlayerHorizontally(PoseStack poseStack) {
+        Quaternionf rotation = Minecraft.getInstance().gameRenderer.getMainCamera().rotation();
+        poseStack.mulPose(new Quaternionf(0, rotation.y, 0, rotation.w));
     }
 
     private static void dancingEffectIconVertex(PoseStack.Pose pose, VertexConsumer consumer, EntityRenderState renderState, float x, float y, float u, float v) {

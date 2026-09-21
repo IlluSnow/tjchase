@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.network;
+package illusnow.tjchase.network.c2s;
 
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.entity.controllable.Controllable;
@@ -23,6 +23,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +44,7 @@ public record UpdateControlledEntityRotationPayload(int id, float yRot, float yH
     }
 
     @Nullable
-    public Controllable getEntity(Level level) {
-        return level.getEntity(id) instanceof Controllable controllable ? controllable : null;
+    public Controllable getEntity(Level level, Player player) {
+        return level.getEntity(id) instanceof Controllable controllable && controllable.getPlayerController() == player ? controllable : null;
     }
 }

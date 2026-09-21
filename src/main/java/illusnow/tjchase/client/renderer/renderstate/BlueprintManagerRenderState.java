@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.client.renderer.entity;
+package illusnow.tjchase.client.renderer.renderstate;
 
 import illusnow.tjchase.util.Utils;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;

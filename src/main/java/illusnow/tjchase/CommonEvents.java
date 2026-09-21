@@ -21,14 +21,19 @@ import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.command.TJChaseCommand;
 import illusnow.tjchase.entity.*;
 import illusnow.tjchase.entity.controllable.Controllable;
+import illusnow.tjchase.entity.dataentity.BlueprintManager;
+import illusnow.tjchase.entity.dataentity.HarpTester;
+import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.entity.projectile.YogaBall;
 import illusnow.tjchase.item.HarpItem;
+import illusnow.tjchase.item.ModDataComponents;
 import illusnow.tjchase.item.enchantment.ModEnchantmentEffectComponents;
 import illusnow.tjchase.tag.ModBlockTags;
 import illusnow.tjchase.tag.ModItemTags;
 import illusnow.tjchase.util.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -36,6 +41,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -45,6 +51,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.jetbrains.annotations.Nullable;
@@ -73,6 +80,14 @@ public class CommonEvents {
         if (!player.level().isClientSide()) {
             Controllable.checkCanContinueToControl(player);
         }
+        Entity tiedTo = TyingHelper.getTiedTo(player);
+        if (tiedTo != null && TyingHelper.isMovementRestricted(player)) {
+            player.snapTo(TyingHelper.getTyingPosition(tiedTo, player), tiedTo.getYRot(), tiedTo.getXRot());
+            if (tiedTo instanceof LivingEntity living) {
+                player.setYBodyRot(living.yBodyRot);
+                player.setYHeadRot(living.getYHeadRot());
+            }
+        }
     }
 
     @SubscribeEvent
@@ -85,6 +100,7 @@ public class CommonEvents {
             }
             BlueprintManager.updateBlueprintData(livingEntity);
         }
+        TyingHelper.clearInvalid(entity);
     }
 
     @SubscribeEvent
@@ -300,6 +316,16 @@ public class CommonEvents {
     private static void handleTJChaseCharacterSuperArmor(MobEffectEvent.Applicable event) {
         if (event.getEntity() instanceof TJChaseCharacter tj && tj.hasSuperArmor() && event.getEffectInstance().getEffect().value().getCategory() == MobEffectCategory.HARMFUL) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onItemTooltip(ItemTooltipEvent event) {
+        ItemStack stack = event.getItemStack();
+        TooltipDisplay tooltipDisplay = stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT);
+        stack.addToTooltip(ModDataComponents.CARRYING_TEMPLATE, event.getContext(), tooltipDisplay, event.getToolTip()::add, event.getFlags());
+        if (!stack.has(ModDataComponents.CARRYING_TEMPLATE)) {
+            stack.addToTooltip(ModDataComponents.PLACE_TEMPLATE, event.getContext(), tooltipDisplay, event.getToolTip()::add, event.getFlags());
         }
     }
 }

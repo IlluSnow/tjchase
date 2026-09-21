@@ -18,8 +18,11 @@
 package illusnow.tjchase.item;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.world.gameplay.object.Template;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.ExtraCodecs;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -29,6 +32,12 @@ public final class ModDataComponents {
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, TJChase.MODID);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> PROFICIENCY = DATA_COMPONENTS.registerComponentType("proficiency", builder ->
             builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Template<?>>> CARRYING_TEMPLATE = DATA_COMPONENTS.registerComponentType("carrying_template", builder ->
+            builder.persistent(Template.CODEC).networkSynchronized(Template.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Template<?>>> PLACE_TEMPLATE = DATA_COMPONENTS.registerComponentType("place_template", builder ->
+            builder.persistent(Template.CODEC).networkSynchronized(Template.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Component>> GAMEPLAY_OBJECT_NAME = DATA_COMPONENTS.registerComponentType("gameplay_object_name", builder ->
+            builder.persistent(ComponentSerialization.CODEC).networkSynchronized(ComponentSerialization.STREAM_CODEC).cacheEncoding());
 
     private ModDataComponents() {}
 }

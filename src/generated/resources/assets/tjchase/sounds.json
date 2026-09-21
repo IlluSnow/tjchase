@@ -115,11 +115,23 @@
     ],
     "subtitle": "subtitles.tjchase.linia_hurt"
   },
+  "primed_rocket": {
+    "sounds": [
+      "tjchase:entity/rocket/primed"
+    ],
+    "subtitle": "subtitles.tjchase.primed_rocket"
+  },
   "remote_control_press": {
     "sounds": [
       "tjchase:item/remote_control/press"
     ],
     "subtitle": "subtitles.tjchase.remote_control_press"
+  },
+  "rocket_launch": {
+    "sounds": [
+      "tjchase:entity/rocket/launch"
+    ],
+    "subtitle": "subtitles.tjchase.rocket_launch"
   },
   "vine_grow": {
     "sounds": [

@@ -19,7 +19,7 @@ package illusnow.tjchase.entity.projectile;
 
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.entity.ModEntities;
-import illusnow.tjchase.entity.VineManager;
+import illusnow.tjchase.entity.dataentity.VineManager;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.VineGenerator;

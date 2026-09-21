@@ -18,15 +18,26 @@
 package illusnow.tjchase.client.network;
 
 import com.mojang.logging.LogUtils;
+import illusnow.tjchase.client.gui.screen.GameplayObjectEditScreen;
 import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
-import illusnow.tjchase.entity.Zuri;
+import illusnow.tjchase.client.resources.sounds.PrimedRocketSoundInstance;
 import illusnow.tjchase.entity.controllable.Controllable;
-import illusnow.tjchase.network.PlayDanceTimePayload;
-import illusnow.tjchase.network.UpdateControlledEntityPayload;
+import illusnow.tjchase.entity.gameplay.InGamePlacedEntity;
+import illusnow.tjchase.network.s2c.OpenGameplayObjectEditScreenForInGameEntityPayload;
+import illusnow.tjchase.network.s2c.PlayDanceTimePayload;
+import illusnow.tjchase.network.s2c.PlayFuseSoundPayload;
+import illusnow.tjchase.network.s2c.UpdateControlledEntityPayload;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.AbstractSoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
+import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.function.Function;
 
 public final class ModClientPayloadHandlers {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -34,18 +45,32 @@ public final class ModClientPayloadHandlers {
     private ModClientPayloadHandlers() {}
 
     public static void handlePlayDanceTime(PlayDanceTimePayload payload, IPayloadContext context) {
+        playSound(payload::getZuri, DanceTimeSoundInstance::new);
+    }
+
+    public static void handlePlayFuseSound(PlayFuseSoundPayload payload, IPayloadContext context) {
+        playSound(payload::getRocket, PrimedRocketSoundInstance::new);
+    }
+
+    private static <T extends Entity> void playSound(EntityGetter<? extends T> entityGetter, Function<? super T, ? extends AbstractSoundInstance> soundFactory) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.level != null) {
-            Zuri zuri = payload.getZuri(minecraft.level);
-            if (zuri != null) {
-                if (!zuri.isSilent()) {
-                    SoundEngine.PlayResult playResult = minecraft.getSoundManager().play(new DanceTimeSoundInstance(zuri));
+            T entity = entityGetter.getEntity(minecraft.level);
+            if (entity != null) {
+                if (!entity.isSilent()) {
+                    SoundEngine.PlayResult playResult = minecraft.getSoundManager().play(soundFactory.apply(entity));
                     if (playResult != SoundEngine.PlayResult.STARTED) {
-                        LOGGER.warn("Zuri was found, but Dance Time was not played normally: {}", playResult);
+                        LOGGER.warn("{} was found, but the music was not played normally: {}", I18n.get(entity.getName().getString()), playResult);
                     }
                 }
             }
         }
+    }
+
+    @FunctionalInterface
+    private interface EntityGetter<T extends Entity> {
+        @Nullable
+        T getEntity(ClientLevel level);
     }
 
     public static void handleUpdateControlledEntity(UpdateControlledEntityPayload payload, IPayloadContext context) {
@@ -59,5 +84,18 @@ public final class ModClientPayloadHandlers {
                 minecraft.setCameraEntity(context.player());
             }
         }
+    }
+
+    public static void handleOpenGameObjectEditScreen(OpenGameplayObjectEditScreenForInGameEntityPayload payload, IPayloadContext context) {
+        InGamePlacedEntity<?> entity = payload.getEntity(context.player().level());
+        if (entity == null) {
+            warnNotFound(payload.entityId());
+            return;
+        }
+        Minecraft.getInstance().setScreen(new GameplayObjectEditScreen<>(entity.getDisplayName().copy(), entity, entity.createTemplate()));
+    }
+
+    private static void warnNotFound(int id) {
+        LOGGER.warn("Unable to find entity with id {}", id);
     }
 }

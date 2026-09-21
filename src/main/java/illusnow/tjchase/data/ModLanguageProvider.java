@@ -21,37 +21,46 @@ import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.command.EntityCommand;
 import illusnow.tjchase.command.ProficiencyCommand;
-import illusnow.tjchase.entity.HarpTester;
+import illusnow.tjchase.entity.dataentity.HarpTester;
 import illusnow.tjchase.entity.ModEntities;
+import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.proficiency.ProficiencyMainLevel;
-import illusnow.tjchase.item.ModCreativeModeTabs;
-import illusnow.tjchase.item.ModItems;
-import illusnow.tjchase.item.EntityDebugStickItem;
-import illusnow.tjchase.item.ProficiencyStickItem;
+import illusnow.tjchase.item.*;
 import illusnow.tjchase.item.enchantment.ModEnchantments;
 import illusnow.tjchase.sound.ModSoundSubtitles;
 import illusnow.tjchase.tag.ModBlockTags;
 import illusnow.tjchase.tag.ModItemTags;
 import illusnow.tjchase.util.ModComponents;
 import illusnow.tjchase.world.ModDamageSources;
+import illusnow.tjchase.world.gameplay.object.editablevalue.EditableValue;
+import illusnow.tjchase.world.gameplay.object.editablevalue.EditableValueBehaviors;
+import illusnow.tjchase.world.gameplay.object.editablevalue.ModEditableValues;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import static illusnow.tjchase.client.data.ModDataGenerators.getDamageTypeMsg;
 import static illusnow.tjchase.item.enchantment.ModEnchantments.getEnchantmentDescriptionId;
 
-public final class ModLanguageProvider {
-    private ModLanguageProvider() {}
+public abstract class ModLanguageProvider extends LanguageProvider {
+    protected ModLanguageProvider(PackOutput output, String locale) {
+        super(output, TJChase.MODID, locale);
+    }
 
-    public static class EnUs extends LanguageProvider {
+    public void add(EditableValue<?, ?> key, String name) {
+        add(key.getTranslationKey(), name);
+    }
+
+    public static class EnUs extends ModLanguageProvider {
         public EnUs(PackOutput output) {
-            super(output, TJChase.MODID, "en_us");
+            super(output, "en_us");
         }
 
         @Override
         protected void addTranslations() {
-            add(ModComponents.SPACED_LEFT_PARENTHESIS_MSG, " (");
-            add(ModComponents.SPACED_RIGHT_PARENTHESIS_MSG, ") ");
+            add(ModComponents.SPACED_LEFT_PARENTHESIS_MSGID, " (");
+            add(ModComponents.SPACED_RIGHT_PARENTHESIS_MSGID, ") ");
+            add(ModComponents.CONTAINER_RENAME_MSGID, "Rename");
+            add(ModComponents.GUI_RESET_TO_DEFAULT_MSGID, "Reset to Default");
             add(ProficiencyMainLevel.BEGINNER.getKey(0), "Beginner");
             add(ProficiencyMainLevel.BEGINNER.getKey(5), "Beginner V");
             add(ProficiencyMainLevel.BEGINNER.getKey(4), "Beginner IV");
@@ -121,9 +130,25 @@ public final class ModLanguageProvider {
             add(ModEntities.VINE_MANAGER.get(), "Vine Manager");
             add(ModEntities.VINE_SEED.get(), "Robin Hood Tuffy's Bean");
             add(ModEntities.ORBITING_BLOCK.get(), "Flying Block");
+            add(ModEntities.ROCKET.get(), "Rocket");
+            add(Rocket.FuseDisplayDirection.FRONT.getTranslatedName().getString(), "Front");
+            add(Rocket.FuseDisplayDirection.BACK.getTranslatedName().getString(), "Back");
+            add(Rocket.FuseDisplayDirection.LEFT.getTranslatedName().getString(), "Left");
+            add(Rocket.FuseDisplayDirection.RIGHT.getTranslatedName().getString(), "Right");
+            add(Rocket.FuseDisplayDirection.UP.getTranslatedName().getString(), "Up");
             add(ModEntities.YOGA_BALL.get(), "Yoga Ball");
             add(ModEntities.ZURI.get(), "Zuri");
+            add(ModEditableValues.BURNING_SPEED.get(), "Fuse Burning Speed");
+            add(ModEditableValues.DEFAULT_FUSE_SECONDS.get(), "Default Fuse Length");
+            add(ModEditableValues.INSTABURN_SECONDS.get(), "Fuse Instaburn Length");
+            add(ModEditableValues.FUSE_DISPLAY_DIRECTION.get(), "Countdown Display Direction");
+            add(ModEditableValues.FUSE_DISPLAY_DISTANCE.get(), "Countdown Display Distance");
+            add(ModEditableValues.FUSE_DISPLAY_HEIGHT_OFFSET.get(), "Countdown Display Height");
+            add(ModEditableValues.FUSE_DISPLAY_FONT_SCALE.get(), "Countdown Font Size");
+            add(EditableValueBehaviors.RangedBehavior.HINT_KEY, "Value Range: [%d, %d]");
+            add(EditableValueBehaviors.RangedBehavior.HINT_KEY_DECIMAL, "Value Range: [%.1f, %.1f]");
             add(ModCreativeModeTabs.TAB_ID, "TJChase");
+            add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "TJChase - Gameplay");
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "Entity Debug Stick");
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
@@ -131,7 +156,9 @@ public final class ModLanguageProvider {
             add(ModItems.NETHERITE_HARP.get(), "Angel Tom's Netherite Harp");
             add(ModItems.PROFICIENCY_STICK.get(), "Proficiency Stick");
             add(ModItems.REMOTE_CONTROL.get(), "Remote Control");
+            add(ModItems.ROCKET_EDITOR.get(), "Rocket Editor");
             add(ModItems.VINE_SEED.get(), "Robin Hood Tuffy's Bean");
+            add(GameplayObjectEditorItem.NAME_TRANSLATION_KEY, "%s (Carrying %s)");
             add(EntityDebugStickItem.KILL, "Killed %s");
             add(EntityDebugStickItem.REMOVE, "Removed %s");
             add(EntityDebugStickItem.RESUME, "Resumed the entity's AI");
@@ -162,7 +189,9 @@ public final class ModLanguageProvider {
             add(ModSoundSubtitles.LINIA_AMBIENT, "Linia screams");
             add(ModSoundSubtitles.LINIA_DEATH, "Linia dies");
             add(ModSoundSubtitles.LINIA_HURT, "Linia hurts");
+            add(ModSoundSubtitles.PRIMED_ROCKET, "Rocket Fuse burns");
             add(ModSoundSubtitles.REMOTE_CONTROL_PRESS, "Remote Control's button pressed");
+            add(ModSoundSubtitles.ROCKET_LAUNCH, "Rocket launches");
             add(ModSoundSubtitles.VINE_GROW, "Beanstalk grows");
             add(ModSoundSubtitles.VINE_SEED_THROW, "Bean flies");
             add(ModSoundSubtitles.VINE_HEAL, "Bean heals");
@@ -176,15 +205,17 @@ public final class ModLanguageProvider {
         }
     }
 
-    public static class ZhCn extends LanguageProvider {
+    public static class ZhCn extends ModLanguageProvider {
         public ZhCn(PackOutput output) {
-            super(output, TJChase.MODID, "zh_cn");
+            super(output, "zh_cn");
         }
 
         @Override
         protected void addTranslations() {
-            add(ModComponents.SPACED_LEFT_PARENTHESIS_MSG, "（");
-            add(ModComponents.SPACED_RIGHT_PARENTHESIS_MSG, "）");
+            add(ModComponents.SPACED_LEFT_PARENTHESIS_MSGID, "（");
+            add(ModComponents.SPACED_RIGHT_PARENTHESIS_MSGID, "）");
+            add(ModComponents.CONTAINER_RENAME_MSGID, "重命名");
+            add(ModComponents.GUI_RESET_TO_DEFAULT_MSGID, "重置为默认值");
             add(ProficiencyMainLevel.BEGINNER.getKey(0), "萌新");
             add(ProficiencyMainLevel.BEGINNER.getKey(5), "萌新 V");
             add(ProficiencyMainLevel.BEGINNER.getKey(4), "萌新 IV");
@@ -254,9 +285,25 @@ public final class ModLanguageProvider {
             add(ModEntities.VINE_MANAGER.get(), "藤蔓管理器");
             add(ModEntities.VINE_SEED.get(), "罗宾汉泰菲的藤蔓种子");
             add(ModEntities.ORBITING_BLOCK.get(), "飞行的方块");
+            add(ModEntities.ROCKET.get(), "火箭");
+            add(Rocket.FuseDisplayDirection.FRONT.getTranslatedName().getString(), "前");
+            add(Rocket.FuseDisplayDirection.BACK.getTranslatedName().getString(), "后");
+            add(Rocket.FuseDisplayDirection.LEFT.getTranslatedName().getString(), "左");
+            add(Rocket.FuseDisplayDirection.RIGHT.getTranslatedName().getString(), "右");
+            add(Rocket.FuseDisplayDirection.UP.getTranslatedName().getString(), "上");
             add(ModEntities.YOGA_BALL.get(), "瑜伽球");
             add(ModEntities.ZURI.get(), "苏蕊");
+            add(ModEditableValues.BURNING_SPEED.get(), "引线燃烧速度");
+            add(ModEditableValues.DEFAULT_FUSE_SECONDS.get(), "默认引线长度");
+            add(ModEditableValues.INSTABURN_SECONDS.get(), "引线瞬间燃烧长度");
+            add(ModEditableValues.FUSE_DISPLAY_DIRECTION.get(), "倒计时显示方向");
+            add(ModEditableValues.FUSE_DISPLAY_DISTANCE.get(), "倒计时显示距离");
+            add(ModEditableValues.FUSE_DISPLAY_HEIGHT_OFFSET.get(), "倒计时显示高度");
+            add(ModEditableValues.FUSE_DISPLAY_FONT_SCALE.get(), "倒计时字体大小");
+            add(EditableValueBehaviors.RangedBehavior.HINT_KEY, "取值范围：[%d, %d]");
+            add(EditableValueBehaviors.RangedBehavior.HINT_KEY_DECIMAL, "取值范围：[%.1f, %.1f]");
             add(ModCreativeModeTabs.TAB_ID, "猫鼠");
+            add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "猫鼠 - 主游戏");
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "实体调试棒");
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");
@@ -264,7 +311,9 @@ public final class ModLanguageProvider {
             add(ModItems.NETHERITE_HARP.get(), "天使汤姆的下界合金竖琴");
             add(ModItems.PROFICIENCY_STICK.get(), "专精度设置棒");
             add(ModItems.REMOTE_CONTROL.get(), "遥控器");
+            add(ModItems.ROCKET_EDITOR.get(), "火箭编辑器");
             add(ModItems.VINE_SEED.get(), "罗宾汉泰菲的藤蔓种子");
+            add(GameplayObjectEditorItem.NAME_TRANSLATION_KEY, "%s（携带了%s）");
             add(EntityDebugStickItem.KILL, "杀死了%s");
             add(EntityDebugStickItem.REMOVE, "移除了%s");
             add(EntityDebugStickItem.RESUME, "恢复了此实体的AI");
@@ -295,7 +344,9 @@ public final class ModLanguageProvider {
             add(ModSoundSubtitles.LINIA_AMBIENT, "线灵：尖叫");
             add(ModSoundSubtitles.LINIA_DEATH, "线灵：死亡");
             add(ModSoundSubtitles.LINIA_HURT, "线灵：受伤");
+            add(ModSoundSubtitles.PRIMED_ROCKET, "火箭引线：燃烧");
             add(ModSoundSubtitles.REMOTE_CONTROL_PRESS, "遥控器按钮：按下");
+            add(ModSoundSubtitles.ROCKET_LAUNCH, "火箭：发射");
             add(ModSoundSubtitles.VINE_GROW, "藤蔓：生长");
             add(ModSoundSubtitles.VINE_HEAL, "藤蔓：治疗");
             add(ModSoundSubtitles.VINE_SEED_THROW, "藤蔓种子：飞出");

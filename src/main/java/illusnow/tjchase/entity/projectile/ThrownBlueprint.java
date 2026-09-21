@@ -17,7 +17,7 @@
 
 package illusnow.tjchase.entity.projectile;
 
-import illusnow.tjchase.entity.BlueprintManager;
+import illusnow.tjchase.entity.dataentity.BlueprintManager;
 import illusnow.tjchase.entity.Linia;
 import illusnow.tjchase.entity.ModEntities;
 import illusnow.tjchase.item.ModItems;

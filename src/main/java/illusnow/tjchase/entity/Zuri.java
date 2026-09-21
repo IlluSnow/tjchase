@@ -27,7 +27,7 @@ import illusnow.tjchase.entity.proficiency.ProficiencyRelatedValue;
 import illusnow.tjchase.entity.proficiency.interpolator.LinearInterpolator;
 import illusnow.tjchase.entity.projectile.YogaBall;
 import illusnow.tjchase.item.ModItems;
-import illusnow.tjchase.network.PlayDanceTimePayload;
+import illusnow.tjchase.network.s2c.PlayDanceTimePayload;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.DancingHelper;
 import illusnow.tjchase.util.Utils;

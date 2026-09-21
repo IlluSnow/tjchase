@@ -18,6 +18,10 @@
 package illusnow.tjchase.entity;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.entity.dataentity.BlueprintManager;
+import illusnow.tjchase.entity.dataentity.HarpTester;
+import illusnow.tjchase.entity.dataentity.VineManager;
+import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.projectile.ThrownBlueprint;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.entity.projectile.VineSeed;
@@ -45,6 +49,8 @@ public final class ModEntities {
             EntityType.Builder.of(Linia::new, MobCategory.CREATURE).noLootTable().sized(0.35F, 0.6F).eyeHeight(0.36F).ridingOffset(0.04F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<OrbitingBlockEntity>> ORBITING_BLOCK = register(ModEntityNames.ORBITING_BLOCK,
             EntityType.Builder.<OrbitingBlockEntity>of(OrbitingBlockEntity::new, MobCategory.MISC).noLootTable().sized(HarpConstants.DEFAULT_ORBITING_BLOCK_SIZE, HarpConstants.DEFAULT_ORBITING_BLOCK_SIZE).clientTrackingRange(8).updateInterval(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<Rocket>> ROCKET = register(ModEntityNames.ROCKET,
+            EntityType.Builder.of(Rocket::new, MobCategory.MISC).noLootTable().noSummon().sized(1F, 3.15F).eyeHeight(3).ridingOffset(0).clientTrackingRange(10));
     public static final DeferredHolder<EntityType<?>, EntityType<VineManager>> VINE_MANAGER = register(ModEntityNames.VINE_MANAGER,
             EntityType.Builder.<VineManager>of(VineManager::new, MobCategory.MISC).noLootTable().noSummon().sized(0, 0).clientTrackingRange(5).updateInterval(20));
     public static final DeferredHolder<EntityType<?>, EntityType<VineSeed>> VINE_SEED = register(ModEntityNames.VINE_SEED,

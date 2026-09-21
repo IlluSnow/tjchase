@@ -18,7 +18,13 @@ repositories {
             includeGroup("software.bernie.geckolib")
         }
     }
+
+    mavenCentral()
+    maven {
+        name = "RedlanceMinecraft"
+        url = uri("https://repo.redlance.org/public")
     }
+}
 
 base {
     archivesName = mod_id
@@ -142,6 +148,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolibVersion}"
+
+    implementation("com.zigythebird.playeranim:PlayerAnimationLibNeo:${property("pal_version")}")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -20,7 +20,7 @@ package illusnow.tjchase.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import illusnow.tjchase.entity.VineManager;
+import illusnow.tjchase.entity.dataentity.VineManager;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.tag.ModBlockTags;
 import net.minecraft.core.BlockPos;

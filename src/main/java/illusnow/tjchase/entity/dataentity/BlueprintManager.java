@@ -15,12 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.entity;
+package illusnow.tjchase.entity.dataentity;
 
 import com.google.common.base.Predicates;
 import com.google.common.primitives.Ints;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.attachment.ModAttachments;
+import illusnow.tjchase.entity.ModEntityDataSerializers;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.Utils;
 import net.minecraft.network.syncher.EntityDataAccessor;

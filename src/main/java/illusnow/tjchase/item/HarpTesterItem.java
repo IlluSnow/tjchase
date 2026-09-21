@@ -17,7 +17,7 @@
 
 package illusnow.tjchase.item;
 
-import illusnow.tjchase.entity.HarpTester;
+import illusnow.tjchase.entity.dataentity.HarpTester;
 import illusnow.tjchase.entity.ModEntities;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;

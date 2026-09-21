@@ -1,4 +1,4 @@
-// 1.21.11	2026-08-09T18:31:29.6029529	Model Definitions - tjchase
+// 1.21.11	2026-08-29T01:05:37.4914777	Model Definitions - tjchase
 2606791521eac27fa77ebbeeea442b8073802a51 assets/tjchase/blockstates/temporary_acacia_leaves.json
 5a49eaf2e8e03519cd1c8bb9acc727119658c60e assets/tjchase/blockstates/temporary_azalea_leaves.json
 8ef838697c46c00a32d716cdcf4638eed23d1cc0 assets/tjchase/blockstates/temporary_birch_leaves.json
@@ -15,6 +15,7 @@ bf78e102fdeea480a3240a50af71749ccdbbe9b6 assets/tjchase/items/entity_debug_stick
 adb7ac38fa7c74b02213274bd35b30181dc25111 assets/tjchase/items/harp_tester.json
 a48a02a9551b72f8ebf4adbd8caac813b203d10b assets/tjchase/items/netherite_harp.json
 d185fad651f93d56a874ab1e73b2c59d8d4f7cf9 assets/tjchase/items/proficiency_stick.json
+08864e86d7a5537b6f75f405fca47e31c7ab9cc0 assets/tjchase/items/rocket_editor.json
 6b9a52b14915ea4940e8ba9ff6e0aff897813a0f assets/tjchase/items/vine_seed.json
 c33480667eb6c1a875f9f1bdccc6b68cfe73df0b assets/tjchase/models/block/temporary_vine.json
 2da66613754c3a1beb8a6a538827f5630f23d140 assets/tjchase/models/item/blueprint.json
@@ -23,4 +24,5 @@ c85438ea7549bed01ef7752e0fa237da3a58c0ed assets/tjchase/models/item/harp.json
 a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/harp_tester.json
 6a41a5297f92976bdfe18e08e675a2964c8e4fbe assets/tjchase/models/item/netherite_harp.json
 a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/proficiency_stick.json
+5209cf11eafe640dd650073ce0c52c61b64d0684 assets/tjchase/models/item/rocket_editor.json
 fd92816d370a6b3c9f53a128f3fb91e67c276483 assets/tjchase/models/item/vine_seed.json

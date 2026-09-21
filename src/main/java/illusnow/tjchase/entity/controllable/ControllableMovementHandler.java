@@ -47,14 +47,27 @@ public final class ControllableMovementHandler {
 
     public static void updateControlledMobMovement(Controllable controllingMob, Player player, Input input) {
         LivingEntity mob = controllingMob.getSelfAsEntity();
-        mob.setSprinting(input.sprint() && !input.shift());
-        mob.setShiftKeyDown(input.shift());
+        updateShiftAndSprint(controllingMob, input);
         float x = calculateImpulse(input.left(), input.right());
         float z = calculateImpulse(input.forward(), input.backward());
         Vec2 movementVec = modifyMovement(mob, input, new Vec2(x, z).normalized());
         mob.xxa = movementVec.x;
         mob.setSpeed(movementVec.length());
         mob.zza = movementVec.y;
+        updateJump(controllingMob, input);
+    }
+
+    public static void updateShiftAndSprint(Controllable controllingMob, Input input) {
+        LivingEntity mob = controllingMob.getSelfAsEntity();
+        mob.setSprinting(input.sprint() && !input.shift());
+        mob.setShiftKeyDown(input.shift());
+    }
+
+    public static void updateJump(Controllable controllingMob, Input input) {
+        LivingEntity mob = controllingMob.getSelfAsEntity();
+        float x = calculateImpulse(input.left(), input.right());
+        float z = calculateImpulse(input.forward(), input.backward());
+        Vec2 movementVec = modifyMovement(mob, input, new Vec2(x, z).normalized());
         if (input.jump() && mob.onGround()) {
             makeControlledMobJump(mob, movementVec.lengthSquared() > 0);
         }
@@ -64,8 +77,9 @@ public final class ControllableMovementHandler {
         mob.jumpFromGround();
         if (((LivingEntityAccessor) mob).callGetJumpPower() > 1E-5 && addMovement) {
             // Sprinting mobs have already had a 0.2 movement boost
-            addExtraJumpMovement(mob, mob.isSprinting() ? 0.06 : (mob.isShiftKeyDown() ? 0.06 : 0.2));
+            addExtraJumpMovement(mob, mob.isShiftKeyDown() ? 0.06 : (mob.isSprinting() ? 0.06 : 0.2));
         }
+        mob.needsSync = false;
     }
 
     public static Vec2 calculateMoveVector(Input input) {
