@@ -29,6 +29,7 @@ import illusnow.tjchase.item.enchantment.ModEnchantmentEffectComponents;
 import illusnow.tjchase.particle.ModParticleTypes;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.ModMolangQueries;
+import illusnow.tjchase.world.gameplay.action.ModActions;
 import illusnow.tjchase.world.gameplay.object.ModGameplayObjectTypes;
 import illusnow.tjchase.world.gameplay.object.editablevalue.ModEditableValues;
 import net.minecraft.resources.Identifier;
@@ -49,6 +50,7 @@ public class TJChase {
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public TJChase(IEventBus bus, ModContainer modContainer) {
+        ModActions.ACTIONS.register(bus);
         ModAttachments.ATTACHMENT_TYPES.register(bus);
         ModBlocks.BLOCKS.register(bus);
         ModCreativeModeTabs.CREATIVE_MODE_TABS.register(bus);

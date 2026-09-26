@@ -17,16 +17,20 @@
 
 package illusnow.tjchase.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import illusnow.tjchase.entity.dataentity.VineManager;
 import illusnow.tjchase.entity.controllable.Controllable;
+import illusnow.tjchase.entity.dataentity.VineManager;
+import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.tag.ModBlockTags;
+import illusnow.tjchase.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -97,5 +101,24 @@ public abstract class LivingEntityMixin extends Entity {
             return;
         }
         original.call(yaw, pitch);
+    }
+
+    @ModifyReturnValue(method = "attackable", at = @At("RETURN"))
+    private boolean makePassivePlayerUnattackable(boolean original) {
+        if ((Object) this instanceof Player self) {
+            return !original || !Utils.isPassive(self);
+        }
+        return original;
+    }
+
+    @ModifyReturnValue(method = "isPickable", at = @At("RETURN"))
+    private boolean notPickableIfBeingTied(boolean original) {
+        if (!original) {
+            return false;
+        }
+        if ((Object) this instanceof Player self) {
+            return TyingHelper.getTiedTo(self) == null;
+        }
+        return true;
     }
 }

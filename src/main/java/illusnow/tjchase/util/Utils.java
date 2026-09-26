@@ -19,15 +19,21 @@ package illusnow.tjchase.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import illusnow.tjchase.attachment.ModAttachments;
+import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.particle.ModParticleTypes;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.players.NameAndId;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -37,12 +43,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -57,6 +66,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public final class Utils {
@@ -78,6 +88,11 @@ public final class Utils {
             ByteBufCodecs.DOUBLE, aabb -> aabb.maxY,
             ByteBufCodecs.DOUBLE, aabb -> aabb.maxZ,
             AABB::new
+    );
+    public static final StreamCodec<ByteBuf, NameAndId> NAME_AND_ID_STREAM_CODEC = StreamCodec.composite(
+            UUIDUtil.STREAM_CODEC, NameAndId::id,
+            ByteBufCodecs.PLAYER_NAME, NameAndId::name,
+            NameAndId::new
     );
 
     private Utils() {}
@@ -159,6 +174,10 @@ public final class Utils {
         return input.read(name, AABB_CODEC);
     }
 
+    public static AttributeInstance checkAndGetAttribute(LivingEntity entity, Holder<Attribute> attribute) {
+        return Objects.requireNonNull(entity.getAttribute(attribute), "Attribute %s is null! LivingEntity: %s".formatted(attribute.value(), entity));
+    }
+
     public static boolean noPhysics(LivingEntity entity) {
         return entity.isNoGravity() || entity.noPhysics;
     }
@@ -183,6 +202,10 @@ public final class Utils {
         return entity.getType().is(EntityTypeTags.AQUATIC);
     }
 
+    public static boolean isPassive(Player player) {
+        return player.getData(ModAttachments.WEAK_STATE).isWeak() || TyingHelper.getTiedTo(player) != null;
+    }
+
     @SuppressWarnings("deprecation")
     public static Vec3 tryMoveDownToGround(Level level, Vec3 pos, int maxTries) {
         BlockPos.MutableBlockPos blockPos = BlockPos.containing(pos).mutable();
@@ -195,5 +218,23 @@ public final class Utils {
             }
         }
         return new Vec3(pos.x, blockPos.getY(), pos.z);
+    }
+
+    public static boolean onlyOnePlayerDisconnectedOrLanWorld(@Nullable MinecraftServer server) {
+        if (server == null) {
+            return false;
+        }
+        if (server.isStopped()) {
+            return false;
+        }
+        return !server.isSingleplayer() || server.isPublished();
+    }
+
+    public static boolean isLanWorldHost(Player player) {
+        MinecraftServer server = player.level().getServer();
+        if (server == null || !server.isSingleplayer()) {
+            return false;
+        }
+        return server.isSingleplayerOwner(player.nameAndId());
     }
 }

@@ -127,8 +127,8 @@ public class BlueprintManagerRenderer extends EntityRenderer<BlueprintManager, B
         double referenceDistance = 8;
         float calculatedWidth1 = (float) (14 * (referenceDistance / distance1));
         float calculatedWidth2 = (float) (14 * (referenceDistance / distance2));
-        float finalLineWidth1 = Math.max(1.5F, Math.min(14, calculatedWidth1));
-        float finalLineWidth2 = Math.max(1.5F, Math.min(14, calculatedWidth2));
+        float finalLineWidth1 = Math.clamp(calculatedWidth1, 1.5F, 14);
+        float finalLineWidth2 = Math.clamp(calculatedWidth2, 1.5F, 14);
         consumer.addVertex((float) x1, (float) y1, (float) z1).setColor(1, 1, 1, renderState.getLineAlpha()).setLineWidth(finalLineWidth1).setNormal(pose, normal);
         consumer.addVertex((float) x2, (float) y2, (float) z2).setColor(1, 1, 1, renderState.getLineAlpha()).setLineWidth(finalLineWidth2).setNormal(pose, normal);
     }

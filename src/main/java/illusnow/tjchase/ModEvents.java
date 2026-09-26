@@ -25,10 +25,7 @@ import illusnow.tjchase.network.c2s.LoadTemplatePayload;
 import illusnow.tjchase.network.c2s.UpdateControlledEntityPositionPayload;
 import illusnow.tjchase.network.c2s.UpdateControlledEntityRotationPayload;
 import illusnow.tjchase.network.c2s.UpdateInputPayload;
-import illusnow.tjchase.network.s2c.OpenGameplayObjectEditScreenForInGameEntityPayload;
-import illusnow.tjchase.network.s2c.PlayDanceTimePayload;
-import illusnow.tjchase.network.s2c.PlayFuseSoundPayload;
-import illusnow.tjchase.network.s2c.UpdateControlledEntityPayload;
+import illusnow.tjchase.network.s2c.*;
 import illusnow.tjchase.util.ModRegistries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -79,6 +76,18 @@ public class ModEvents {
                 LoadTemplatePayload.STREAM_CODEC,
                 ModServerPayloadHandlers::handleLoadTemplate
         );
+        registrar.playToClient(
+                TiePlayerPayload.TYPE,
+                TiePlayerPayload.STREAM_CODEC
+        );
+        registrar.playToClient(
+                UpdateActionPayload.TYPE,
+                UpdateActionPayload.STREAM_CODEC
+        );
+        registrar.playToClient(
+                UpdateWeakStatusPayload.TYPE,
+                UpdateWeakStatusPayload.STREAM_CODEC
+        );
         registrar = registrar.executesOn(HandlerThread.NETWORK);
         registrar.playBidirectional(
                 SyncInGameEntityPayload.TYPE,
@@ -104,6 +113,7 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void registerRegistries(NewRegistryEvent event) {
+        event.register(ModRegistries.ACTIONS);
         event.register(ModRegistries.EDITABLE_VALUES);
         event.register(ModRegistries.GAMEPLAY_OBJECT_TYPES);
     }

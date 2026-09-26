@@ -37,6 +37,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
+@SuppressWarnings("NotNullFieldNotInitialized")
 public class GameplayObjectEditScreen<O> extends Screen {
     private final GameplayObject<?> gameplayObj;
     private final Template<O> template;

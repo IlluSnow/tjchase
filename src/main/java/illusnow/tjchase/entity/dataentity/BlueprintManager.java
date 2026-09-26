@@ -81,6 +81,9 @@ public class BlueprintManager extends DataEntity implements TraceableEntity {
     }
 
     public static List<BlueprintManager> getAllBlueprintsOf(@Nullable Entity entity) {
+        if (entity == null || !hasAnyBlueprintsIn(entity.level())) {
+            return List.of();
+        }
         return getBlueprintsOf(entity, Predicates.alwaysTrue());
     }
 
@@ -103,7 +106,26 @@ public class BlueprintManager extends DataEntity implements TraceableEntity {
     }
 
     public static List<BlueprintManager> getNearbyBlueprints(Level level, AABB range) {
+        if (!hasAnyBlueprintsIn(level)) {
+            return List.of();
+        }
         return level.getEntitiesOfClass(BlueprintManager.class, range);
+    }
+
+    public static boolean hasAnyBlueprintsIn(Level level) {
+        return level.getData(ModAttachments.BLUEPRINT_LIVE_COUNT).get() > 0;
+    }
+
+    @Override
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
+        level().getData(ModAttachments.BLUEPRINT_LIVE_COUNT).incrementAndGet();
+    }
+
+    @Override
+    public void onRemovedFromLevel() {
+        super.onRemovedFromLevel();
+        level().getData(ModAttachments.BLUEPRINT_LIVE_COUNT).decrementAndGet();
     }
 
     public static void updateBlueprintData(LivingEntity livingEntity) {

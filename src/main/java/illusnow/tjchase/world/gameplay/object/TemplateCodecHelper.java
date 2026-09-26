@@ -71,12 +71,10 @@ final class TemplateCodecHelper {
     static <T> DataResult<T> writeAll(Template<?> template, DynamicOps<T> ops, T prefix) {
         ListBuilder<T> builder = ops.listBuilder();
 
-        // 按照 Template 内部的插入顺序遍历 List<Pair>
         for (Pair<? extends EditableValue<?, ?>, Object> pair : template.createPairList()) {
             EditableValue<?, ?> key = pair.getFirst();
             Object value = pair.getSecond();
 
-            // 为每个条目构建一个 {"key": ..., "value": ...} 对象
             RecordBuilder<T> entryBuilder = ops.mapBuilder();
             entryBuilder.add("key", EditableValue.CODEC.encodeStart(ops, key));
             entryBuilder.add("value", encodeValue(key, value, ops));
@@ -98,7 +96,6 @@ final class TemplateCodecHelper {
             List<Pair<EditableValue<?, Object>, Object>> pairList = new ArrayList<>();
             DataResult<Unit> result = DataResult.success(Unit.INSTANCE, Lifecycle.stable());
 
-            // 按 Stream 的顺序依次读取每个条目
             for (T entryTag : (Iterable<T>) stream::iterator) {
                 DataResult<Pair<EditableValue<?, Object>, Object>> entryResult = ops.getMap(entryTag).flatMap(mapLike -> {
                     T keyData = mapLike.get("key");
@@ -115,14 +112,12 @@ final class TemplateCodecHelper {
                     });
                 });
 
-                // 累加结果并保持 List 的添加顺序
                 result = result.apply2stable((u, pair) -> {
                     pairList.add(pair);
                     return Unit.INSTANCE;
                 }, entryResult);
             }
 
-            // 使用 Template(List<Pair<...>>) 构造器还原，保证顺序一致
             return result.map(u -> Pair.of(new Template<>(pairList), ops.empty()));
         });
     }

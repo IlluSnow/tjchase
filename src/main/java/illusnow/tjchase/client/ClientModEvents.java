@@ -22,6 +22,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.client.editablevalue.ClientEditableValueHelper;
+import illusnow.tjchase.client.gui.ModHudLayers;
 import illusnow.tjchase.client.model.ModArmPoses;
 import illusnow.tjchase.client.network.ModClientPayloadHandlers;
 import illusnow.tjchase.client.particle.HarpPlayedNoteParticle;
@@ -29,10 +30,7 @@ import illusnow.tjchase.client.particle.TJChaseBuffParticle;
 import illusnow.tjchase.client.util.HarpAnimation;
 import illusnow.tjchase.item.HarpItem;
 import illusnow.tjchase.item.ModItems;
-import illusnow.tjchase.network.s2c.OpenGameplayObjectEditScreenForInGameEntityPayload;
-import illusnow.tjchase.network.s2c.PlayDanceTimePayload;
-import illusnow.tjchase.network.s2c.PlayFuseSoundPayload;
-import illusnow.tjchase.network.s2c.UpdateControlledEntityPayload;
+import illusnow.tjchase.network.s2c.*;
 import illusnow.tjchase.particle.ModParticleTypes;
 import illusnow.tjchase.tag.ModItemTags;
 import net.minecraft.client.Minecraft;
@@ -52,6 +50,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RenderHandEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
@@ -85,6 +84,18 @@ public class ClientModEvents {
         event.register(
                 OpenGameplayObjectEditScreenForInGameEntityPayload.TYPE,
                 ModClientPayloadHandlers::handleOpenGameObjectEditScreen
+        );
+        event.register(
+                TiePlayerPayload.TYPE,
+                ModClientPayloadHandlers::handleTiePlayer
+        );
+        event.register(
+                UpdateActionPayload.TYPE,
+                ModClientPayloadHandlers::handleUpdateAction
+        );
+        event.register(
+                UpdateWeakStatusPayload.TYPE,
+                ModClientPayloadHandlers::handleUpdateWeakStatus
         );
     }
 
@@ -162,5 +173,10 @@ public class ClientModEvents {
                 && player.getItemInHand(InteractionHand.MAIN_HAND).is(ModItemTags.HARPS)) {
             HarpAnimation.renderFirstPersonThrowBlockAnimation(event, player, itemInHandRenderer);
         }
+    }
+
+    @SubscribeEvent
+    public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
+        ModHudLayers.register(event);
     }
 }

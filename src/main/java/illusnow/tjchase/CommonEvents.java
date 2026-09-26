@@ -19,10 +19,14 @@ package illusnow.tjchase;
 
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.command.TJChaseCommand;
-import illusnow.tjchase.entity.*;
+import illusnow.tjchase.entity.HealthLockable;
+import illusnow.tjchase.entity.Linia;
+import illusnow.tjchase.entity.TJChaseCharacter;
+import illusnow.tjchase.entity.Zuri;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.dataentity.BlueprintManager;
 import illusnow.tjchase.entity.dataentity.HarpTester;
+import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.entity.projectile.YogaBall;
@@ -32,10 +36,15 @@ import illusnow.tjchase.item.enchantment.ModEnchantmentEffectComponents;
 import illusnow.tjchase.tag.ModBlockTags;
 import illusnow.tjchase.tag.ModItemTags;
 import illusnow.tjchase.util.*;
+import illusnow.tjchase.world.gameplay.WeakState;
+import illusnow.tjchase.world.gameplay.action.ActionHolder;
+import illusnow.tjchase.world.gameplay.action.ModActions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.*;
@@ -49,9 +58,12 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.jetbrains.annotations.Nullable;
@@ -77,16 +89,72 @@ public class CommonEvents {
         Player player = event.getEntity();
         // Does not need to sync here because the event is fired on both sides
         player.getData(ModAttachments.ORBITING_BLOCKS.get()).update();
+        ActionHolder.updateBidirectionally(player);
         if (!player.level().isClientSide()) {
             Controllable.checkCanContinueToControl(player);
         }
-        Entity tiedTo = TyingHelper.getTiedTo(player);
-        if (tiedTo != null && TyingHelper.isMovementRestricted(player)) {
-            player.snapTo(TyingHelper.getTyingPosition(tiedTo, player), tiedTo.getYRot(), tiedTo.getXRot());
-            if (tiedTo instanceof LivingEntity living) {
-                player.setYBodyRot(living.yBodyRot);
-                player.setYHeadRot(living.getYHeadRot());
+        WeakState weak = player.getData(ModAttachments.WEAK_STATE);
+        if (player.isAlive()) {
+            if (!player.level().isClientSide() && weak.serverTick(player)) {
+                player.syncData(ModAttachments.WEAK_STATE);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onCalculatingEntitySize(EntityEvent.Size event) {
+        if (event.getEntity() instanceof Player player && player.hasData(ModAttachments.WEAK_STATE) && player.getData(ModAttachments.WEAK_STATE).isWeak()) {
+            event.setNewSize(WeakState.WEAK_DIMENSIONS);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onClickingWeakPlayer(PlayerInteractEvent.EntityInteractSpecific event) {
+        if (event.getTarget() instanceof ServerPlayer player && player.getData(ModAttachments.WEAK_STATE).isWeak() && TyingHelper.getTiedTo(player) == null) {
+            TyingHelper.tie(player, event.getEntity());
+            ActionHolder.setAction(player, ModActions.STRUGGLE.get());
+            ActionHolder.setAction(event.getEntity(), ModActions.HUG.get());
+            event.setCancellationResult(InteractionResult.SUCCESS_SERVER);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        untieIfDisconnected(event);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        tieAgainIfReconnected(event);
+    }
+
+    private static void untieIfDisconnected(PlayerEvent.PlayerLoggedOutEvent event) {
+        Player player = event.getEntity();
+        Freezable.Situation currentSituation = Freezable.findCurrentSituation((ServerPlayer) player);
+        Entity tiedTo = TyingHelper.getTiedTo(player);
+        if (tiedTo != null) {
+            if (tiedTo instanceof Rocket rocket && currentSituation.playerMaybeOfflineAfterLoad()) {
+                rocket.freezeOnDisconnect((ServerPlayer) player);
+            }
+            if (tiedTo instanceof Player playerTyingSelf) {
+                TyingHelper.tie(player, null);
+                TyingHelper.clearStruggleOrPrayAction(player);
+                TyingHelper.clearHugOrTieAction(playerTyingSelf);
+            }
+        }
+        Player selfTying = TyingHelper.getTying(player);
+        if (selfTying != null) {
+            TyingHelper.tie(selfTying, null);
+            TyingHelper.clearStruggleOrPrayAction(selfTying);
+            TyingHelper.clearHugOrTieAction(player);
+        }
+    }
+
+    private static void tieAgainIfReconnected(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        Entity tiedTo = TyingHelper.getTiedTo(player);
+        if (tiedTo instanceof Rocket rocket) {
+            rocket.unfreezeOnConnect((ServerPlayer) player);
         }
     }
 
@@ -100,8 +168,36 @@ public class CommonEvents {
             }
             BlueprintManager.updateBlueprintData(livingEntity);
         }
-        TyingHelper.clearInvalid(entity);
+        updateTie(entity);
     }
+
+    private static void updateTie(Entity entity) {
+        if (!entity.level().isClientSide() && (TyingHelper.canTiePlayer(entity) || entity instanceof Player)) {
+            TyingHelper.clearIfInvalid(entity);
+        }
+        if (TyingHelper.canTiePlayer(entity)) {
+            Player tying = TyingHelper.getTying(entity);
+            if (tying != null && TyingHelper.isMovementRestricted(tying)) {
+                if (entity instanceof Player controller) {
+                    updateTieForPlayers(controller, tying);
+                } else {
+                    TyingHelper.restrictTiedPlayerMovement(tying, entity, false);
+                }
+            }
+        }
+    }
+
+    private static void updateTieForPlayers(Player controller, Player controlling) {
+        if (controlling.isLocalPlayer()) {
+            TyingHelper.restrictTiedPlayerMovement(controlling, controller, false);
+        } else {
+            if (!controller.level().isClientSide()) {
+                TyingHelper.restrictTiedPlayerMovement(controlling, controller, false);
+            }
+        }
+    }
+
+
 
     @SubscribeEvent
     public static void onProjectileImpact(ProjectileImpactEvent event) {
@@ -115,6 +211,13 @@ public class CommonEvents {
         handleOrbitingBlocksDamageReduction(event);
         handleTJChaseCharacterDamageReductionStart(event);
         handleBlueprintDamageReduction(event);
+        handlePassivePlayer(event);
+    }
+
+    private static void handlePassivePlayer(LivingIncomingDamageEvent event) {
+        if (event.getEntity() instanceof Player player && Utils.isPassive(player) && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            event.setCanceled(true);
+        }
     }
 
     private static void handleBlueprintDamageReduction(LivingIncomingDamageEvent event) {
@@ -168,6 +271,13 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
+    public static void onLivingHeal(LivingHealEvent event) {
+        if (event.getEntity() instanceof Player player && player.getData(ModAttachments.WEAK_STATE).isWeak()) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingDamagePre(LivingDamageEvent.Pre event) {
         handleTJChaseCharacterDamageReductionFinal(event);
         if (event.getSource().getEntity() instanceof Linia) {
@@ -189,10 +299,19 @@ public class CommonEvents {
         float minimum = getMinimumHealth(level, entity, stack);
         if (healthLocked(level, entity, stack, event.getSource())) {
             if (entity.getHealth() <= minimum) {
+                if (entity instanceof HealthLockable healthLockable) {
+                    healthLockable.tjChase$onHealthLockingHasEffect();
+                }
                 event.setNewDamage(0);
             } else {
                 float delta = entity.getHealth() - minimum;
-                event.setNewDamage(Math.min(event.getNewDamage(), delta));
+                float newDamage = event.getNewDamage();
+                if (newDamage > delta) {
+                    event.setNewDamage(delta);
+                    if (entity instanceof HealthLockable healthLockable) {
+                        healthLockable.tjChase$onHealthLockingHasEffect();
+                    }
+                }
             }
         }
     }
@@ -217,11 +336,17 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
+        if (event.getEntity() instanceof Player) {
+            event.setCanceled(true);
+            return;
+        }
         if (event.getSource().getEntity() instanceof TJChaseCharacter tjc) {
             tjc.awardKillProficiencyPoints(event.getEntity(), event.getEntity().getMaxHealth());
         }
         if (event.getEntity() instanceof Player player && !player.level().isClientSide()) {
             Controllable.control(player, null);
+            Entity tiedTo = TyingHelper.getTiedTo(player);
+            TyingHelper.clearTying(player, tiedTo);
         }
     }
 
@@ -234,8 +359,8 @@ public class CommonEvents {
         if (lockedHealthFromAngelTomWeapon3 > 0) {
             return lockedHealthFromAngelTomWeapon3;
         }
-        if (entity instanceof HealthLockable healthLockable && healthLockable.processDamageInEventListeners()) {
-            return healthLockable.getLockedHealth();
+        if (entity instanceof HealthLockable healthLockable && healthLockable.tjChase$processDamageInEventListeners()) {
+            return healthLockable.tjChase$getLockedHealth();
         }
         return 0;
     }
@@ -260,13 +385,7 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLivingChangeAttackTarget(LivingChangeTargetEvent event) {
         handleHarpTester(event);
-        if (event.getNewAboutToBeSetTarget() instanceof TJChaseCharacter tjc && tjc.isWeak()) {
-            if (event.getEntity() instanceof Mob mob && mob.getTarget() == event.getNewAboutToBeSetTarget()) {
-                event.setNewAboutToBeSetTarget(null);
-            } else {
-                event.setCanceled(true);
-            }
-        }
+        handleWeak(event);
         if (event.getEntity() instanceof Mob mob && DancingHelper.isTargetingAffectedByZuri(mob) && event.getNewAboutToBeSetTarget() != null) {
             LivingEntity oldTarget = mob.getTarget();
             Zuri zuri = DancingHelper.getZuriDancingWithDirectly(mob);
@@ -277,6 +396,23 @@ public class CommonEvents {
             } else if (cannotAttack) {
                 event.setCanceled(true);
             }
+        }
+    }
+
+    private static void handleWeak(LivingChangeTargetEvent event) {
+        if (event.getNewAboutToBeSetTarget() instanceof TJChaseCharacter tjc && tjc.isWeak()) {
+            easeTarget(event);
+        }
+        if (event.getNewAboutToBeSetTarget() instanceof Player player && Utils.isPassive(player)) {
+            easeTarget(event);
+        }
+    }
+
+    private static void easeTarget(LivingChangeTargetEvent event) {
+        if (event.getEntity() instanceof Mob mob && mob.getTarget() == event.getNewAboutToBeSetTarget()) {
+            event.setNewAboutToBeSetTarget(null);
+        } else {
+            event.setCanceled(true);
         }
     }
 

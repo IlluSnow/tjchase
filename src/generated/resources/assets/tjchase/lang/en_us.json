@@ -49,6 +49,7 @@
   "entity.tjchase.yoga_ball": "Yoga Ball",
   "entity.tjchase.zuri": "Zuri",
   "gui.tjchase.reset_to_default": "Reset to Default",
+  "gui.tjchase.weak_countdown": "Weak time remaining: %ds",
   "in_game_editable_property.tjchase.rocket_base_burning_speed": "Fuse Burning Speed",
   "in_game_editable_property.tjchase.rocket_fuse_display_direction": "Countdown Display Direction",
   "in_game_editable_property.tjchase.rocket_fuse_display_distance": "Countdown Display Distance",

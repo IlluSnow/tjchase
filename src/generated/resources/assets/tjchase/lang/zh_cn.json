@@ -49,6 +49,7 @@
   "entity.tjchase.yoga_ball": "瑜伽球",
   "entity.tjchase.zuri": "苏蕊",
   "gui.tjchase.reset_to_default": "重置为默认值",
+  "gui.tjchase.weak_countdown": "虚弱时间剩余：%ds",
   "in_game_editable_property.tjchase.rocket_base_burning_speed": "引线燃烧速度",
   "in_game_editable_property.tjchase.rocket_fuse_display_direction": "倒计时显示方向",
   "in_game_editable_property.tjchase.rocket_fuse_display_distance": "倒计时显示距离",

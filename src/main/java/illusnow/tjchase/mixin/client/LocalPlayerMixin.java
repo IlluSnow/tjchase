@@ -17,17 +17,20 @@
 
 package illusnow.tjchase.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.controllable.ControllableMovementHandler;
+import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.mixin.EntityAccessor;
 import illusnow.tjchase.util.OriginalInputAccessor;
 import net.minecraft.client.player.ClientInput;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Input;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec2;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -87,5 +90,13 @@ public abstract class LocalPlayerMixin {
                 && !entity.isPassenger()
                 && moving
                 && ((EntityAccessor) entity).callGetBlockJumpFactor() >= 1.0;
+    }
+
+    @ModifyReturnValue(method = "isControlledCamera", at = @At("RETURN"))
+    private boolean updateForPassive(boolean original) {
+        if (TyingHelper.getTiedTo((Player) (Object) this) != null) {
+            return false;
+        }
+        return original;
     }
 }

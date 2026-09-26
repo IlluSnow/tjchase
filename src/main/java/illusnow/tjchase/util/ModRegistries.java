@@ -18,6 +18,7 @@
 package illusnow.tjchase.util;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.world.gameplay.action.Action;
 import illusnow.tjchase.world.gameplay.object.GameplayObjectType;
 import illusnow.tjchase.world.gameplay.object.editablevalue.EditableValue;
 import net.minecraft.core.Registry;
@@ -25,6 +26,8 @@ import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 public final class ModRegistries {
+    public static final ResourceKey<Registry<Action>> ACTIONS_KEY = ResourceKey.createRegistryKey(TJChase.prefix("actions"));
+    public static final Registry<Action> ACTIONS = new RegistryBuilder<>(ModRegistries.ACTIONS_KEY).sync(true).create();
     public static final ResourceKey<Registry<EditableValue<?, ?>>> EDITABLE_VALUES_KEY = ResourceKey.createRegistryKey(TJChase.prefix("editable_values"));
     public static final Registry<EditableValue<?, ?>> EDITABLE_VALUES = new RegistryBuilder<>(ModRegistries.EDITABLE_VALUES_KEY).sync(true).create();
     public static final ResourceKey<Registry<GameplayObjectType<?>>> GAMEPLAY_OBJECT_TYPES_KEY = ResourceKey.createRegistryKey(TJChase.prefix("gameplay_object_types"));

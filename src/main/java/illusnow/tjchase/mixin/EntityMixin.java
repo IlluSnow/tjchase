@@ -20,10 +20,13 @@ package illusnow.tjchase.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.controllable.ControllableMovementHandler;
+import illusnow.tjchase.entity.gameplay.TyingHelper;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.attachment.AttachmentHolder;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,6 +38,16 @@ public abstract class EntityMixin extends AttachmentHolder {
     @Shadow public abstract boolean isSpectator();
 
     @Shadow public abstract boolean isShiftKeyDown();
+
+    @WrapOperation(method = "push(Lnet/minecraft/world/entity/Entity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isPassengerOfSameVehicle(Lnet/minecraft/world/entity/Entity;)Z"))
+    private boolean disablePushForTyingPlayers(Entity self, Entity another, Operation<Boolean> original) {
+        if (self instanceof Player thisPlayer && another instanceof Player anotherPlayer) {
+            if (TyingHelper.getTiedTo(thisPlayer) == anotherPlayer || TyingHelper.getTiedTo(anotherPlayer) == thisPlayer) {
+                return true;
+            }
+        }
+        return original.call(self, another);
+    }
 
     @ModifyReturnValue(method = "isInvisible", at = @At("RETURN"))
     private boolean forceVisibleInsideBlueprint(boolean original) {

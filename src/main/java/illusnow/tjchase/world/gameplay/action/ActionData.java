@@ -15,14 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.entity;
+package illusnow.tjchase.world.gameplay.action;
 
-public interface HealthLockable {
-    float tjChase$getLockedHealth();
+import com.mojang.serialization.Codec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.level.storage.ValueOutput;
 
-    default boolean tjChase$processDamageInEventListeners() {
-        return true;
+public interface ActionData<T> {
+    Codec<T> codec();
+
+    StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec();
+
+    @SuppressWarnings("unchecked")
+    default T self() {
+        return (T) this;
     }
 
-    default void tjChase$onHealthLockingHasEffect() {}
+    default void store(ValueOutput output, String key) {
+        output.store(key, codec(), self());
+    }
 }

@@ -15,19 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.world.gameplay;
+package illusnow.tjchase.util;
 
 import com.zigythebird.playeranim.animation.PlayerAnimResources;
+import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranim.api.PlayerAnimationAccess;
 import com.zigythebird.playeranimcore.animation.Animation;
 import com.zigythebird.playeranimcore.animation.RawAnimation;
-import illusnow.tjchase.TJChase;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Objects;
 
-public class ModAnimationIDs {
-    public static final Identifier STRUGGLE_LAYER = TJChase.prefix("struggle");
-    public static final Identifier TIED_STRUGGLE = TJChase.prefix("tied_struggle");
+public final class PlayerAnimationUtils {
+    private PlayerAnimationUtils() {}
+
+    public static PlayerAnimationController getController(Player player, Identifier animLayer) {
+        if (!player.level().isClientSide()) {
+            throw new IllegalStateException("Wrong side");
+        }
+        return (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, animLayer);
+    }
+
+    public static boolean triggerAnim(Player player, Identifier animLayer, Identifier animID) {
+        return getController(player, animLayer).triggerAnimation(animID);
+    }
 
     public static Animation getSimpleAnimation(Identifier animation) {
         return Objects.requireNonNull(PlayerAnimResources.getAnimation(animation), "Animation not found");

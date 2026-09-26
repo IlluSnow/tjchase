@@ -447,7 +447,7 @@ public class Linia extends PathfinderMob implements GeoEntity, HealthLockable {
     }
 
     @Override
-    public float getLockedHealth() {
+    public float tjChase$getLockedHealth() {
         if (storedEntityType != null && storedEntityType.is(ModEntityTypeTags.TJCHASE_FRIENDLY_MOBS)) {
             return TJChaseFriendlyMob.MINIMUM_HEALTH;
         }

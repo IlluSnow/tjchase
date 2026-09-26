@@ -18,8 +18,10 @@
 package illusnow.tjchase.attachment;
 
 public final class ModAttachmentNames {
+    public static final String ACTION_HOLDER = "action_holder";
     public static final String ANGEL_TOM_PASSIVE2_TRACKER = "angel_tom_passive2_tracker";
     public static final String BLUEPRINT_CONVERSION_IMMUNE_TICKS = "blueprint_conversion_immune_ticks";
+    public static final String BLUEPRINT_LIVE_COUNT = "blueprint_live_count";
     public static final String CONTROLLING_ENTITY = "controlling_entity";
     public static final String DANCE_EFFECT_TYPE = "dance_effect_type";
     public static final String DANCING_WITH = "dancing_with";
@@ -30,6 +32,7 @@ public final class ModAttachmentNames {
     public static final String TIED_TO = "tied_to";
     public static final String TYING = "tying";
     public static final String VINE_CD = "vine_cd";
+    public static final String WEAK_STATE = "weak_state";
 
     private ModAttachmentNames() {}
 }

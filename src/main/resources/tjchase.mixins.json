@@ -12,20 +12,27 @@
     "LivingEntityMixin",
     "LookControlAccessor",
     "MobMixin",
-    "PlayerListMixin"
+    "PlayerListMixin",
+    "PlayerMixin",
+    "client.KeyMappingMixin"
   ],
   "client": [
     "ClientInputMixin",
     "client.AbstractClientPlayerMixin",
     "client.BlockRenderDispatcherAccessor",
+    "client.CameraMixin",
     "client.ClientInputAccessor",
     "client.ClientPacketListenerMixin",
     "client.EntityRendererMixin",
     "client.EntityRenderStateMixin",
     "client.GameRendererMixin",
+    "client.GuiMixin",
     "client.ItemInHandRendererAccessor",
+    "client.KeyMappingMixin",
     "client.LocalPlayerMixin",
-    "client.MouseHandlerMixin"
+    "client.MinecraftMixin",
+    "client.MouseHandlerMixin",
+    "client.ToggleKeyMappingMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -33,5 +40,6 @@
   "overwrites": {
     "requireAnnotations": true
   },
-  "mixinextras": {"minVersion": "0.5.3"}
+  "mixinextras": {
+    "minVersion": "0.5.3"}
 }

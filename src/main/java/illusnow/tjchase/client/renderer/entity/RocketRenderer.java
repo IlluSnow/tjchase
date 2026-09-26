@@ -26,6 +26,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
@@ -50,7 +51,11 @@ public class RocketRenderer<R extends RocketRenderState & GeoRenderState> extend
     public void addRenderData(Rocket rocket, @Nullable Void relatedObject, R renderState, float partialTick) {
         renderState.setFusePositionOffset(rocket.getFuseDisplayDirection().apply(rocket.getLookAngle(), rocket.getFuseDisplayDistance()).add(0, rocket.getFuseDisplayHeightOffset(), 0));
         renderState.setRenderFuseCountdown(!rocket.isFlying());
-        renderState.setFuseCountdownSecondsText(Component.literal(String.valueOf(rocket.getFuseSeconds())));
+        MutableComponent countdown = rocket.isTemplate() ? Component.literal(rocket.getFuseSeconds() + " / " + rocket.getDefaultFuseSeconds()) : Component.literal(String.valueOf(rocket.getFuseSeconds()));
+        if (rocket.isFrozen()) {
+            countdown.withColor(0xCCEEFF);
+        }
+        renderState.setFuseCountdownSecondsText(countdown);
         renderState.setFontScale(rocket.getFuseDisplayFontScale());
     }
 

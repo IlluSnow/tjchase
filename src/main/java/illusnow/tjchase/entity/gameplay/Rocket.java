@@ -23,6 +23,9 @@ import illusnow.tjchase.entity.ModEntityNames;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.network.s2c.PlayFuseSoundPayload;
 import illusnow.tjchase.sound.ModSoundEvents;
+import illusnow.tjchase.util.Freezable;
+import illusnow.tjchase.world.gameplay.action.ActionHolder;
+import illusnow.tjchase.world.gameplay.action.ModActions;
 import illusnow.tjchase.world.gameplay.object.GameplayObjectType;
 import illusnow.tjchase.world.gameplay.object.ModGameplayObjectTypes;
 import illusnow.tjchase.world.gameplay.object.editablevalue.ModEditableValues;
@@ -37,6 +40,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.NameAndId;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -65,10 +69,11 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Objects;
 import java.util.function.IntFunction;
 import java.util.function.UnaryOperator;
 
-public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
+public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Freezable {
     private static final String HIT_CONTROLLER_NAME = "Hit";
     private static final String HIT_N_NAME = "hitN";
     private static final String HIT_S_NAME = "hitS";
@@ -82,9 +87,11 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
     public static final RawAnimation HIT_W = RawAnimation.begin().thenPlay(HIT_W_NAME);
     public static final RawAnimation FLY = RawAnimation.begin().thenPlayAndHold("fly");
     private static final EntityDataAccessor<Integer> DATA_FUSE = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_DEFAULT_FUSE_SECONDS = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_FLY_TICKS = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_PRIMED = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_FLYING = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> DATA_FROZEN = SynchedEntityData.defineId(Rocket.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<FuseDisplayDirection> DATA_FUSE_DISPLAY_DIRECTION = SynchedEntityData.defineId(Rocket.class, ModEntityDataSerializers.FUSE_DISPLAY_DIRECTION.get());
     private static final EntityDataAccessor<Double> DATA_FUSE_DISPLAY_DISTANCE = SynchedEntityData.defineId(Rocket.class, ModEntityDataSerializers.DOUBLE.get());
     private static final EntityDataAccessor<Double> DATA_FUSE_DISPLAY_HEIGHT_OFFSET = SynchedEntityData.defineId(Rocket.class, ModEntityDataSerializers.DOUBLE.get());
@@ -94,16 +101,23 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
     public static final int MAX_FLY_TICKS = 140;
     public static final int FLY_EXPLOSION_TICKS = 120;
     private static final int DEFAULT_FUSE = DEFAULT_FUSE_SECONDS * 20 * FUSE_DECREASE_PER_TICK;
+    private static final int DEFAULT_TIE_DURATION = 35;
+    private static final int DEFAULT_RESCUE_DURATION = 20;
     private static final String FUSE_TAG = "Fuse";
     private static final String PRIMED_TAG = "Primed";
     private static final String FLYING_TAG = "Flying";
     private static final String INITIAL_Y_ROT_TAG = "InitialYRot";
+    private static final String RESCUE_TICKS_TAG = "RescueTicks";
+    private static final String FROZEN_TAG = "Frozen";
+    private static final String DISCONNECTED_PLAYER_TAG = "DisconnectedPlayer";
     private static final double FUSE_SOUND_PLAY_RADIUS = 16;
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+    @Nullable
+    private NameAndId disconnectedPlayerOnRocket;
     private double baseBurningSpeed = 1;
     private float initialYRot;
     private int instaburnSeconds;
-    private int defaultFuseSeconds = DEFAULT_FUSE_SECONDS;
+    private int rescueTicks;
 
     public Rocket(EntityType<? extends Rocket> entityType, Level level) {
         super(entityType, level);
@@ -113,8 +127,10 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_FUSE, DEFAULT_FUSE);
+        builder.define(DATA_DEFAULT_FUSE_SECONDS, DEFAULT_FUSE_SECONDS);
         builder.define(DATA_PRIMED, false);
         builder.define(DATA_FLYING, false);
+        builder.define(DATA_FROZEN, false);
         builder.define(DATA_FLY_TICKS, 0);
         builder.define(DATA_FUSE_DISPLAY_DIRECTION, ModEditableValues.FUSE_DISPLAY_DIRECTION.get().defaultValue());
         builder.define(DATA_FUSE_DISPLAY_DISTANCE, ModEditableValues.FUSE_DISPLAY_DISTANCE.get().defaultValue());
@@ -133,6 +149,12 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
                 float flyTicks = getFlyTicks();
                 if (flyTicks >= MAX_FLY_TICKS){
                     discard();
+                } else if (flyTicks >= FLY_EXPLOSION_TICKS) {
+                    Player tying = TyingHelper.getTying(this);
+                    if (tying != null) {
+                        TyingHelper.clearStruggleOrPrayAction(tying);
+                    }
+                    TyingHelper.tie(null, this);
                 }
             } else {
                 float flyTicks = getFlyTicks();
@@ -144,7 +166,11 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
         if (!level().isClientSide()) {
             if (isPrimed() && !isFlying()) {
                 int decreaseAmount = calculateDecreaseAmountPerTick();
-                decreaseFuse(decreaseAmount);
+                if (rescueTicks <= 0) {
+                    decreaseFuse(decreaseAmount);
+                } else {
+                    rescueTicks--;
+                }
                 if (getFuse() == 0 && canFly()) {
                     setFlying(true);
                 }
@@ -226,24 +252,37 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
             return InteractionResult.SUCCESS_SERVER;
         }
         if (hand == InteractionHand.MAIN_HAND && player.getItemInHand(hand).isEmpty()) {
-            if (level().isClientSide()) {
-
-            } else {
-                TyingHelper.tie(player, this);
+            if (canTiePlayerToSelf()) {
+                if (!level().isClientSide()) {
+                    TyingHelper.tie(player, this);
+                    ActionHolder.setAction(player, ModActions.STRUGGLE.get());
+                }
+                return InteractionResult.SUCCESS;
             }
-            return InteractionResult.SUCCESS;
         }
         return super.createInteractionResult(player, hand);
     }
 
-    private void prime() {
+    private boolean canTiePlayerToSelf() {
+        return !isFlying() && !isFrozen() && TyingHelper.getTying(this) == null;
+    }
+
+    public void prime() {
         setPrimed(true);
         playFuseSound();
         decreaseFuseBySeconds(getInstaburnSeconds());
     }
 
+    public void extinguish() {
+        setPrimed(false);
+    }
+
     private boolean canFly() {
-        return true;
+        return rescueTicks <= 0 && !isFrozen();
+    }
+
+    private boolean canRescue() {
+        return getFuse() > 0 && !isFrozen();
     }
 
     private int calculateDecreaseAmountPerTick() {
@@ -271,7 +310,7 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
             return false;
         }
         if (super.hurtServer(level, damageSource, amount)) {
-            if (damageSource.getDirectEntity() != null) {
+            if (damageSource.getDirectEntity() != null && TyingHelper.getTying(this) == null) {
                 playHitAnimation(damageSource.getDirectEntity());
             }
             return true;
@@ -327,7 +366,7 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
     }
 
     public int getDefaultFuseSeconds() {
-        return defaultFuseSeconds;
+        return entityData.get(DATA_DEFAULT_FUSE_SECONDS);
     }
 
     public void setFuse(int fuse) {
@@ -339,7 +378,7 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
     }
 
     public void setDefaultFuseSeconds(int defaultFuseSeconds) {
-        this.defaultFuseSeconds = defaultFuseSeconds;
+        entityData.set(DATA_DEFAULT_FUSE_SECONDS, defaultFuseSeconds);
     }
 
     public void decreaseFuse(int amount) {
@@ -379,6 +418,10 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
         if (flying) {
             initialYRot = getYRot();
             playSound(ModSoundEvents.ROCKET_LAUNCH.get(), 1, 1);
+            Player tying = TyingHelper.getTying(this);
+            if (tying != null) {
+                ActionHolder.setAction(tying, ModActions.PRAY.get());
+            }
         }
     }
 
@@ -418,20 +461,28 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
         output.putBoolean(PRIMED_TAG, isPrimed());
         output.putBoolean(FLYING_TAG, isFlying());
         output.putFloat(INITIAL_Y_ROT_TAG, initialYRot);
+        output.putInt(RESCUE_TICKS_TAG, rescueTicks);
+        if (disconnectedPlayerOnRocket != null) {
+            output.store(DISCONNECTED_PLAYER_TAG, NameAndId.CODEC, disconnectedPlayerOnRocket);
+        }
+        output.putBoolean(FROZEN_TAG, entityData.get(DATA_FROZEN));
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
-        setFuse(input.getIntOr(FUSE_TAG, getDefaultFuseSeconds()));
+        setFuse(input.getIntOr(FUSE_TAG, getDefaultFuseSeconds() * 20 * FUSE_DECREASE_PER_TICK));
         setPrimed(input.getBooleanOr(PRIMED_TAG, false));
         setFlying(input.getBooleanOr(FLYING_TAG, false));
         initialYRot = input.getFloatOr(INITIAL_Y_ROT_TAG, 0);
+        rescueTicks = input.getIntOr(RESCUE_TICKS_TAG, 0);
+        disconnectedPlayerOnRocket = input.read(DISCONNECTED_PLAYER_TAG, NameAndId.CODEC).orElse(null);
+        setFrozen(input.getBooleanOr(FROZEN_TAG, false));
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>("Empty/Tied", test -> isVehicle() ? test.setAndContinue(TIED) : test.setAndContinue(EMPTY)));
+        controllers.add(new AnimationController<>("Empty/Tied", test -> TyingHelper.getTying(this) != null ? test.setAndContinue(TIED) : test.setAndContinue(EMPTY)));
         controllers.add(new AnimationController<>("Fly", test -> isFlying() ? test.setAndContinue(FLY) : PlayState.STOP));
         controllers.add(new AnimationController<>(HIT_CONTROLLER_NAME, test -> PlayState.STOP)
                 .triggerableAnim(HIT_N_NAME, HIT_N)
@@ -491,6 +542,33 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity {
 
     public void setFuseDisplayFontScale(double fontScale) {
         entityData.set(DATA_FUSE_DISPLAY_FONT_SCALE, fontScale);
+    }
+
+    @Override
+    public boolean isFrozen() {
+        if (level().isClientSide()) {
+            return entityData.get(DATA_FROZEN);
+        }
+        return disconnectedPlayerOnRocket != null;
+    }
+
+    private void setFrozen(boolean frozen) {
+        entityData.set(DATA_FROZEN, frozen);
+    }
+
+    @Override
+    public void freezeOnDisconnect(ServerPlayer player) {
+        disconnectedPlayerOnRocket = player.nameAndId();
+        setFrozen(true);
+    }
+
+    @Override
+    public void unfreezeOnConnect(ServerPlayer player) {
+        if (Objects.equals(player.nameAndId(), disconnectedPlayerOnRocket)) {
+            TyingHelper.tie(player, this);
+            disconnectedPlayerOnRocket = null;
+            setFrozen(false);
+        }
     }
 
     public enum FuseDisplayDirection implements StringRepresentable, TranslatableEnum {

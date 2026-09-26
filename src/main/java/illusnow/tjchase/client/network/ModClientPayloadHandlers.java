@@ -23,16 +23,17 @@ import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
 import illusnow.tjchase.client.resources.sounds.PrimedRocketSoundInstance;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.gameplay.InGamePlacedEntity;
-import illusnow.tjchase.network.s2c.OpenGameplayObjectEditScreenForInGameEntityPayload;
-import illusnow.tjchase.network.s2c.PlayDanceTimePayload;
-import illusnow.tjchase.network.s2c.PlayFuseSoundPayload;
-import illusnow.tjchase.network.s2c.UpdateControlledEntityPayload;
+import illusnow.tjchase.entity.gameplay.TyingHelper;
+import illusnow.tjchase.network.s2c.*;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.AbstractSoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -93,6 +94,51 @@ public final class ModClientPayloadHandlers {
             return;
         }
         Minecraft.getInstance().setScreen(new GameplayObjectEditScreen<>(entity.getDisplayName().copy(), entity, entity.createTemplate()));
+    }
+
+    public static void handleTiePlayer(TiePlayerPayload payload, IPayloadContext context) {
+        LOGGER.debug("Handling tying {}, tie = {}", context.player().getDisplayName().getString(), payload.tie());
+        handleTiedPlayerCameraEntity(payload.tie(), context.player());
+    }
+
+    public static void handleTiedPlayerCameraEntity(boolean tie, Player player) {
+        Minecraft minecraft = Minecraft.getInstance();
+        Entity tiedTo = TyingHelper.getTiedTo(player);
+        if (tie) {
+            if (tiedTo != null && (minecraft.getCameraEntity() == null || tiedTo.getId() != minecraft.getCameraEntity().getId())) {
+                minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+                minecraft.setCameraEntity(tiedTo);
+            }
+        } else {
+            minecraft.setCameraEntity(null);
+        }
+    }
+
+    public static void handleUpdateAction(UpdateActionPayload payload, IPayloadContext context) {
+        Player player = context.player().level().getPlayerByUUID(payload.player().id());
+        if (player == null) {
+            infoNullPlayer(payload.player());
+            return;
+        }
+        payload.op().handle(player, payload.newAction().orElse(null), payload.oldAction().orElse(null));
+    }
+
+    public static void handleUpdateWeakStatus(UpdateWeakStatusPayload payload, IPayloadContext context) {
+        Player player = context.player().level().getPlayerByUUID(payload.player());
+        if (player == null) {
+            infoNullPlayer(payload.player());
+            return;
+        }
+        player.refreshDimensions();
+        if (payload.weak() && player.isLocalPlayer()) {
+            if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?>) {
+                Minecraft.getInstance().setScreen(null);
+            }
+        }
+    }
+
+    private static void infoNullPlayer(Object id) {
+        LOGGER.info("Player with {} {} not found, ignored", id.getClass().getSimpleName(), id);
     }
 
     private static void warnNotFound(int id) {

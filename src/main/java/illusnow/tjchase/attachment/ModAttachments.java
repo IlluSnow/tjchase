@@ -26,6 +26,8 @@ import illusnow.tjchase.entity.dataentity.HarpTester;
 import illusnow.tjchase.util.AngelTomPassive2Tracker;
 import illusnow.tjchase.util.DancingHelper;
 import illusnow.tjchase.util.OrbitingBlockHolder;
+import illusnow.tjchase.world.gameplay.WeakState;
+import illusnow.tjchase.world.gameplay.action.ActionHolder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -44,14 +46,21 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 public final class ModAttachments {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, TJChase.MODID);
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<ActionHolder>> ACTION_HOLDER = ATTACHMENT_TYPES.register(ModAttachmentNames.ACTION_HOLDER, () ->
+            AttachmentType.builder(ActionHolder::new).serialize(ActionHolder.Serializer.INSTANCE).sync(ActionHolder.Syncer.INSTANCE).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<AngelTomPassive2Tracker>> ANGEL_TOM_PASSIVE2_TRACKER = ATTACHMENT_TYPES.register(ModAttachmentNames.ANGEL_TOM_PASSIVE2_TRACKER, () ->
             AttachmentType.builder(AngelTomPassive2Tracker::createDefault).serialize(AngelTomPassive2Tracker.MAP_CODEC).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> BLUEPRINT_CONVERSION_IMMUNE_TICKS = ATTACHMENT_TYPES.register(ModAttachmentNames.BLUEPRINT_CONVERSION_IMMUNE_TICKS, () ->
             AttachmentType.builder(() -> 0L).serialize(Codec.LONG.fieldOf(ModAttachmentNames.BLUEPRINT_CONVERSION_IMMUNE_TICKS)).build());
+    // Tracks how many BlueprintManager entities are currently loaded in a level, so the
+    // nearby-blueprint entity search can be skipped entirely when none exist. Not persisted or synced.
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<AtomicInteger>> BLUEPRINT_LIVE_COUNT = ATTACHMENT_TYPES.register(ModAttachmentNames.BLUEPRINT_LIVE_COUNT, () ->
+            AttachmentType.builder(() -> new AtomicInteger()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Controllable.Holder>> CONTROLLING_ENTITY = ATTACHMENT_TYPES.register(ModAttachmentNames.CONTROLLING_ENTITY, () ->
             AttachmentType.builder(() -> Controllable.Holder.EMPTY).serialize(Controllable.Holder.Serializer.INSTANCE).sync(Controllable.Holder.Syncer.INSTANCE).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<OrbitingBlockHolder>> ORBITING_BLOCKS = ATTACHMENT_TYPES.register(ModAttachmentNames.ORBITING_BLOCKS, () ->
@@ -72,6 +81,8 @@ public final class ModAttachments {
             AttachmentType.<Optional<EntityReference<Entity>>>builder(Optional::empty).serialize(optionalSerializer(EntityReference.codec())).sync(optionalSyncer(EntityReference.streamCodec())).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Optional<EntityReference<Player>>>> TYING = ATTACHMENT_TYPES.register(ModAttachmentNames.TYING, () ->
             AttachmentType.<Optional<EntityReference<Player>>>builder(Optional::empty).serialize(optionalSerializer(EntityReference.codec())).sync(optionalSyncer(EntityReference.streamCodec())).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<WeakState>> WEAK_STATE = ATTACHMENT_TYPES.register(ModAttachmentNames.WEAK_STATE, () ->
+            AttachmentType.builder(WeakState::new).serialize(WeakState.MAP_CODEC).sync(WeakState.STREAM_CODEC).build());
 
     private ModAttachments() {}
 

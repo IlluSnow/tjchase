@@ -25,6 +25,8 @@ import illusnow.tjchase.world.gameplay.object.GameplayObjectType;
 import illusnow.tjchase.world.gameplay.object.Template;
 import illusnow.tjchase.world.gameplay.object.editablevalue.EditableValue;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,8 +47,8 @@ import org.jspecify.annotations.Nullable;
 
 public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extends Entity implements GameplayObject<GameplayObjectType<O>> {
     private static final String TEMPLATE_TAG = "Template";
+    private static final EntityDataAccessor<Boolean> DATA_TEMPLATE = SynchedEntityData.defineId(InGamePlacedEntity.class, EntityDataSerializers.BOOLEAN);
     private final InterpolationHandler interpolation = new InterpolationHandler(this, 3);
-    private boolean template;
     private int cleaningPreparationTicks;
 
     protected InGamePlacedEntity(EntityType<? extends InGamePlacedEntity> entityType, Level level) {
@@ -60,7 +62,9 @@ public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extend
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {}
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_TEMPLATE, false);
+    }
 
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
@@ -235,10 +239,10 @@ public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extend
 
     @Override
     public boolean isTemplate() {
-        return template;
+        return entityData.get(DATA_TEMPLATE);
     }
 
     public void setTemplate(boolean template) {
-        this.template = template;
+        entityData.set(DATA_TEMPLATE, template);
     }
 }

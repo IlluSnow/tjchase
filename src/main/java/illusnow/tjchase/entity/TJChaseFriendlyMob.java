@@ -49,7 +49,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -130,7 +129,7 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     private static final EntityDataAccessor<Optional<EntityReference<Player>>> DATA_CONTROLLER_REF = SynchedEntityData.defineId(TJChaseFriendlyMob.class, ModEntityDataSerializers.OPTIONAL_PLAYER_REFERENCE.get());
     protected static final int DEFAULT_MELEE_ATTACK_RANGE = 5;
     protected static final int DEFAULT_MAX_WEAK_TICKS = 15;
-    protected static final float MINIMUM_HEALTH = 0.001F;
+    protected static final float MINIMUM_HEALTH = 1E-3F;
     protected final int maxWeakTicks = initMaxWeakTicks();
     private boolean reloadedControlledEntity;
 
@@ -337,7 +336,7 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
         return false;
     }
 
-    protected @NotNull List<LivingEntity> findNearbyTargets(LivingEntity attackTarget, double attackRange) {
+    protected List<LivingEntity> findNearbyTargets(LivingEntity attackTarget, double attackRange) {
         AABB attackBox = getAttackBoundingBox(attackRange);
         double dx = attackTarget.getX() - getX();
         double dy = attackTarget.getEyeY() - getY();
@@ -592,12 +591,12 @@ public abstract class TJChaseFriendlyMob extends PathfinderMob implements Ownabl
     protected abstract void onRecovered();
 
     @Override
-    public float getLockedHealth() {
+    public float tjChase$getLockedHealth() {
         return MINIMUM_HEALTH;
     }
 
     @Override
-    public boolean processDamageInEventListeners() {
+    public boolean tjChase$processDamageInEventListeners() {
         return false;
     }
 }

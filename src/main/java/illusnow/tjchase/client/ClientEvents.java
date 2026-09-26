@@ -18,6 +18,7 @@
 package illusnow.tjchase.client;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.client.network.ModClientPayloadHandlers;
 import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
 import illusnow.tjchase.client.resources.sounds.PrimedRocketSoundInstance;
 import illusnow.tjchase.client.util.OrbitingBlocksRenderHelper;
@@ -27,13 +28,16 @@ import illusnow.tjchase.entity.controllable.ControllableMovementHandler;
 import illusnow.tjchase.entity.dataentity.BlueprintManager;
 import illusnow.tjchase.entity.gameplay.InGamePlacedEntity;
 import illusnow.tjchase.entity.gameplay.Rocket;
+import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.mixin.client.ClientInputAccessor;
 import illusnow.tjchase.network.c2s.LoadTemplatePayload;
 import illusnow.tjchase.network.c2s.UpdateControlledEntityPositionPayload;
 import illusnow.tjchase.network.c2s.UpdateInputPayload;
 import illusnow.tjchase.util.OriginalInputAccessor;
+import illusnow.tjchase.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
@@ -73,10 +77,34 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
+    public static void canRenderNameTag(RenderNameTagEvent.CanRender event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+        Entity tiedTo = TyingHelper.getTiedTo(player);
+        if (event.getEntity() == player && tiedTo != null && !(tiedTo instanceof Player)) {
+            event.setCanRender(TriState.FALSE);
+        }
+    }
+
+    @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
         if (entity.level().isClientSide() && entity.tickCount == 1) {
             handleClientFirstTick(entity);
+        }
+        if (entity.level().isClientSide() && entity instanceof LocalPlayer player) {
+            Entity tiedTo = TyingHelper.getTiedTo(player);
+            if (tiedTo != null) {
+                ModClientPayloadHandlers.handleTiedPlayerCameraEntity(true, player);
+            }
+        }
+        if (entity instanceof RemotePlayer remotePlayer) {
+            Entity tiedTo = TyingHelper.getTiedTo(remotePlayer);
+            if (tiedTo instanceof Player controller) {
+                TyingHelper.restrictTiedPlayerMovement(remotePlayer, controller, false);
+            }
         }
     }
 
@@ -155,7 +183,7 @@ public class ClientEvents {
     private static boolean isPlayerInBlueprint() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            for (BlueprintManager manager : player.level().getEntitiesOfClass(BlueprintManager.class, player.getBoundingBox().inflate(BlueprintManager.MAX_LENGTH_ALLOWED))) {
+            for (BlueprintManager manager : BlueprintManager.getNearbyBlueprints(player.level(), player.getBoundingBox().inflate(BlueprintManager.MAX_LENGTH_ALLOWED))) {
                 if (manager.isPositionInside(getCameraPosition()) && manager.isValid()) {
                     return true;
                 }
@@ -168,6 +196,22 @@ public class ClientEvents {
         return Minecraft.getInstance().gameRenderer.getMainCamera().position();
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onInteractionKeyMappingFirstlyTriggered(InputEvent.InteractionKeyMappingTriggered event) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null && Utils.isPassive(player)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onMouseFirstlyScroll(InputEvent.MouseScrollingEvent event) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null && Utils.isPassive(player)) {
+            event.setCanceled(true);
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onInteractionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
         HitResult hitResult = Minecraft.getInstance().hitResult;
@@ -175,6 +219,16 @@ public class ClientEvents {
         if (player != null && event.isPickBlock() && hitResult instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof InGamePlacedEntity<?> entity) {
             if (event.getHand() == InteractionHand.MAIN_HAND && entity.validItem(player.getItemInHand(event.getHand()))) {
                 ClientPacketDistributor.sendToServer(new LoadTemplatePayload(entity.createTemplate()));
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderGuiLayer(RenderGuiLayerEvent.Pre event) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null && Utils.isPassive(player)) {
+            if (ClientPassivePlayerHelper.isGuiLayerDisabled(event.getName())) {
                 event.setCanceled(true);
             }
         }

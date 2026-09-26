@@ -15,14 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.entity;
+package illusnow.tjchase.world.gameplay.action;
 
-public interface HealthLockable {
-    float tjChase$getLockedHealth();
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 
-    default boolean tjChase$processDamageInEventListeners() {
-        return true;
+public class ContinuousAction extends Action {
+    protected ContinuousAction(Identifier id, Identifier animId, int priority) {
+        super(id, animId, priority);
     }
 
-    default void tjChase$onHealthLockingHasEffect() {}
+    @Override
+    public void onComplete(Player player) {}
+
+    @Override
+    public void onInterrupt(Player player) {}
+
+    @Override
+    public void update(Player player, ActionHolder actionHolder) {}
 }

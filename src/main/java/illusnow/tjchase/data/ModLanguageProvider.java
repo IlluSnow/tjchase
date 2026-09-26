@@ -19,6 +19,7 @@ package illusnow.tjchase.data;
 
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
+import illusnow.tjchase.client.gui.ModHudLayers;
 import illusnow.tjchase.command.EntityCommand;
 import illusnow.tjchase.command.ProficiencyCommand;
 import illusnow.tjchase.entity.dataentity.HarpTester;
@@ -149,6 +150,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(EditableValueBehaviors.RangedBehavior.HINT_KEY_DECIMAL, "Value Range: [%.1f, %.1f]");
             add(ModCreativeModeTabs.TAB_ID, "TJChase");
             add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "TJChase - Gameplay");
+            add(ModHudLayers.WEAK_COUNTDOWN_TEXT, "Weak time remaining: %ds");
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "Entity Debug Stick");
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
@@ -304,6 +306,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(EditableValueBehaviors.RangedBehavior.HINT_KEY_DECIMAL, "取值范围：[%.1f, %.1f]");
             add(ModCreativeModeTabs.TAB_ID, "猫鼠");
             add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "猫鼠 - 主游戏");
+            add(ModHudLayers.WEAK_COUNTDOWN_TEXT, "虚弱时间剩余：%ds");
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "实体调试棒");
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");
