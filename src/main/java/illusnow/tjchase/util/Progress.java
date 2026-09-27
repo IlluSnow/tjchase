@@ -48,7 +48,4 @@ public record Progress(long startTick, long endTick) {
         return tickCount < startTick || tickCount >= endTick;
     }
 
-    public boolean stillValid(long tickCount) {
-        return !shouldRemove(tickCount);
-    }
 }

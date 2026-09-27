@@ -25,10 +25,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ModActions {
     public static final DeferredRegister<Action> ACTIONS = DeferredRegister.create(ModRegistries.ACTIONS_KEY, TJChase.MODID);
-    public static final DeferredHolder<Action, Action> STRUGGLE = ACTIONS.register("tied_struggle", id -> new ContinuousAction(id, ModPlayerAnimationIDs.TIED_STRUGGLE, Action.MEDIUM_PRIORITY));
-    public static final DeferredHolder<Action, Action> PRAY = ACTIONS.register("pray", id -> new ContinuousAction(id, ModPlayerAnimationIDs.PRAY, Action.MEDIUM_PRIORITY));
-    public static final DeferredHolder<Action, Action> HUG = ACTIONS.register("hug", id -> new ContinuousAction(id, ModPlayerAnimationIDs.HUG, Action.MEDIUM_PRIORITY));
-    public static final DeferredHolder<Action, Action> TIE = ACTIONS.register("tie", id -> new ContinuousAction(id, ModPlayerAnimationIDs.TIE, Action.MEDIUM_PRIORITY));
+    public static final DeferredHolder<Action, Action> STRUGGLE = ACTIONS.register("tied_struggle", id -> new StruggleAction(id, ModPlayerAnimationIDs.TIED_STRUGGLE, Action.MEDIUM_PRIORITY));
+    public static final DeferredHolder<Action, Action> PRAY = ACTIONS.register("pray", id -> new StruggleAction(id, ModPlayerAnimationIDs.PRAY, Action.MEDIUM_PRIORITY));
+    public static final DeferredHolder<Action, Action> HUG = ACTIONS.register("hug", id -> new HugAction(id, ModPlayerAnimationIDs.HUG, Action.MEDIUM_PRIORITY));
+    public static final DeferredHolder<Action, Action> TIE = ACTIONS.register("tie", id -> new TieAction(id, ModPlayerAnimationIDs.TIE, Action.MEDIUM_PRIORITY));
 
     private ModActions() {}
 }

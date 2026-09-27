@@ -29,13 +29,14 @@ import net.minecraft.server.players.NameAndId;
 
 import java.util.Optional;
 
-public record UpdateActionPayload(ActionHolder.NetworkOp op, NameAndId player, Optional<Action> newAction, Optional<Action> oldAction) implements CustomPacketPayload {
+public record UpdateActionPayload(ActionHolder.NetworkOp op, NameAndId player, Optional<Action> newAction, Optional<Action> oldAction, float speed) implements CustomPacketPayload {
     public static final Type<UpdateActionPayload> TYPE = new Type<>(TJChase.prefix("update_action"));
     public static final StreamCodec<RegistryFriendlyByteBuf, UpdateActionPayload> STREAM_CODEC = StreamCodec.composite(
             ActionHolder.NetworkOp.STREAM_CODEC, UpdateActionPayload::op,
             Utils.NAME_AND_ID_STREAM_CODEC, UpdateActionPayload::player,
             ByteBufCodecs.optional(Action.STREAM_CODEC), UpdateActionPayload::newAction,
             ByteBufCodecs.optional(Action.STREAM_CODEC), UpdateActionPayload::oldAction,
+            ByteBufCodecs.FLOAT, UpdateActionPayload::speed,
             UpdateActionPayload::new
     );
 

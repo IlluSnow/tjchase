@@ -20,22 +20,99 @@ package illusnow.tjchase.world.gameplay.action;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.Nullable;
 
-public abstract class OneTimeAction extends Action {
-    protected OneTimeAction(Identifier id, Identifier animId, int priority) {
+import java.util.Objects;
+
+public abstract non-sealed class OneTimeAction<D extends ActionData> extends Action {
+    private final int defaultDuration;
+
+    protected OneTimeAction(Identifier id, Identifier animId, int priority, int defaultDuration) {
         super(id, animId, priority);
+        this.defaultDuration = defaultDuration;
     }
 
     @Override
-    public void onInterrupt(Player player) {}
+    public void onInterrupt(Player player, ActionHolder holder) {}
 
     @Override
-    public void update(Player player, ActionHolder actionHolder) {
-        Vec3 deltaMovement = player.getDeltaMovement();
-        if (Math.abs(deltaMovement.x) + Math.abs(deltaMovement.z) > 0.1) {
-            actionHolder.interruptCurrentAction(player);
+    public void update(Player player, ActionHolder holder) {
+        if (!player.level().isClientSide()) {
+            if (shouldInterrupt(player, holder, getDataFrom(holder))) {
+                interrupt(player, holder);
+                return;
+            }
+            if (holder.getProgress().shouldRemove(holder.getTickCount())) {
+                complete(player, holder);
+            }
         }
     }
 
-    protected abstract boolean interruptsActionIfMoving(Player player);
+    public boolean canTrigger(Player player, ActionHolder holder, ActionData data) {
+        return !shouldInterrupt(player, holder, cast(data));
+    }
+
+    protected boolean shouldInterrupt(Player player, ActionHolder holder, D data) {
+        Vec3 deltaMovement = player.getDeltaMovement();
+        return interruptsActionIfMoving(player) && Math.abs(deltaMovement.x) + Math.abs(deltaMovement.z) > 0.1;
+    }
+
+    protected boolean interruptsActionIfMoving(Player player) {
+        return true;
+    }
+
+    protected void interrupt(Player player, ActionHolder holder) {
+        ActionHolder.setAction(player, null);
+    }
+
+    protected void complete(Player player, ActionHolder holder) {
+        holder.completeCurrentAction(player);
+        if (readPreviousContinuousAction(player, holder, true)) {
+            ActionHolder.sync(player, ActionHolder.NetworkOp.COMPLETE_BACKTRACK, null, this, 1);
+            ActionHolder.setAction(player, holder.getPrevAction());
+        } else {
+            ActionHolder.sync(player, ActionHolder.NetworkOp.COMPLETE, null, this, 1);
+        }
+        holder.setPrevAction(null);
+    }
+
+    @Override
+    public void reload(Player player, ActionHolder holder) {
+        if (!player.level().isClientSide()) {
+            ActionHolder.setAction(player, null);
+            holder.setPrevAction(null);
+        }
+    }
+
+    public D getDataFrom(ActionHolder holder) {
+        return cast(holder.getActionData());
+    }
+
+    @SuppressWarnings("unchecked")
+    public D cast(@Nullable ActionData data) {
+        Objects.requireNonNull(data, "Data not found");
+        return (D) data;
+    }
+
+    @Contract("null -> false")
+    public boolean isValidData(@Nullable ActionData data) {
+        if (data == null) {
+            return false;
+        }
+        try {
+            cast(data);
+            return true;
+        } catch (ClassCastException e) {
+            return false;
+        }
+    }
+
+    public int defaultDuration() {
+        return defaultDuration;
+    }
+
+    public boolean readPreviousContinuousAction(Player player, ActionHolder holder, boolean complete) {
+        return !complete;
+    }
 }

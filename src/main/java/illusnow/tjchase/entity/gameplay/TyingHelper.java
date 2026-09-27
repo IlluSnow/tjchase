@@ -41,6 +41,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public final class TyingHelper {
+    public static final double PLAYER_BEING_TIED_ALPHA = 0.25;
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Map<EntityType<?>, PositionCalculator<Entity>> POSITION_CALCULATORS = new HashMap<>();
 
@@ -81,6 +82,7 @@ public final class TyingHelper {
     }
 
     public static void tie(@Nullable Player player, @Nullable Entity tiedTo) {
+        boolean updatedPlayer = false;
         if (player == null && tiedTo == null) {
             return;
         }
@@ -93,6 +95,7 @@ public final class TyingHelper {
                     prevTiedTo.setData(ModAttachments.TYING, Optional.empty());
                 }
                 player.setData(ModAttachments.TIED_TO, Optional.ofNullable(EntityReference.of(tiedTo)));
+                updatedPlayer = true;
             }
         }
         if (tiedTo != null) {
@@ -103,10 +106,11 @@ public final class TyingHelper {
                     updatePlayer(prevTying, null);
                 }
                 tiedTo.setData(ModAttachments.TYING, Optional.ofNullable(EntityReference.of(player)));
+                updatedPlayer = true;
             }
         }
 
-        if (player != null) {
+        if (player != null && updatedPlayer) {
             updatePlayer(player, tiedTo);
         }
     }
@@ -133,7 +137,8 @@ public final class TyingHelper {
                     clearHugOrTieAction(prevPlayerTiedTo);
                 }
             } else if (prevTiedTo == null && player.getData(ModAttachments.TIED_TO).isPresent()) {
-                tie(player, null);
+                player.setData(ModAttachments.TIED_TO, Optional.empty());
+                updatePlayer(player, null);
                 clearStruggleOrPrayAction(player);
             }
         }
@@ -145,7 +150,7 @@ public final class TyingHelper {
                 clearHugOrTieAction(player);
             }
         } else if (prevTying == null && entity.getData(ModAttachments.TYING).isPresent()) {
-            tie(null, entity);
+            entity.setData(ModAttachments.TYING, Optional.empty());
             if (entity instanceof Player player) {
                 clearHugOrTieAction(player);
             }

@@ -23,6 +23,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.attachment.ModAttachments;
+import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.network.s2c.UpdateWeakStatusPayload;
 import illusnow.tjchase.util.Utils;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -119,6 +120,12 @@ public class WeakState {
         Utils.checkAndGetAttribute(player, Attributes.MOVEMENT_SPEED).addPermanentModifier(WEAK_SPEED_REDUCTION_MODIFIER);
         Utils.checkAndGetAttribute(player, Attributes.ENTITY_INTERACTION_RANGE).addPermanentModifier(WEAK_INTERACTION_RANGE_MODIFIER);
         Utils.checkAndGetAttribute(player, Attributes.BLOCK_INTERACTION_RANGE).addPermanentModifier(WEAK_INTERACTION_RANGE_MODIFIER);
+        Player tying = TyingHelper.getTying(player);
+        TyingHelper.tie(null, player);
+        if (tying != null) {
+            TyingHelper.clearHugOrTieAction(player);
+            TyingHelper.clearStruggleOrPrayAction(tying);
+        }
         player.syncData(ModAttachments.WEAK_STATE);
         PacketDistributor.sendToAllPlayers(new UpdateWeakStatusPayload(player.getUUID(), true));
         player.refreshDimensions();

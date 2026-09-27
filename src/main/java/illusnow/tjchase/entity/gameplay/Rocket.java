@@ -101,8 +101,8 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
     public static final int MAX_FLY_TICKS = 140;
     public static final int FLY_EXPLOSION_TICKS = 120;
     private static final int DEFAULT_FUSE = DEFAULT_FUSE_SECONDS * 20 * FUSE_DECREASE_PER_TICK;
-    private static final int DEFAULT_TIE_DURATION = 35;
-    private static final int DEFAULT_RESCUE_DURATION = 20;
+    public static final int DEFAULT_TIE_DURATION = 35;
+    public static final int DEFAULT_RESCUE_DURATION = 20;
     private static final String FUSE_TAG = "Fuse";
     private static final String PRIMED_TAG = "Primed";
     private static final String FLYING_TAG = "Flying";
@@ -118,6 +118,7 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
     private float initialYRot;
     private int instaburnSeconds;
     private int rescueTicks;
+    private boolean occupied;
 
     public Rocket(EntityType<? extends Rocket> entityType, Level level) {
         super(entityType, level);
@@ -251,20 +252,22 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
             prime();
             return InteractionResult.SUCCESS_SERVER;
         }
-        if (hand == InteractionHand.MAIN_HAND && player.getItemInHand(hand).isEmpty()) {
-            if (canTiePlayerToSelf()) {
-                if (!level().isClientSide()) {
-                    TyingHelper.tie(player, this);
-                    ActionHolder.setAction(player, ModActions.STRUGGLE.get());
-                }
-                return InteractionResult.SUCCESS;
-            }
-        }
         return super.createInteractionResult(player, hand);
     }
 
-    private boolean canTiePlayerToSelf() {
-        return !isFlying() && !isFrozen() && TyingHelper.getTying(this) == null;
+    public boolean tryTiePlayerToSelf(Player player, boolean allowOccupied) {
+        if (canTiePlayerToSelf(allowOccupied)) {
+            if (!level().isClientSide()) {
+                TyingHelper.tie(player, this);
+                ActionHolder.setAction(player, ModActions.STRUGGLE.get());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean canTiePlayerToSelf(boolean allowOccupied) {
+        return !isFlying() && !isFrozen() && (allowOccupied || !isOccupied()) && TyingHelper.getTying(this) == null;
     }
 
     public void prime() {
@@ -569,6 +572,14 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
             disconnectedPlayerOnRocket = null;
             setFrozen(false);
         }
+    }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
     }
 
     public enum FuseDisplayDirection implements StringRepresentable, TranslatableEnum {

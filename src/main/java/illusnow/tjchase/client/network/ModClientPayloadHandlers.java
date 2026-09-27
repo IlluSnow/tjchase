@@ -23,6 +23,7 @@ import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
 import illusnow.tjchase.client.resources.sounds.PrimedRocketSoundInstance;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.gameplay.InGamePlacedEntity;
+import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.network.s2c.*;
 import net.minecraft.client.CameraType;
@@ -101,16 +102,33 @@ public final class ModClientPayloadHandlers {
         handleTiedPlayerCameraEntity(payload.tie(), context.player());
     }
 
+    @Nullable
+    private static CameraType prevCameraType = null;
+
     public static void handleTiedPlayerCameraEntity(boolean tie, Player player) {
         Minecraft minecraft = Minecraft.getInstance();
         Entity tiedTo = TyingHelper.getTiedTo(player);
         if (tie) {
             if (tiedTo != null && (minecraft.getCameraEntity() == null || tiedTo.getId() != minecraft.getCameraEntity().getId())) {
-                minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+                if (prevCameraType == null) {
+                    prevCameraType = minecraft.options.getCameraType();
+                }
+                if (tiedTo instanceof Rocket) {
+                    minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+                }
+                if (tiedTo instanceof Player) {
+                    minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+                }
                 minecraft.setCameraEntity(tiedTo);
             }
         } else {
             minecraft.setCameraEntity(null);
+            if (prevCameraType == null) {
+                LOGGER.warn("Resetting player's camera type for untied player but prevCameraType was not found, using default");
+                prevCameraType = CameraType.FIRST_PERSON;
+            }
+            minecraft.options.setCameraType(prevCameraType);
+            prevCameraType = null;
         }
     }
 

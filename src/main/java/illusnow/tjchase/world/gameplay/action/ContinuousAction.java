@@ -20,17 +20,17 @@ package illusnow.tjchase.world.gameplay.action;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
-public class ContinuousAction extends Action {
-    protected ContinuousAction(Identifier id, Identifier animId, int priority) {
+public non-sealed class ContinuousAction extends Action {
+    public ContinuousAction(Identifier id, Identifier animId, int priority) {
         super(id, animId, priority);
     }
 
     @Override
-    public void onComplete(Player player) {}
+    public void onComplete(Player player, ActionHolder holder) {}
 
     @Override
-    public void onInterrupt(Player player) {}
+    public void onInterrupt(Player player, ActionHolder holder) {}
 
     @Override
-    public void update(Player player, ActionHolder actionHolder) {}
+    public void update(Player player, ActionHolder holder) {}
 }

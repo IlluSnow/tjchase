@@ -49,17 +49,22 @@ public class ActionHolder {
     @Nullable
     private Action currentAction;
     @Nullable
-    private Progress currentProgress;
-    private int tickCount;
+    private ContinuousAction prevAction; // Synced manually
+    private long tickCount;
     private boolean firstUpdate = true;
+    // Serverside non-persistent data for OneTimeActions
+    @Nullable
+    private Progress currentProgress;
+    @Nullable
+    private ActionData data;
 
     public static ActionHolder get(Player player) {
         return player.getData(ModAttachments.ACTION_HOLDER);
     }
 
-    public static void sync(Player player, NetworkOp op, @Nullable Action newAction, @Nullable Action oldAction) {
+    public static void sync(Player player, NetworkOp op, @Nullable Action newAction, @Nullable Action oldAction, float speed) {
         player.syncData(ModAttachments.ACTION_HOLDER);
-        PacketDistributor.sendToAllPlayers(new UpdateActionPayload(op, player.nameAndId(), Optional.ofNullable(newAction), Optional.ofNullable(oldAction)));
+        PacketDistributor.sendToAllPlayers(new UpdateActionPayload(op, player.nameAndId(), Optional.ofNullable(newAction), Optional.ofNullable(oldAction), speed));
     }
 
     public static void updateBidirectionally(Player player) {
@@ -72,20 +77,50 @@ public class ActionHolder {
     }
 
     public static boolean setAction(Player player, @Nullable Action action) {
+        return setAction(player, action, null);
+    }
+
+    public static boolean setAction(Player player, @Nullable Action action, @Nullable ActionData data) {
         ActionHolder holder = get(player);
+        if (action instanceof OneTimeAction<?> oneTimeAction) {
+            if (!oneTimeAction.isValidData(data)) {
+                LOGGER.warn("Invalid action data {} for {}", data, oneTimeAction);
+                return false;
+            } else if (!oneTimeAction.canTrigger(player, holder, data)) {
+                return false;
+            }
+        }
         Action prevAction = holder.getCurrentAction();
         NetworkOp op = null;
         if (action != null) {
-            if (holder.replaceCurrentAction(player, action)) {
-                op = NetworkOp.SET_NEW;
+            if (holder.replaceCurrentAction(player, action, data)) {
+                if (action instanceof OneTimeAction<?> && prevAction instanceof ContinuousAction continuousPrevAction) {
+                    holder.setPrevAction(continuousPrevAction);
+                    op = NetworkOp.SET_NEW_SAVE_OLD;
+                } else {
+                    op = NetworkOp.SET_NEW;
+                }
             }
         } else {
-            if (holder.interruptCurrentAction(player)) {
-                op = NetworkOp.INTERRUPT;
+            boolean readStored = false;
+            if (prevAction instanceof OneTimeAction<?> oneTimeAction) {
+                readStored = oneTimeAction.readPreviousContinuousAction(player, holder, false);
             }
+            if ((holder.prevAction == null || !readStored) ? holder.interruptCurrentAction(player) : holder.replaceCurrentAction(player, holder.prevAction, data)) {
+                op = (holder.prevAction == null || !readStored) ? NetworkOp.INTERRUPT : NetworkOp.INTERRUPT_BACKTRACK;
+            }
+            if (readStored) {
+                action = holder.prevAction;
+            }
+            holder.setPrevAction(null);
         }
         if (op != null) {
-            sync(player, op, action, prevAction);
+            float speed = 1;
+            if (action instanceof OneTimeAction<?> oneTimeAction) {
+                checkActionDataNonnull(data, oneTimeAction);
+                speed = (float) data.duration() / oneTimeAction.defaultDuration();
+            }
+            sync(player, op, action, prevAction, speed);
         }
         return op != null;
     }
@@ -98,7 +133,16 @@ public class ActionHolder {
     public static boolean stopActionIf(Player player, Predicate<? super Action> currentActionPredicate) {
         Action action = getAction(player);
         if (action != null && currentActionPredicate.test(action)) {
-            return setAction(player, null);
+            int attempts = 0;
+            do {
+                setAction(player, null);
+                attempts++;
+                if (attempts >= 5) {
+                    LOGGER.warn("Failed to actually stop action, the condition may be invalid");
+                    return false;
+                }
+            } while (currentActionPredicate.test(action));
+            return true;
         }
         return false;
     }
@@ -108,20 +152,49 @@ public class ActionHolder {
         return currentAction;
     }
 
-    public boolean replaceCurrentAction(Player player, Action newAction) {
-        if (!newAction.canInterrupt(currentAction)) {
+    @Nullable
+    public ContinuousAction getPrevAction() {
+        return prevAction;
+    }
+
+    public void setPrevAction(@Nullable ContinuousAction prevAction) {
+        this.prevAction = prevAction;
+    }
+
+    @Nullable
+    public ActionData getActionData() {
+        return data;
+    }
+
+    private void setActionDataDirectly(@Nullable ActionData data) {
+        this.data = data;
+    }
+
+    private boolean replaceCurrentAction(Player player, Action newAction, @Nullable ActionData data) {
+        if (newAction == currentAction || !newAction.canInterrupt(currentAction)) {
             return false;
         }
         interruptAndStop(player);
         currentAction = newAction;
-        currentAction.start(player);
+        setActionDataDirectly(data);
+        if (newAction instanceof OneTimeAction<?> oneTimeAction) {
+            checkActionDataNonnull(data, oneTimeAction);
+            currentProgress = Progress.createWithDuration(tickCount, data.duration());
+        }
+        currentAction.start(player, this);
         return true;
     }
 
-    public boolean interruptCurrentAction(Player player) {
+    private static void checkActionDataNonnull(@Nullable ActionData data, OneTimeAction<?> oneTimeAction) {
+        Objects.requireNonNull(data, "ActionData is null for OneTimeAction " + oneTimeAction);
+    }
+
+    private boolean interruptCurrentAction(Player player) {
         if (currentAction != null) {
-            interruptAndStop(player, currentAction);
+            interruptAndStop(player, currentAction, this);
             currentAction = null;
+            currentProgress = null;
+            setActionDataDirectly(null);
             return true;
         }
         return false;
@@ -129,18 +202,20 @@ public class ActionHolder {
 
     public boolean completeCurrentAction(Player player) {
         if (currentAction != null) {
-            completeAndStop(player, currentAction);
+            completeAndStop(player, currentAction, this);
             currentAction = null;
+            currentProgress = null;
+            setActionDataDirectly(null);
             return true;
         }
         return false;
     }
 
-    public void update(Player player) {
+    private void update(Player player) {
         tickCount++;
         if (firstUpdate) {
             if (currentAction != null) {
-                currentAction.reload(player);
+                currentAction.reload(player, this);
             }
             firstUpdate = false;
         }
@@ -149,28 +224,46 @@ public class ActionHolder {
         }
     }
 
+    public Progress getProgress() {
+        Objects.requireNonNull(currentProgress, "Attempting to get action progress but found null");
+        return currentProgress;
+    }
+
+    public long getTickCount() {
+        return tickCount;
+    }
+
     private void interruptAndStop(Player player) {
         if (currentAction != null) {
-            interruptAndStop(player, currentAction);
+            interruptAndStop(player, currentAction, this);
         }
     }
 
-    private static void interruptAndStop(Player player, Action action) {
-        action.onInterrupt(player);
-        action.stop(player);
+    private static void interruptAndStop(Player player, Action action, ActionHolder holder) {
+        action.onInterrupt(player, holder);
+        action.stop(player, holder);
     }
 
-    private static void completeAndStop(Player player, Action action) {
-        action.onComplete(player);
-        action.stop(player);
+    private static void completeAndStop(Player player, Action action, ActionHolder holder) {
+        action.onComplete(player, holder);
+        action.stop(player, holder);
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("currentAction", currentAction)
+                .add("prevAction", prevAction)
                 .add("tickCount", tickCount)
                 .toString();
+    }
+
+    private static void checkAndSetPrevActionForSyncing(ActionHolder holder, @Nullable Action prevActionRead) {
+        if (prevActionRead instanceof ContinuousAction prevContinuousActionRead) {
+            holder.setPrevAction(prevContinuousActionRead);
+        } else {
+            LOGGER.warn("Failed to sync prevAction, {} is not a ContinuousAction", prevActionRead);
+        }
     }
 
     public enum NetworkOp {
@@ -178,24 +271,58 @@ public class ActionHolder {
             @Override
             public void handle(Player player, @Nullable Action newAction, @Nullable Action oldAction) {
                 Objects.requireNonNull(newAction, "newAction cannot be null");
+                ActionHolder holder = getActionHolder(player);
                 if (oldAction != null) {
-                    interruptAndStop(player, oldAction);
+                    interruptAndStop(player, oldAction, holder);
                 }
-                newAction.start(player);
+                newAction.start(player, holder);
             }
         },
         INTERRUPT(1) {
             @Override
             public void handle(Player player, @Nullable Action newAction, @Nullable Action oldAction) {
                 Objects.requireNonNull(oldAction, "oldAction cannot be null");
-                interruptAndStop(player, oldAction);
+                ActionHolder holder = getActionHolder(player);
+                interruptAndStop(player, oldAction, holder);
             }
         },
         COMPLETE(2) {
             @Override
             public void handle(Player player, @Nullable Action newAction, @Nullable Action oldAction) {
                 Objects.requireNonNull(oldAction, "oldAction cannot be null");
-                completeAndStop(player, oldAction);
+                ActionHolder holder = getActionHolder(player);
+                completeAndStop(player, oldAction, holder);
+            }
+        },
+        SET_NEW_SAVE_OLD(3) {
+            @Override
+            public void handle(Player player, @Nullable Action newAction, @Nullable Action oldAction) {
+                Objects.requireNonNull(newAction, "newAction cannot be null");
+                Objects.requireNonNull(oldAction, "oldAction cannot be null");
+                ActionHolder holder = getActionHolder(player);
+                interruptAndStop(player, oldAction, holder);
+                newAction.start(player, holder);
+                checkAndSetPrevActionForSyncing(holder, oldAction);
+            }
+        },
+        INTERRUPT_BACKTRACK(4) {
+            @Override
+            public void handle(Player player, @Nullable Action newAction, @Nullable Action oldAction) {
+                Objects.requireNonNull(newAction, "newAction cannot be null");
+                Objects.requireNonNull(oldAction, "oldAction cannot be null");
+                ActionHolder holder = getActionHolder(player);
+                interruptAndStop(player, oldAction, holder);
+                newAction.start(player, holder);
+                holder.setPrevAction(null);
+            }
+        },
+        COMPLETE_BACKTRACK(5) {
+            @Override
+            public void handle(Player player, @Nullable Action newAction, @Nullable Action oldAction) {
+                Objects.requireNonNull(oldAction, "oldAction cannot be null");
+                ActionHolder holder = getActionHolder(player);
+                completeAndStop(player, oldAction, holder);
+                holder.setPrevAction(null);
             }
         };
 
@@ -210,6 +337,10 @@ public class ActionHolder {
 
         public abstract void handle(Player player, @Nullable Action newAction, @Nullable Action oldAction);
 
+        private static ActionHolder getActionHolder(Player player) {
+            return player.getData(ModAttachments.ACTION_HOLDER);
+        }
+
         public int getId() {
             return id;
         }
@@ -222,6 +353,12 @@ public class ActionHolder {
         public ActionHolder read(IAttachmentHolder holder, ValueInput input) {
             ActionHolder actionHolder = new ActionHolder();
             actionHolder.currentAction = input.read("CurrentAction", Action.CODEC).orElse(null);
+            Action prevActionRead = input.read("PrevAction", Action.CODEC).orElse(null);
+            if (prevActionRead instanceof ContinuousAction prevContinuousActionRead){
+                actionHolder.setPrevAction(prevContinuousActionRead);
+            } else {
+                LOGGER.warn("Failed to load prevAction, {} is not a ContinuousAction", prevActionRead);
+            }
             actionHolder.tickCount = input.getIntOr("TickCount", 0);
             return actionHolder;
         }
@@ -231,7 +368,10 @@ public class ActionHolder {
             if (attachment.currentAction != null) {
                 output.store("CurrentAction", Action.CODEC, attachment.currentAction);
             }
-            output.putInt("TickCount", attachment.tickCount);
+            if (attachment.prevAction != null) {
+                output.store("PrevAction", Action.CODEC, attachment.prevAction);
+            }
+            output.putLong("TickCount", attachment.tickCount);
             return true;
         }
     }
@@ -246,7 +386,7 @@ public class ActionHolder {
                 int id = buf.registryAccess().lookupOrThrow(ModRegistries.ACTIONS_KEY).getId(attachment.currentAction);
                 buf.writeVarInt(id);
             }
-            buf.writeVarInt(attachment.tickCount);
+            buf.writeVarLong(attachment.tickCount);
         }
 
         @Override
@@ -256,7 +396,7 @@ public class ActionHolder {
                 int id = buf.readVarInt();
                 actionHolder.currentAction = buf.registryAccess().lookupOrThrow(ModRegistries.ACTIONS_KEY).byId(id);
             }
-            actionHolder.tickCount = buf.readVarInt();
+            actionHolder.tickCount = buf.readVarLong();
             return actionHolder;
         }
     }

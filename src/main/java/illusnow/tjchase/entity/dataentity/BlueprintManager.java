@@ -135,8 +135,12 @@ public class BlueprintManager extends DataEntity implements TraceableEntity {
         boolean hadPositiveEffect = livingEntity.getData(ModAttachments.POSITIVE_EFFECT_BLUEPRINT);
         boolean shouldHavePositiveEffect = insideOwnedBlueprint;
         boolean shouldHaveNegativeEffect = !blueprints.isEmpty() && blueprints.stream().anyMatch(blueprintManager -> blueprintManager.getOwner() != livingEntity);
-        livingEntity.setData(ModAttachments.NEGATIVE_EFFECT_BLUEPRINT, shouldHaveNegativeEffect);
-        livingEntity.setData(ModAttachments.POSITIVE_EFFECT_BLUEPRINT, shouldHavePositiveEffect);
+        if (shouldHaveNegativeEffect != hadNegativeEffect) {
+            livingEntity.setData(ModAttachments.NEGATIVE_EFFECT_BLUEPRINT, shouldHaveNegativeEffect);
+        }
+        if (shouldHavePositiveEffect != hadPositiveEffect) {
+            livingEntity.setData(ModAttachments.POSITIVE_EFFECT_BLUEPRINT, shouldHavePositiveEffect);
+        }
         if (hadNegativeEffect && !shouldHaveNegativeEffect) {
             mobLeaves(livingEntity, false, true);
         }

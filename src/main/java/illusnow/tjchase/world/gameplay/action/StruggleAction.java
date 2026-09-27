@@ -17,6 +17,19 @@
 
 package illusnow.tjchase.world.gameplay.action;
 
-public interface ActionData {
-    int duration();
+import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranimcore.api.firstPerson.FirstPersonConfiguration;
+import net.minecraft.resources.Identifier;
+
+public class StruggleAction extends ContinuousAction {
+    public StruggleAction(Identifier id, Identifier animId, int priority) {
+        super(id, animId, priority);
+    }
+
+    @Override
+    protected void applyFirstPersonAdjustments(PlayerAnimationController controller) {
+        super.applyFirstPersonAdjustments(controller);
+        controller.setFirstPersonConfiguration(new FirstPersonConfiguration(true, true, false, false));
+        controller.addModifierLast(new AdvancedFirstPersonOffsetModifier(0, 3, 3));
+    }
 }

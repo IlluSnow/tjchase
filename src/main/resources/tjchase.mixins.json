@@ -14,6 +14,7 @@
     "MobMixin",
     "PlayerListMixin",
     "PlayerMixin",
+    "ServerGamePacketListenerImplMixin",
     "client.KeyMappingMixin"
   ],
   "client": [
@@ -29,6 +30,7 @@
     "client.GuiMixin",
     "client.ItemInHandRendererAccessor",
     "client.KeyMappingMixin",
+    "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
     "client.MouseHandlerMixin",

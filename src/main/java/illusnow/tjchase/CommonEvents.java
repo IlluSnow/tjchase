@@ -39,11 +39,13 @@ import illusnow.tjchase.util.*;
 import illusnow.tjchase.world.gameplay.WeakState;
 import illusnow.tjchase.world.gameplay.action.ActionHolder;
 import illusnow.tjchase.world.gameplay.action.ModActions;
+import illusnow.tjchase.world.gameplay.action.TieAction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -110,11 +112,22 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onClickingWeakPlayer(PlayerInteractEvent.EntityInteractSpecific event) {
+        handleHugAndTie(event);
+    }
+
+    private static void handleHugAndTie(PlayerInteractEvent.EntityInteractSpecific event) {
         if (event.getTarget() instanceof ServerPlayer player && player.getData(ModAttachments.WEAK_STATE).isWeak() && TyingHelper.getTiedTo(player) == null) {
             TyingHelper.tie(player, event.getEntity());
             ActionHolder.setAction(player, ModActions.STRUGGLE.get());
             ActionHolder.setAction(event.getEntity(), ModActions.HUG.get());
             event.setCancellationResult(InteractionResult.SUCCESS_SERVER);
+        }
+
+        Player tying = TyingHelper.getTying(event.getEntity());
+        if (event.getTarget() instanceof Rocket rocket && !rocket.level().isClientSide() && event.getHand() == InteractionHand.MAIN_HAND && tying != null) {
+            if (ActionHolder.setAction(event.getEntity(), ModActions.TIE.get(), new TieAction.Data(EntityReference.of(rocket), Rocket.DEFAULT_TIE_DURATION))) {
+                event.setCancellationResult(InteractionResult.SUCCESS_SERVER);
+            }
         }
     }
 

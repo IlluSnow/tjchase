@@ -31,7 +31,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import org.jspecify.annotations.Nullable;
 
-public abstract class Action {
+public abstract sealed class Action permits ContinuousAction, OneTimeAction {
     public static final Codec<Action> CODEC = ModRegistries.ACTIONS.byNameCodec();
     public static final StreamCodec<RegistryFriendlyByteBuf, Action> STREAM_CODEC = ByteBufCodecs.registry(ModRegistries.ACTIONS_KEY);
     public static final int LOW_PRIORITY = 10;
@@ -48,7 +48,7 @@ public abstract class Action {
         this.priority = priority;
     }
 
-    public void start(Player player) {
+    public void start(Player player, ActionHolder holder) {
         triggerRelatedAnim(player);
     }
 
@@ -58,17 +58,18 @@ public abstract class Action {
         }
         PlayerAnimationController controller = PlayerAnimationUtils.getController(player, ModPlayerAnimationIDs.ACTION_LAYER);
         controller.triggerAnimation(animId);
-        controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
-        controller.setFirstPersonConfiguration(new FirstPersonConfiguration().setShowLeftArm(true).setShowRightArm(true));
-//        controller.setFirstPersonFollowsCamera(true);
-        controller.addModifierLast(new AdvancedFirstPersonOffsetModifier(0, 3, 3));
+        applyFirstPersonAdjustments(controller);
     }
 
-    public void reload(Player player) {
+    protected void applyFirstPersonAdjustments(PlayerAnimationController controller) {
+        controller.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
+    }
+
+    public void reload(Player player, ActionHolder holder) {
         triggerRelatedAnim(player);
     }
 
-    public void stop(Player player) {
+    public void stop(Player player, ActionHolder holder) {
         stopRelatedAnim(player);
     }
 
@@ -84,11 +85,11 @@ public abstract class Action {
         controller.stopTriggeredAnimation();
     }
 
-    public abstract void onComplete(Player player);
+    public abstract void onComplete(Player player, ActionHolder holder);
 
-    public abstract void onInterrupt(Player player);
+    public abstract void onInterrupt(Player player, ActionHolder holder);
 
-    public abstract void update(Player player, ActionHolder actionHolder);
+    public abstract void update(Player player, ActionHolder holder);
 
     public boolean canInterrupt(@Nullable Action action) {
         return action == null || priority >= action.priority;
