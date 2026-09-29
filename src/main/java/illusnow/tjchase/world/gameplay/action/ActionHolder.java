@@ -130,15 +130,22 @@ public class ActionHolder {
         return stopActionIf(player, currentAction -> currentAction == action);
     }
 
+    @SuppressWarnings("ConstantValue")
+    public static boolean stopAllActions(Player player) {
+        return stopActionIf(player, Objects::nonNull);
+    }
+
+    @SuppressWarnings("DataFlowIssue")
     public static boolean stopActionIf(Player player, Predicate<? super Action> currentActionPredicate) {
         Action action = getAction(player);
         if (action != null && currentActionPredicate.test(action)) {
             int attempts = 0;
             do {
                 setAction(player, null);
+                action = getAction(player);
                 attempts++;
                 if (attempts >= 5) {
-                    LOGGER.warn("Failed to actually stop action, the condition may be invalid");
+                    LOGGER.warn("Failed to actually stop the player's action, the condition may be invalid");
                     return false;
                 }
             } while (currentActionPredicate.test(action));

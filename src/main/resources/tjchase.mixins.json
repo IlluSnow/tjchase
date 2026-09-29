@@ -15,6 +15,7 @@
     "PlayerListMixin",
     "PlayerMixin",
     "ServerGamePacketListenerImplMixin",
+    "client.AvatarRendererMixin",
     "client.KeyMappingMixin"
   ],
   "client": [

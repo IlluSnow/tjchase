@@ -78,11 +78,14 @@ public abstract sealed class Action permits ContinuousAction, OneTimeAction {
             return;
         }
         PlayerAnimationController controller = PlayerAnimationUtils.getController(player, ModPlayerAnimationIDs.ACTION_LAYER);
-        controller.setFirstPersonMode(FirstPersonMode.NONE);
-        controller.setFirstPersonConfiguration(new FirstPersonConfiguration());
-//        controller.setFirstPersonFollowsCamera(false);
+        resetFirstPersonAdjustments(controller);
         controller.removeAllModifiers();
         controller.stopTriggeredAnimation();
+    }
+
+    protected void resetFirstPersonAdjustments(PlayerAnimationController controller) {
+        controller.setFirstPersonMode(FirstPersonMode.NONE);
+        controller.setFirstPersonConfiguration(new FirstPersonConfiguration());
     }
 
     public abstract void onComplete(Player player, ActionHolder holder);

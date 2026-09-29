@@ -28,6 +28,7 @@ public final class TJChaseCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal(TJChase.MODID)
+                        .then(DebugCommand.register())
                         .then(EntityCommand.register())
                         .then(ProficiencyCommand.register())
         );

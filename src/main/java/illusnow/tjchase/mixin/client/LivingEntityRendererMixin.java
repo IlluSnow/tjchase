@@ -54,10 +54,13 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
     public abstract Identifier getTextureLocation(S renderState);
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At("TAIL"))
-    private void extractCustomAlpha(T entity, S reusedState, float partialTick, CallbackInfo ci) {
+    private void extractCustomData(T entity, S reusedState, float partialTick, CallbackInfo ci) {
+        boolean allowLayerRendering = true;
         if (entity instanceof RemotePlayer player && TyingHelper.getTiedTo(player) == Minecraft.getInstance().getCameraEntity()) {
             reusedState.addGeckolibData(ModDataTickets.CUSTOM_ENTITY_ALPHA, TyingHelper.PLAYER_BEING_TIED_ALPHA);
+            allowLayerRendering = false;
         }
+        reusedState.addGeckolibData(ModDataTickets.ALLOW_LAYER_RENDERING, allowLayerRendering);
     }
 
     @SuppressWarnings("unchecked")
