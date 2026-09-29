@@ -245,4 +245,7 @@ public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extend
     public void setTemplate(boolean template) {
         entityData.set(DATA_TEMPLATE, template);
     }
+
+    @Override
+    public void push(double x, double y, double z) {}
 }

@@ -91,6 +91,9 @@ public abstract class DataEntity extends Entity {
     public void setCustomName(@Nullable Component name) {}
 
     @Override
+    public void push(double x, double y, double z) {}
+
+    @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
         double renderDistance = getRenderDistance();
         if (renderDistance <= 0) {
