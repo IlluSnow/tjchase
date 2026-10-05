@@ -40,6 +40,8 @@ import illusnow.tjchase.world.gameplay.WeakState;
 import illusnow.tjchase.world.gameplay.action.ActionHolder;
 import illusnow.tjchase.world.gameplay.action.ModActions;
 import illusnow.tjchase.world.gameplay.action.TieAction;
+import illusnow.tjchase.world.gameplay.struggle.StruggleInstance;
+import illusnow.tjchase.world.gameplay.struggle.StruggleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
@@ -101,6 +103,7 @@ public class CommonEvents {
                 player.syncData(ModAttachments.WEAK_STATE);
             }
         }
+        StruggleInstance.updateBidirectionally(player);
     }
 
     @SubscribeEvent
@@ -120,6 +123,7 @@ public class CommonEvents {
             TyingHelper.tie(player, event.getEntity());
             ActionHolder.setAction(player, ModActions.STRUGGLE.get());
             ActionHolder.setAction(event.getEntity(), ModActions.HUG.get());
+            StruggleInstance.setStruggle(player, StruggleInstance.createNew(StruggleTypes.PLAYER.get()));
             event.setCancellationResult(InteractionResult.SUCCESS_SERVER);
         }
 

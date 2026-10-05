@@ -17,17 +17,22 @@
 
 package illusnow.tjchase.client.key;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import illusnow.tjchase.util.ModKeyMappingNames;
-import net.minecraft.client.KeyMapping;
+import illusnow.tjchase.util.Utils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.neoforged.neoforge.client.settings.IKeyConflictContext;
 
-public final class ModKeyMappings {
-    public static final KeyMapping.Category TJCHASE_MAIN = new KeyMapping.Category(ModKeyMappingNames.TJCHASE_MAIN);
-    public static final KeyMapping KEY_STRUGGLE = new KeyMapping(ModKeyMappingNames.KEY_STRUGGLE,
-            ModKeyConflictContexts.PASSIVE,
-            InputConstants.Type.KEYSYM,
-            InputConstants.KEY_SPACE,
-            TJCHASE_MAIN);
+public enum ModKeyConflictContexts implements IKeyConflictContext {
+    PASSIVE {
+        @Override
+        public boolean isActive() {
+            LocalPlayer player = Minecraft.getInstance().player;
+            return player != null && Utils.isPassive(player);
+        }
 
-    private ModKeyMappings() {}
+        @Override
+        public boolean conflicts(IKeyConflictContext other) {
+            return this == other;
+        }
+    }
 }

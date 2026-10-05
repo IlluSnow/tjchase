@@ -38,7 +38,7 @@ public record Progress(long startTick, long endTick) {
         return new Progress(currentTickCount, currentTickCount + duration);
     }
 
-    public float getProgress(long tickCount, float partialTick) {
+    public float calculatePercentage(long tickCount, float partialTick) {
         long activeTicks = tickCount - startTick;
         float activeTicksWithPartialTick = activeTicks + partialTick;
         return Math.clamp(activeTicksWithPartialTick / (endTick - startTick), 0, 1);
@@ -47,5 +47,4 @@ public record Progress(long startTick, long endTick) {
     public boolean shouldRemove(long tickCount) {
         return tickCount < startTick || tickCount >= endTick;
     }
-
 }

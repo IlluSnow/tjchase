@@ -75,6 +75,8 @@
   "item.tjchase.vine_seed": "Robin Hood Tuffy's Bean",
   "itemGroups.tjchase": "TJChase",
   "itemGroups.tjchase.gameplay": "TJChase - Gameplay",
+  "key.category.tjchase.main": "TJChase",
+  "key.tjchase.struggle": "Struggle",
   "message.tjchase.entity_debug_stick.facing_east": "Set facing east",
   "message.tjchase.entity_debug_stick.facing_north": "Set facing north",
   "message.tjchase.entity_debug_stick.facing_south": "Set facing south",

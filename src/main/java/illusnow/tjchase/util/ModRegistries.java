@@ -21,6 +21,7 @@ import illusnow.tjchase.TJChase;
 import illusnow.tjchase.world.gameplay.action.Action;
 import illusnow.tjchase.world.gameplay.object.GameplayObjectType;
 import illusnow.tjchase.world.gameplay.object.editablevalue.EditableValue;
+import illusnow.tjchase.world.gameplay.struggle.StruggleType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.RegistryBuilder;
@@ -32,6 +33,8 @@ public final class ModRegistries {
     public static final Registry<EditableValue<?, ?>> EDITABLE_VALUES = new RegistryBuilder<>(ModRegistries.EDITABLE_VALUES_KEY).sync(true).create();
     public static final ResourceKey<Registry<GameplayObjectType<?>>> GAMEPLAY_OBJECT_TYPES_KEY = ResourceKey.createRegistryKey(TJChase.prefix("gameplay_object_types"));
     public static final Registry<GameplayObjectType<?>> GAMEPLAY_OBJECT_TYPES = new RegistryBuilder<>(ModRegistries.GAMEPLAY_OBJECT_TYPES_KEY).sync(true).create();
+    public static final ResourceKey<Registry<StruggleType>> STRUGGLE_TYPES_KEY = ResourceKey.createRegistryKey(TJChase.prefix("struggle_types"));
+    public static final Registry<StruggleType> STRUGGLE_TYPES = new RegistryBuilder<>(ModRegistries.STRUGGLE_TYPES_KEY).sync(true).create();
 
     private ModRegistries() {}
 }

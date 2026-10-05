@@ -18,16 +18,15 @@
 package illusnow.tjchase.network;
 
 import com.mojang.logging.LogUtils;
+import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.controllable.ControllableMovementHandler;
 import illusnow.tjchase.entity.gameplay.InGamePlacedEntity;
 import illusnow.tjchase.item.ModDataComponents;
 import illusnow.tjchase.network.bidirectional.SyncInGameEntityPayload;
-import illusnow.tjchase.network.c2s.LoadTemplatePayload;
-import illusnow.tjchase.network.c2s.UpdateControlledEntityPositionPayload;
-import illusnow.tjchase.network.c2s.UpdateControlledEntityRotationPayload;
-import illusnow.tjchase.network.c2s.UpdateInputPayload;
+import illusnow.tjchase.network.c2s.*;
 import illusnow.tjchase.world.gameplay.object.Template;
+import illusnow.tjchase.world.gameplay.struggle.StruggleInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -101,6 +100,19 @@ public final class ModServerPayloadHandlers {
     public static void handleLoadTemplate(LoadTemplatePayload payload, IPayloadContext context) {
         ItemStack mainHandItem = context.player().getMainHandItem();
         mainHandItem.set(ModDataComponents.PLACE_TEMPLATE, payload.template().isDefault() ? null : payload.template());
+    }
+
+    public static void handleStruggle(StrugglePayload payload, IPayloadContext context) {
+        Player player = context.player();
+        StruggleInstance struggle = StruggleInstance.getStruggle(player);
+        if (struggle == null) {
+            LOGGER.error("Player {} attempted to struggle but has no struggle instance", player.getName().getString());
+            return;
+        }
+        if (struggle.serverStruggle(player)) {
+            StruggleInstance.setStruggle(player, null);
+        }
+        player.syncData(ModAttachments.STRUGGLE);
     }
 
     private static void warnNotFound(int id) {

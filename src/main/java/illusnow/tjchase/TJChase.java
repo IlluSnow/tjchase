@@ -32,6 +32,7 @@ import illusnow.tjchase.util.ModMolangQueries;
 import illusnow.tjchase.world.gameplay.action.ModActions;
 import illusnow.tjchase.world.gameplay.object.ModGameplayObjectTypes;
 import illusnow.tjchase.world.gameplay.object.editablevalue.ModEditableValues;
+import illusnow.tjchase.world.gameplay.struggle.StruggleTypes;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -63,6 +64,7 @@ public class TJChase {
         ModItems.ITEMS.register(bus);
         ModParticleTypes.PARTICLE_TYPES.register(bus);
         ModSoundEvents.SOUND_EVENTS.register(bus);
+        StruggleTypes.STRUGGLE_TYPES.register(bus);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

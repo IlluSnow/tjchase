@@ -18,6 +18,7 @@
 package illusnow.tjchase.client;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.client.key.ModKeyMappings;
 import illusnow.tjchase.client.network.ModClientPayloadHandlers;
 import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
 import illusnow.tjchase.client.resources.sounds.PrimedRocketSoundInstance;
@@ -31,10 +32,12 @@ import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.mixin.client.ClientInputAccessor;
 import illusnow.tjchase.network.c2s.LoadTemplatePayload;
+import illusnow.tjchase.network.c2s.StrugglePayload;
 import illusnow.tjchase.network.c2s.UpdateControlledEntityPositionPayload;
 import illusnow.tjchase.network.c2s.UpdateInputPayload;
 import illusnow.tjchase.util.OriginalInputAccessor;
 import illusnow.tjchase.util.Utils;
+import illusnow.tjchase.world.gameplay.struggle.StruggleInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
@@ -201,6 +204,19 @@ public class ClientEvents {
         Player player = Minecraft.getInstance().player;
         if (player != null && Utils.isPassive(player)) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onKeyInput(InputEvent.Key event) {
+        if (ModKeyMappings.KEY_STRUGGLE.matches(event.getKeyEvent())) {
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player != null) {
+                StruggleInstance struggle = StruggleInstance.getStruggle(player);
+                if (struggle != null && struggle.clientStruggle(player)) {
+                    ClientPacketDistributor.sendToServer(new StrugglePayload(1));
+                }
+            }
         }
     }
 

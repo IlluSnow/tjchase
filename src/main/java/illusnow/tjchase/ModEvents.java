@@ -21,10 +21,7 @@ import illusnow.tjchase.item.ModCreativeModeTabs;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.network.ModServerPayloadHandlers;
 import illusnow.tjchase.network.bidirectional.SyncInGameEntityPayload;
-import illusnow.tjchase.network.c2s.LoadTemplatePayload;
-import illusnow.tjchase.network.c2s.UpdateControlledEntityPositionPayload;
-import illusnow.tjchase.network.c2s.UpdateControlledEntityRotationPayload;
-import illusnow.tjchase.network.c2s.UpdateInputPayload;
+import illusnow.tjchase.network.c2s.*;
 import illusnow.tjchase.network.s2c.*;
 import illusnow.tjchase.util.ModRegistries;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -88,6 +85,11 @@ public class ModEvents {
                 UpdateWeakStatusPayload.TYPE,
                 UpdateWeakStatusPayload.STREAM_CODEC
         );
+        registrar.playToServer(
+                StrugglePayload.TYPE,
+                StrugglePayload.STREAM_CODEC,
+                ModServerPayloadHandlers::handleStruggle
+        );
         registrar = registrar.executesOn(HandlerThread.NETWORK);
         registrar.playBidirectional(
                 SyncInGameEntityPayload.TYPE,
@@ -116,5 +118,6 @@ public class ModEvents {
         event.register(ModRegistries.ACTIONS);
         event.register(ModRegistries.EDITABLE_VALUES);
         event.register(ModRegistries.GAMEPLAY_OBJECT_TYPES);
+        event.register(ModRegistries.STRUGGLE_TYPES);
     }
 }

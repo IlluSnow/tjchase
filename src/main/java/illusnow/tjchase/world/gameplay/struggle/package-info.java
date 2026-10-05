@@ -15,19 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.client.key;
+@NullMarked
+package illusnow.tjchase.world.gameplay.struggle;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import illusnow.tjchase.util.ModKeyMappingNames;
-import net.minecraft.client.KeyMapping;
-
-public final class ModKeyMappings {
-    public static final KeyMapping.Category TJCHASE_MAIN = new KeyMapping.Category(ModKeyMappingNames.TJCHASE_MAIN);
-    public static final KeyMapping KEY_STRUGGLE = new KeyMapping(ModKeyMappingNames.KEY_STRUGGLE,
-            ModKeyConflictContexts.PASSIVE,
-            InputConstants.Type.KEYSYM,
-            InputConstants.KEY_SPACE,
-            TJCHASE_MAIN);
-
-    private ModKeyMappings() {}
-}
+import org.jspecify.annotations.NullMarked;

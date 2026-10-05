@@ -19,12 +19,11 @@ package illusnow.tjchase.data;
 
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
-import illusnow.tjchase.client.gui.ModHudLayers;
 import illusnow.tjchase.command.DebugCommand;
 import illusnow.tjchase.command.EntityCommand;
 import illusnow.tjchase.command.ProficiencyCommand;
-import illusnow.tjchase.entity.dataentity.HarpTester;
 import illusnow.tjchase.entity.ModEntities;
+import illusnow.tjchase.entity.dataentity.HarpTester;
 import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.proficiency.ProficiencyMainLevel;
 import illusnow.tjchase.item.*;
@@ -33,11 +32,14 @@ import illusnow.tjchase.sound.ModSoundSubtitles;
 import illusnow.tjchase.tag.ModBlockTags;
 import illusnow.tjchase.tag.ModItemTags;
 import illusnow.tjchase.util.ModComponents;
+import illusnow.tjchase.util.ModKeyMappingNames;
 import illusnow.tjchase.world.ModDamageSources;
+import illusnow.tjchase.world.gameplay.WeakState;
 import illusnow.tjchase.world.gameplay.object.editablevalue.EditableValue;
 import illusnow.tjchase.world.gameplay.object.editablevalue.EditableValueBehaviors;
 import illusnow.tjchase.world.gameplay.object.editablevalue.ModEditableValues;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import static illusnow.tjchase.client.data.ModDataGenerators.getDamageTypeMsg;
@@ -50,6 +52,10 @@ public abstract class ModLanguageProvider extends LanguageProvider {
 
     public void add(EditableValue<?, ?> key, String name) {
         add(key.getTranslationKey(), name);
+    }
+
+    public void addKeyCategory(Identifier categoryId, String name) {
+        add(categoryId.toLanguageKey("key.category"), name);
     }
 
     public static class EnUs extends ModLanguageProvider {
@@ -157,7 +163,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(EditableValueBehaviors.RangedBehavior.HINT_KEY_DECIMAL, "Value Range: [%.1f, %.1f]");
             add(ModCreativeModeTabs.TAB_ID, "TJChase");
             add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "TJChase - Gameplay");
-            add(ModHudLayers.WEAK_COUNTDOWN_TEXT, "Weak time remaining: %ds");
+            add(WeakState.WEAK_COUNTDOWN_TEXT, "Weak time remaining: %ds");
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "Entity Debug Stick");
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
@@ -186,6 +192,8 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModBlockTags.HARD_ORBITING_BLOCK_TAG_SPECIAL, "Special Hard Blocks");
             add(ModBlockTags.SOFT_ORBITING_BLOCK_TAG_SPECIAL, "Special Soft Blocks");
             add(ModItemTags.HARPS, "Harps");
+            addKeyCategory(ModKeyMappingNames.TJCHASE_MAIN, "TJChase");
+            add(ModKeyMappingNames.KEY_STRUGGLE, "Struggle");
             add(ModSoundSubtitles.BLUEPRINT_FOLD, "Blueprint folds");
             add(ModSoundSubtitles.BLUEPRINT_RELEASE, "Blueprint expands");
             add(ModSoundSubtitles.BLUEPRINT_THROW, "Blueprint thrown");
@@ -319,7 +327,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(EditableValueBehaviors.RangedBehavior.HINT_KEY_DECIMAL, "取值范围：[%.1f, %.1f]");
             add(ModCreativeModeTabs.TAB_ID, "猫鼠");
             add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "猫鼠 - 主游戏");
-            add(ModHudLayers.WEAK_COUNTDOWN_TEXT, "虚弱时间剩余：%ds");
+            add(WeakState.WEAK_COUNTDOWN_TEXT, "虚弱时间剩余：%ds");
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "实体调试棒");
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");
@@ -348,6 +356,8 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModBlockTags.HARD_ORBITING_BLOCK_TAG_SPECIAL, "特殊的坚硬方块");
             add(ModBlockTags.SOFT_ORBITING_BLOCK_TAG_SPECIAL, "特殊的柔软方块");
             add(ModItemTags.HARPS, "竖琴");
+            addKeyCategory(ModKeyMappingNames.TJCHASE_MAIN, "猫鼠");
+            add(ModKeyMappingNames.KEY_STRUGGLE, "挣扎");
             add(ModSoundSubtitles.BLUEPRINT_FOLD, "蓝图：折叠");
             add(ModSoundSubtitles.BLUEPRINT_RELEASE, "蓝图：展开");
             add(ModSoundSubtitles.BLUEPRINT_THROW, "蓝图：飞出");

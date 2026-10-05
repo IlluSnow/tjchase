@@ -60,6 +60,7 @@ public class WeakState {
     public static final Identifier WEAK_INTERACTION_RANGE_MODIFIER_ID = TJChase.prefix("interaction_range_reduction");
     public static final AttributeModifier WEAK_SPEED_REDUCTION_MODIFIER = new AttributeModifier(WEAK_SPEED_REDUCTION_MODIFIER_ID, -0.7, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     public static final AttributeModifier WEAK_INTERACTION_RANGE_MODIFIER = new AttributeModifier(WEAK_INTERACTION_RANGE_MODIFIER_ID, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    public static final String WEAK_COUNTDOWN_TEXT = TJChase.prefix("gui", "weak_countdown");
     private int recoverTicks;
     private Identifier weakAnimStill;
     private Identifier weakAnimMoving;

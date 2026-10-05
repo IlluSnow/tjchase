@@ -75,6 +75,8 @@
   "item.tjchase.vine_seed": "罗宾汉泰菲的藤蔓种子",
   "itemGroups.tjchase": "猫鼠",
   "itemGroups.tjchase.gameplay": "猫鼠 - 主游戏",
+  "key.category.tjchase.main": "猫鼠",
+  "key.tjchase.struggle": "挣扎",
   "message.tjchase.entity_debug_stick.facing_east": "设为面向东方",
   "message.tjchase.entity_debug_stick.facing_north": "设为面向北方",
   "message.tjchase.entity_debug_stick.facing_south": "设为面向南方",

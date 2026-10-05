@@ -29,6 +29,8 @@ import illusnow.tjchase.world.gameplay.action.ModActions;
 import illusnow.tjchase.world.gameplay.object.GameplayObjectType;
 import illusnow.tjchase.world.gameplay.object.ModGameplayObjectTypes;
 import illusnow.tjchase.world.gameplay.object.editablevalue.ModEditableValues;
+import illusnow.tjchase.world.gameplay.struggle.StruggleInstance;
+import illusnow.tjchase.world.gameplay.struggle.StruggleTypes;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -110,7 +112,9 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
     private static final String RESCUE_TICKS_TAG = "RescueTicks";
     private static final String FROZEN_TAG = "Frozen";
     private static final String DISCONNECTED_PLAYER_TAG = "DisconnectedPlayer";
+    private static final String STRUGGLE_COOLDOWN_TAG = "StruggleCooldown";
     private static final double FUSE_SOUND_PLAY_RADIUS = 16;
+    private static final int MAX_STRUGGLE_COOLDOWN = 20 * 20;
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     @Nullable
     private NameAndId disconnectedPlayerOnRocket;
@@ -118,6 +122,7 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
     private float initialYRot;
     private int instaburnSeconds;
     private int rescueTicks;
+    private int struggleCooldown;
     private boolean occupied;
 
     public Rocket(EntityType<? extends Rocket> entityType, Level level) {
@@ -165,15 +170,26 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
             }
         }
         if (!level().isClientSide()) {
-            if (isPrimed() && !isFlying()) {
-                int decreaseAmount = calculateDecreaseAmountPerTick();
-                if (rescueTicks <= 0) {
-                    decreaseFuse(decreaseAmount);
-                } else {
-                    rescueTicks--;
+            if (!isFlying()) {
+                if (isPrimed()) {
+                    int decreaseAmount = calculateDecreaseAmountPerTick();
+                    if (rescueTicks <= 0) {
+                        decreaseFuse(decreaseAmount);
+                    } else {
+                        rescueTicks--;
+                    }
+                    if (getFuse() == 0 && canFly()) {
+                        setFlying(true);
+                    }
                 }
-                if (getFuse() == 0 && canFly()) {
-                    setFlying(true);
+                Player tying = TyingHelper.getTying(this);
+                if (tying != null && !isFrozen()) {
+                    if (struggleCooldown == 0) {
+                        StruggleInstance.setStruggle(tying, StruggleInstance.createNew(getRandom().nextBoolean() ? StruggleTypes.ROCKET_5.get() : StruggleTypes.ROCKET_10.get()));
+                        struggleCooldown = MAX_STRUGGLE_COOLDOWN;
+                    } else if (StruggleInstance.getStruggle(tying) == null) {
+                        struggleCooldown--;
+                    }
                 }
             }
         } else {
@@ -392,6 +408,10 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
         decreaseFuse(seconds * FUSE_DECREASE_PER_TICK * 20);
     }
 
+    public void increaseFuseBySeconds(int seconds) {
+        decreaseFuse(-seconds * FUSE_DECREASE_PER_TICK * 20);
+    }
+
     public boolean isPrimed() {
         return entityData.get(DATA_PRIMED);
     }
@@ -465,6 +485,7 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
         output.putBoolean(FLYING_TAG, isFlying());
         output.putFloat(INITIAL_Y_ROT_TAG, initialYRot);
         output.putInt(RESCUE_TICKS_TAG, rescueTicks);
+        output.putInt(STRUGGLE_COOLDOWN_TAG, struggleCooldown);
         if (disconnectedPlayerOnRocket != null) {
             output.store(DISCONNECTED_PLAYER_TAG, NameAndId.CODEC, disconnectedPlayerOnRocket);
         }
@@ -479,6 +500,7 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
         setFlying(input.getBooleanOr(FLYING_TAG, false));
         initialYRot = input.getFloatOr(INITIAL_Y_ROT_TAG, 0);
         rescueTicks = input.getIntOr(RESCUE_TICKS_TAG, 0);
+        struggleCooldown = input.getIntOr(STRUGGLE_COOLDOWN_TAG, 0);
         disconnectedPlayerOnRocket = input.read(DISCONNECTED_PLAYER_TAG, NameAndId.CODEC).orElse(null);
         setFrozen(input.getBooleanOr(FROZEN_TAG, false));
     }

@@ -23,6 +23,7 @@ import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.client.editablevalue.ClientEditableValueHelper;
 import illusnow.tjchase.client.gui.ModHudLayers;
+import illusnow.tjchase.client.key.ModKeyMappings;
 import illusnow.tjchase.client.model.ModArmPoses;
 import illusnow.tjchase.client.network.ModClientPayloadHandlers;
 import illusnow.tjchase.client.particle.HarpPlayedNoteParticle;
@@ -49,10 +50,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.client.event.RenderHandEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
@@ -97,6 +95,12 @@ public class ClientModEvents {
                 UpdateWeakStatusPayload.TYPE,
                 ModClientPayloadHandlers::handleUpdateWeakStatus
         );
+    }
+
+    @SubscribeEvent
+    public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+        event.registerCategory(ModKeyMappings.TJCHASE_MAIN);
+        event.register(ModKeyMappings.KEY_STRUGGLE);
     }
 
     @SubscribeEvent

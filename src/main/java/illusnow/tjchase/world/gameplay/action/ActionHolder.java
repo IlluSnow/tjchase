@@ -141,14 +141,31 @@ public class ActionHolder {
         if (action != null && currentActionPredicate.test(action)) {
             int attempts = 0;
             do {
+                // Try 3 times to stop both the currentAction and the prevAction
                 setAction(player, null);
                 action = getAction(player);
                 attempts++;
-                if (attempts >= 5) {
-                    LOGGER.warn("Failed to actually stop the player's action, the condition may be invalid");
-                    return false;
+                if (attempts >= 3) {
+                    if (!currentActionPredicate.test(action)) {
+                        LOGGER.warn("Failed to actually stop the player's action, the condition may be invalid");
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
             } while (currentActionPredicate.test(action));
+            return true;
+        } else if (currentActionPredicate.test(get(player).getPrevAction())) {
+            return clearPrevAction(player, currentActionPredicate);
+        }
+        return false;
+    }
+
+    public static boolean clearPrevAction(Player player, Predicate<? super Action> prevActionPredicate) {
+        ActionHolder holder = get(player);
+        if (holder.getPrevAction() != null && prevActionPredicate.test(holder.getPrevAction())) {
+            holder.setPrevAction(null);
+            sync(player, NetworkOp.CLEAR_PREV_ONLY, null, null, 1);
             return true;
         }
         return false;
@@ -329,6 +346,13 @@ public class ActionHolder {
                 Objects.requireNonNull(oldAction, "oldAction cannot be null");
                 ActionHolder holder = getActionHolder(player);
                 completeAndStop(player, oldAction, holder);
+                holder.setPrevAction(null);
+            }
+        },
+        CLEAR_PREV_ONLY(6) {
+            @Override
+            public void handle(Player player, @Nullable Action newAction, @Nullable Action oldAction) {
+                ActionHolder holder = getActionHolder(player);
                 holder.setPrevAction(null);
             }
         };

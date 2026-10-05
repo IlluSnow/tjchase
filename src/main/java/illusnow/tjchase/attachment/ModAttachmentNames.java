@@ -29,6 +29,7 @@ public final class ModAttachmentNames {
     public static final String NEGATIVE_EFFECT_BLUEPRINT = "negative_effect_blueprint";
     public static final String ORBITING_BLOCKS = "orbiting_blocks";
     public static final String POSITIVE_EFFECT_BLUEPRINT = "positive_effect_blueprint";
+    public static final String STRUGGLE = "struggle";
     public static final String TIED_TO = "tied_to";
     public static final String TYING = "tying";
     public static final String VINE_CD = "vine_cd";
