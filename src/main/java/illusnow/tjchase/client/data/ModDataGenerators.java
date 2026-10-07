@@ -48,6 +48,7 @@ public final class ModDataGenerators {
                 .add(Registries.ENCHANTMENT, ModEnchantments::bootstrap));
         event.createProvider(ModDamageTypeTagsProvider::new);
         event.createProvider(ModEnchantmentTagsProvider::new);
+        event.createProvider(ModEquipmentAssetProvider::new);
     }
 
     public static String getDamageTypeMsg(ResourceKey<DamageType> key) {

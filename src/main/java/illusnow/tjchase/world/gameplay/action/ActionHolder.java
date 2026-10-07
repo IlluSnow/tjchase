@@ -385,8 +385,8 @@ public class ActionHolder {
             ActionHolder actionHolder = new ActionHolder();
             actionHolder.currentAction = input.read("CurrentAction", Action.CODEC).orElse(null);
             Action prevActionRead = input.read("PrevAction", Action.CODEC).orElse(null);
-            if (prevActionRead instanceof ContinuousAction prevContinuousActionRead){
-                actionHolder.setPrevAction(prevContinuousActionRead);
+            if (prevActionRead instanceof ContinuousAction || prevActionRead == null) {
+                actionHolder.setPrevAction((ContinuousAction) prevActionRead);
             } else {
                 LOGGER.warn("Failed to load prevAction, {} is not a ContinuousAction", prevActionRead);
             }

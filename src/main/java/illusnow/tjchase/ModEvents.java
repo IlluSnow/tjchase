@@ -110,6 +110,8 @@ public class ModEvents {
         }
         if (event.getTab() == ModCreativeModeTabs.GAMEPLAY_TAB.get()) {
             event.accept(ModItems.ROCKET_EDITOR.get());
+            event.accept(ModItems.MOUSE_EARS.get());
+            event.accept(ModItems.CAT_EARS.get());
         }
     }
 

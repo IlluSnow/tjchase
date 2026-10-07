@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "tjchase:item/mouse_ears",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

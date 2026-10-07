@@ -19,6 +19,7 @@ package illusnow.tjchase.item;
 
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.entity.ModEntities;
+import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.HarpConstants;
 import illusnow.tjchase.world.gameplay.object.ModGameplayObjectTypes;
 import net.minecraft.core.component.DataComponents;
@@ -36,6 +37,9 @@ import java.util.function.UnaryOperator;
 public final class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(TJChase.MODID);
     public static final DeferredHolder<Item, BlueprintItem> BLUEPRINT = register(ModItemNames.BLUEPRINT, BlueprintItem::new, properties -> properties.stacksTo(16).rarity(ModRarities.BLUEPRINT_CUSTOM.getValue()));
+    public static final DeferredHolder<Item, TJChaseEarsItem> CAT_EARS = register(ModItemNames.CAT_EARS, properties -> new TJChaseEarsItem(ModSoundEvents.ARMOR_EQUIP_CAT_EARS, properties),
+            properties -> properties.stacksTo(1)
+                    .rarity(ModRarities.TOM_CUSTOM.getValue()));
     public static final DeferredHolder<Item, EntityDebugStickItem> ENTITY_DEBUG_STICK = register(ModItemNames.ENTITY_DEBUG_STICK, EntityDebugStickItem::new,
             properties -> properties.stacksTo(1)
                     .rarity(Rarity.EPIC)
@@ -52,6 +56,9 @@ public final class ModItems {
             properties -> properties.stacksTo(1)
                     .rarity(Rarity.EPIC)
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
+    public static final DeferredHolder<Item, TJChaseEarsItem> MOUSE_EARS = register(ModItemNames.MOUSE_EARS, properties -> new TJChaseEarsItem(ModSoundEvents.ARMOR_EQUIP_MOUSE_EARS, properties),
+            properties -> properties.stacksTo(1)
+                    .rarity(ModRarities.JERRY_CUSTOM.getValue()));
     public static final DeferredHolder<Item, ProficiencyStickItem> PROFICIENCY_STICK = register(ModItemNames.PROFICIENCY_STICK, ProficiencyStickItem::new,
             properties -> properties.stacksTo(1)
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));

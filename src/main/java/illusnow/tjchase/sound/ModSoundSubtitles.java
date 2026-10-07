@@ -20,6 +20,8 @@ package illusnow.tjchase.sound;
 import illusnow.tjchase.TJChase;
 
 public final class ModSoundSubtitles {
+    public static final String ARMOR_EQUIP_CAT_EARS = prefix(ModSoundNames.ARMOR_EQUIP_CAT_EARS);
+    public static final String ARMOR_EQUIP_MOUSE_EARS = prefix(ModSoundNames.ARMOR_EQUIP_MOUSE_EARS);
     public static final String BLUEPRINT_FOLD = prefix(ModSoundNames.BLUEPRINT_FOLD);
     public static final String BLUEPRINT_RELEASE = prefix(ModSoundNames.BLUEPRINT_RELEASE);
     public static final String BLUEPRINT_THROW = prefix(ModSoundNames.BLUEPRINT_THROW);

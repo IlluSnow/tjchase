@@ -93,6 +93,28 @@
     ],
     "subtitle": "subtitles.tjchase.harp_throw_block"
   },
+  "item.armor.equip_cat_ears": {
+    "sounds": [
+      "item/armor/equip_generic1",
+      "item/armor/equip_generic2",
+      "item/armor/equip_generic3",
+      "item/armor/equip_generic4",
+      "item/armor/equip_generic5",
+      "item/armor/equip_generic6"
+    ],
+    "subtitle": "subtitles.tjchase.item.armor.equip_cat_ears"
+  },
+  "item.armor.equip_mouse_ears": {
+    "sounds": [
+      "item/armor/equip_generic1",
+      "item/armor/equip_generic2",
+      "item/armor/equip_generic3",
+      "item/armor/equip_generic4",
+      "item/armor/equip_generic5",
+      "item/armor/equip_generic6"
+    ],
+    "subtitle": "subtitles.tjchase.item.armor.equip_mouse_ears"
+  },
   "linia_ambient": {
     "sounds": [
       "tjchase:entity/linia/idle1",

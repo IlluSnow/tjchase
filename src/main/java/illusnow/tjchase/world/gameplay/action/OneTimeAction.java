@@ -27,6 +27,7 @@ import java.util.Objects;
 
 public abstract non-sealed class OneTimeAction<D extends ActionData> extends Action {
     private final int defaultDuration;
+    protected boolean reloads = false;
 
     protected OneTimeAction(Identifier id, Identifier animId, int priority, int defaultDuration) {
         super(id, animId, priority);
@@ -79,7 +80,9 @@ public abstract non-sealed class OneTimeAction<D extends ActionData> extends Act
 
     @Override
     public void reload(Player player, ActionHolder holder) {
-        if (!player.level().isClientSide()) {
+        if (reloads) {
+            super.reload(player, holder);
+        } else if (!player.level().isClientSide()) {
             ActionHolder.setAction(player, null);
             holder.setPrevAction(null);
         }

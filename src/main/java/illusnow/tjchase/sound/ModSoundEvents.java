@@ -26,6 +26,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ModSoundEvents {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(Registries.SOUND_EVENT, TJChase.MODID);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ARMOR_EQUIP_CAT_EARS = register(ModSoundNames.ARMOR_EQUIP_CAT_EARS);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ARMOR_EQUIP_MOUSE_EARS = register(ModSoundNames.ARMOR_EQUIP_MOUSE_EARS);
     public static final DeferredHolder<SoundEvent, SoundEvent> BLUEPRINT_FOLD = register(ModSoundNames.BLUEPRINT_FOLD);
     public static final DeferredHolder<SoundEvent, SoundEvent> BLUEPRINT_RELEASE = register(ModSoundNames.BLUEPRINT_RELEASE);
     public static final DeferredHolder<SoundEvent, SoundEvent> BLUEPRINT_THROW = register(ModSoundNames.BLUEPRINT_THROW);

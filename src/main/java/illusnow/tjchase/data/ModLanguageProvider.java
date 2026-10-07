@@ -165,9 +165,11 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "TJChase - Gameplay");
             add(WeakState.WEAK_COUNTDOWN_TEXT, "Weak time remaining: %ds");
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
+            add(ModItems.CAT_EARS.get(), "Cat Ears");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "Entity Debug Stick");
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
             add(ModItems.HARP.get(), "Angel Tom's Harp");
+            add(ModItems.MOUSE_EARS.get(), "Mouse Ears");
             add(ModItems.NETHERITE_HARP.get(), "Angel Tom's Netherite Harp");
             add(ModItems.PROFICIENCY_STICK.get(), "Proficiency Stick");
             add(ModItems.REMOTE_CONTROL.get(), "Remote Control");
@@ -194,6 +196,8 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItemTags.HARPS, "Harps");
             addKeyCategory(ModKeyMappingNames.TJCHASE_MAIN, "TJChase");
             add(ModKeyMappingNames.KEY_STRUGGLE, "Struggle");
+            add(ModSoundSubtitles.ARMOR_EQUIP_CAT_EARS, "Cat ears equipped");
+            add(ModSoundSubtitles.ARMOR_EQUIP_MOUSE_EARS, "Mouse ears equipped");
             add(ModSoundSubtitles.BLUEPRINT_FOLD, "Blueprint folds");
             add(ModSoundSubtitles.BLUEPRINT_RELEASE, "Blueprint expands");
             add(ModSoundSubtitles.BLUEPRINT_THROW, "Blueprint thrown");
@@ -329,9 +333,11 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "猫鼠 - 主游戏");
             add(WeakState.WEAK_COUNTDOWN_TEXT, "虚弱时间剩余：%ds");
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
+            add(ModItems.CAT_EARS.get(), "猫猫的耳朵");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "实体调试棒");
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");
             add(ModItems.HARP.get(), "天使汤姆的竖琴");
+            add(ModItems.MOUSE_EARS.get(), "鼠鼠的耳朵");
             add(ModItems.NETHERITE_HARP.get(), "天使汤姆的下界合金竖琴");
             add(ModItems.PROFICIENCY_STICK.get(), "专精度设置棒");
             add(ModItems.REMOTE_CONTROL.get(), "遥控器");
@@ -358,6 +364,8 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItemTags.HARPS, "竖琴");
             addKeyCategory(ModKeyMappingNames.TJCHASE_MAIN, "猫鼠");
             add(ModKeyMappingNames.KEY_STRUGGLE, "挣扎");
+            add(ModSoundSubtitles.ARMOR_EQUIP_CAT_EARS, "猫耳：穿戴");
+            add(ModSoundSubtitles.ARMOR_EQUIP_MOUSE_EARS, "鼠耳：穿戴");
             add(ModSoundSubtitles.BLUEPRINT_FOLD, "蓝图：折叠");
             add(ModSoundSubtitles.BLUEPRINT_RELEASE, "蓝图：展开");
             add(ModSoundSubtitles.BLUEPRINT_THROW, "蓝图：飞出");

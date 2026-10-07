@@ -21,6 +21,8 @@ import illusnow.tjchase.entity.ModEntityNames;
 import illusnow.tjchase.item.ModItemNames;
 
 public final class ModSoundNames {
+    public static final String ARMOR_EQUIP_CAT_EARS = "item.armor.equip_" + ModItemNames.CAT_EARS;
+    public static final String ARMOR_EQUIP_MOUSE_EARS = "item.armor.equip_" + ModItemNames.MOUSE_EARS;
     public static final String BLUEPRINT_FOLD = ModItemNames.BLUEPRINT + "_fold";
     public static final String BLUEPRINT_RELEASE = ModItemNames.BLUEPRINT + "_release";
     public static final String BLUEPRINT_THROW = ModItemNames.BLUEPRINT + "_throw";

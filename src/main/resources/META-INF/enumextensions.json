@@ -38,11 +38,29 @@
     },
     {
       "enum": "net/minecraft/world/item/Rarity",
+      "name": "TJCHASE_JERRY_CUSTOM",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "illusnow/tjchase/item/ModRarities",
+        "field": "JERRY_CUSTOM"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
       "name": "TJCHASE_NETHERITE_HARP_CUSTOM",
       "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
       "parameters": {
         "class": "illusnow/tjchase/item/ModRarities",
         "field": "NETHERITE_HARP_CUSTOM"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "TJCHASE_TOM_CUSTOM",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "illusnow/tjchase/item/ModRarities",
+        "field": "TOM_CUSTOM"
       }
     },
     {

@@ -34,9 +34,17 @@ public final class ModRarities {
             Rarity.class, -1, prefixCustom(ModItemNames.HARP), (UnaryOperator<Style>) style ->
             style.withItalic(true).withColor(ChatFormatting.GOLD)
     );
+    public static final EnumProxy<Rarity> JERRY_CUSTOM = new EnumProxy<>(
+            Rarity.class, -1, prefixCustom("jerry"), (UnaryOperator<Style>) style ->
+            style.withColor(0xE89E6B)
+    );
     public static final EnumProxy<Rarity> NETHERITE_HARP_CUSTOM = new EnumProxy<>(
             Rarity.class, -1, prefixCustom(ModItemNames.NETHERITE_HARP), (UnaryOperator<Style>) style ->
             style.withItalic(true).withColor(ChatFormatting.LIGHT_PURPLE)
+    );
+    public static final EnumProxy<Rarity> TOM_CUSTOM = new EnumProxy<>(
+            Rarity.class, -1, prefixCustom("tom"), (UnaryOperator<Style>) style ->
+            style.withColor(0x8EACDE)
     );
     public static final EnumProxy<Rarity> VINE_SEED_CUSTOM = new EnumProxy<>(
             Rarity.class, -1, prefixCustom(ModItemNames.VINE_SEED), (UnaryOperator<Style>) style ->

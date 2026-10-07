@@ -107,6 +107,23 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
         add(ModSoundEvents.ROCKET_LAUNCH, definition()
                 .subtitle(ModSoundSubtitles.ROCKET_LAUNCH)
                 .with(modSound("entity/%s/launch".formatted(ModEntityNames.ROCKET))));
+
+        add(ModSoundEvents.ARMOR_EQUIP_CAT_EARS, definition()
+                .subtitle(ModSoundSubtitles.ARMOR_EQUIP_CAT_EARS)
+                .with(sound("item/armor/equip_generic1"))
+                .with(sound("item/armor/equip_generic2"))
+                .with(sound("item/armor/equip_generic3"))
+                .with(sound("item/armor/equip_generic4"))
+                .with(sound("item/armor/equip_generic5"))
+                .with(sound("item/armor/equip_generic6")));
+        add(ModSoundEvents.ARMOR_EQUIP_MOUSE_EARS, definition()
+                .subtitle(ModSoundSubtitles.ARMOR_EQUIP_MOUSE_EARS)
+                .with(sound("item/armor/equip_generic1"))
+                .with(sound("item/armor/equip_generic2"))
+                .with(sound("item/armor/equip_generic3"))
+                .with(sound("item/armor/equip_generic4"))
+                .with(sound("item/armor/equip_generic5"))
+                .with(sound("item/armor/equip_generic6")));
     }
 
     private void modIdleSound(Holder<SoundEvent> sound, String subtitle, String name, int count) {
