@@ -18,6 +18,7 @@
 package illusnow.tjchase.client.data;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.block.MailboxBlock;
 import illusnow.tjchase.block.ModBlockNames;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.client.ModModelTemplates;
@@ -27,9 +28,7 @@ import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.client.data.models.model.ModelLocationUtils;
-import net.minecraft.client.data.models.model.ModelTemplates;
-import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.data.models.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -42,6 +41,7 @@ import net.minecraft.world.level.block.Blocks;
 import software.bernie.geckolib.animatable.GeoItem;
 
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class ModModelProvider extends ModelProvider {
@@ -72,6 +72,56 @@ public class ModModelProvider extends ModelProvider {
         copyBlockModelOnly(blockModels, Blocks.SPRUCE_LEAVES, ModBlocks.TEMPORARY_SPRUCE_LEAVES.get());
 
         blockModels.createNonTemplateHorizontalBlock(ModBlocks.TEMPORARY_VINE.get());
+        createTemporaryVine(blockModels);
+        createMailbox(blockModels);
+
+        // Item Models
+        itemModels.generateFlatItem(ModItems.BLUEPRINT.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.ENVELOPE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.GOLDEN_FEATHER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.STAMP.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.VINE_SEED.get(), ModelTemplates.FLAT_ITEM);
+
+        createHarp(itemModels, ModItems.HARP.get());
+        createHarp(itemModels, ModItems.NETHERITE_HARP.get());
+        itemModels.generateFlatItem(ModItems.ENTITY_DEBUG_STICK.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.HARP_TESTER.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.PROFICIENCY_STICK.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.ROCKET_EDITOR.get(), ModelTemplates.FLAT_HANDHELD_ROD_ITEM);
+    }
+
+    private static void simpleBlockItem(BlockModelGenerators blockModels, Block block) {
+        blockItem(block, blockModels::registerSimpleItemModel);
+    }
+
+    private static void blockItem(Block block, BiConsumer<? super Block, ? super Identifier> model) {
+        blockItem(block, block, model);
+    }
+
+    private static void blockItem(Block block, Block textureBlock, BiConsumer<? super Block, ? super Identifier> model) {
+        Identifier identifier = ModelLocationUtils.getModelLocation(textureBlock);
+        model.accept(block, identifier);
+    }
+
+    private static Identifier prefixVanillaBlock(String name) {
+        return Identifier.withDefaultNamespace("block/" + name);
+    }
+
+    private static Identifier prefixBlock(String name) {
+        return TJChase.prefix("block/" + name);
+    }
+
+    private static void createHarp(ItemModelGenerators itemModels, Item harp) {
+        itemModels.generateFlatItem(harp, ModModelTemplates.HARP);
+//        ModModelTemplates.HARP.create(harp, TextureMapping.layer0(harp), itemModels.modelOutput);
+    }
+
+    private static void copyBlockModelOnly(BlockModelGenerators blockModelGenerators, Block sourceBlock, Block targetBlock) {
+        MultiVariant variant = BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(sourceBlock));
+        blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(targetBlock, variant));
+    }
+
+    private static void createTemporaryVine(BlockModelGenerators blockModels) {
         blockModels.modelOutput.accept(prefixBlock(ModBlockNames.TEMPORARY_VINE), () -> ModelTemplates.create(TextureSlot.PARTICLE, TextureSlot.TEXTURE)
                 .extend()
                 .ambientOcclusion(false)
@@ -89,34 +139,13 @@ public class ModModelProvider extends ModelProvider {
                                 TextureSlot.TEXTURE, prefixVanillaBlock("vine")
                         )
                 ));
-
-        // Item Models
-        itemModels.generateFlatItem(ModItems.BLUEPRINT.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(ModItems.VINE_SEED.get(), ModelTemplates.FLAT_ITEM);
-
-        createHarp(itemModels, ModItems.HARP.get());
-        createHarp(itemModels, ModItems.NETHERITE_HARP.get());
-        itemModels.generateFlatItem(ModItems.ENTITY_DEBUG_STICK.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(ModItems.HARP_TESTER.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(ModItems.PROFICIENCY_STICK.get(), Items.STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(ModItems.ROCKET_EDITOR.get(), ModelTemplates.FLAT_HANDHELD_ROD_ITEM);
     }
 
-    private static Identifier prefixVanillaBlock(String name) {
-        return Identifier.withDefaultNamespace("block/" + name);
-    }
-
-    private static Identifier prefixBlock(String name) {
-        return TJChase.prefix("block/" + name);
-    }
-
-    public static void createHarp(ItemModelGenerators itemModels, Item harp) {
-        itemModels.generateFlatItem(harp, ModModelTemplates.HARP);
-//        ModModelTemplates.HARP.create(harp, TextureMapping.layer0(harp), itemModels.modelOutput);
-    }
-
-    public static void copyBlockModelOnly(BlockModelGenerators blockModelGenerators, Block sourceBlock, Block targetBlock) {
-        MultiVariant variant = BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(sourceBlock));
-        blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(targetBlock, variant));
+    private static void createMailbox(BlockModelGenerators blockModelGenerators) {
+        MailboxBlock mailbox = ModBlocks.MAILBOX.get();
+        MultiVariant variant = BlockModelGenerators.plainVariant(ModModelTemplates.MAILBOX.create(mailbox, TextureMapping.particle(TextureMapping.getBlockTexture(mailbox, "_particle")), blockModelGenerators.modelOutput));
+        blockModelGenerators.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(mailbox, variant).with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING)
+        );
     }
 }

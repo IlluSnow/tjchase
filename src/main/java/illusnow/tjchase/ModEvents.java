@@ -106,7 +106,11 @@ public class ModEvents {
             event.accept(ModItems.HARP.get());
             event.accept(ModItems.NETHERITE_HARP.get());
             event.accept(ModItems.VINE_SEED.get());
+            event.accept(ModItems.STAMP.get());
+            event.accept(ModItems.ENVELOPE.get());
+            event.accept(ModItems.GOLDEN_FEATHER.get());
             event.accept(ModItems.REMOTE_CONTROL.get());
+            event.accept(ModItems.MAILBOX.get());
         }
         if (event.getTab() == ModCreativeModeTabs.GAMEPLAY_TAB.get()) {
             event.accept(ModItems.ROCKET_EDITOR.get());

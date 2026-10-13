@@ -4,6 +4,7 @@
   "package": "illusnow.tjchase.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BlockAccessor",
     "EnderDragonMixin",
     "EntityAccessor",
     "EntityMixin",
@@ -30,11 +31,13 @@
     "client.GameRendererMixin",
     "client.GuiMixin",
     "client.ItemInHandRendererAccessor",
+    "client.ItemStackRenderStateMixin",
     "client.KeyMappingMixin",
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
     "client.MouseHandlerMixin",
+    "client.ShelfRendererMixin",
     "client.ToggleKeyMappingMixin"
   ],
   "injectors": {

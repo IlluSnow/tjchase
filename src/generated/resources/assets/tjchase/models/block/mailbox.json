@@ -1,0 +1,103 @@
+{
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#particle"
+        },
+        "east": {
+          "texture": "#particle"
+        },
+        "north": {
+          "texture": "#particle"
+        },
+        "south": {
+          "texture": "#particle"
+        },
+        "up": {
+          "texture": "#particle"
+        },
+        "west": {
+          "texture": "#particle"
+        }
+      },
+      "from": [
+        2.001,
+        0.001,
+        2.001
+      ],
+      "to": [
+        13.999,
+        9.999,
+        13.999
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#particle"
+        },
+        "east": {
+          "texture": "#particle"
+        },
+        "north": {
+          "texture": "#particle"
+        },
+        "south": {
+          "texture": "#particle"
+        },
+        "up": {
+          "texture": "#particle"
+        },
+        "west": {
+          "texture": "#particle"
+        }
+      },
+      "from": [
+        1.501,
+        10.001,
+        1.501
+      ],
+      "to": [
+        14.499,
+        10.999,
+        14.499
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#particle"
+        },
+        "east": {
+          "texture": "#particle"
+        },
+        "north": {
+          "texture": "#particle"
+        },
+        "south": {
+          "texture": "#particle"
+        },
+        "up": {
+          "texture": "#particle"
+        },
+        "west": {
+          "texture": "#particle"
+        }
+      },
+      "from": [
+        1.001,
+        11.001,
+        1.001
+      ],
+      "to": [
+        14.999,
+        13.999,
+        14.999
+      ]
+    }
+  ],
+  "textures": {
+    "particle": "tjchase:block/mailbox_particle"
+  }
+}

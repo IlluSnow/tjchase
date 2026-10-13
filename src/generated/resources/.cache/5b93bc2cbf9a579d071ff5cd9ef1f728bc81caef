@@ -1,4 +1,5 @@
-// 1.21.11	2026-08-29T01:05:37.4914777	Model Definitions - tjchase
+// 1.21.11	2026-10-14T00:17:21.6175757	Model Definitions - tjchase
+7670a6701c843a8c7df1c02b67ee717a91dbcb79 assets/tjchase/blockstates/mailbox.json
 2606791521eac27fa77ebbeeea442b8073802a51 assets/tjchase/blockstates/temporary_acacia_leaves.json
 5a49eaf2e8e03519cd1c8bb9acc727119658c60e assets/tjchase/blockstates/temporary_azalea_leaves.json
 8ef838697c46c00a32d716cdcf4638eed23d1cc0 assets/tjchase/blockstates/temporary_birch_leaves.json
@@ -11,18 +12,25 @@ ab47df46795bc4ee1d88b446b0305ee474c1ed9c assets/tjchase/blockstates/temporary_sp
 1c797ad25c1a467e63dc8fdef2355d4dc2cbecc8 assets/tjchase/blockstates/temporary_vine.json
 743dfd4882c167fb1859f526c3a37aabd58d4cfa assets/tjchase/items/blueprint.json
 bf78e102fdeea480a3240a50af71749ccdbbe9b6 assets/tjchase/items/entity_debug_stick.json
+d12cf72eaf496d86ef4f9be1733a5702e20a4dc7 assets/tjchase/items/envelope.json
+da4c390109ed3d9a799b4fe029c4d609beea7eeb assets/tjchase/items/golden_feather.json
 1f87dc047c4bc0b801b64304df25626b89469567 assets/tjchase/items/harp.json
 adb7ac38fa7c74b02213274bd35b30181dc25111 assets/tjchase/items/harp_tester.json
 a48a02a9551b72f8ebf4adbd8caac813b203d10b assets/tjchase/items/netherite_harp.json
 d185fad651f93d56a874ab1e73b2c59d8d4f7cf9 assets/tjchase/items/proficiency_stick.json
 08864e86d7a5537b6f75f405fca47e31c7ab9cc0 assets/tjchase/items/rocket_editor.json
+cb831c20e4a4ce5256b5a7d1d4ce5c5fb4621ab1 assets/tjchase/items/stamp.json
 6b9a52b14915ea4940e8ba9ff6e0aff897813a0f assets/tjchase/items/vine_seed.json
+926994fc875ad043280c467e04eb4c5c64b917ed assets/tjchase/models/block/mailbox.json
 c33480667eb6c1a875f9f1bdccc6b68cfe73df0b assets/tjchase/models/block/temporary_vine.json
 2da66613754c3a1beb8a6a538827f5630f23d140 assets/tjchase/models/item/blueprint.json
 a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/entity_debug_stick.json
+93a827edb466378692a02465d05f74a197729de4 assets/tjchase/models/item/envelope.json
+2e365f23917a85a0455a93008686d8b53662bcf6 assets/tjchase/models/item/golden_feather.json
 c85438ea7549bed01ef7752e0fa237da3a58c0ed assets/tjchase/models/item/harp.json
 a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/harp_tester.json
 6a41a5297f92976bdfe18e08e675a2964c8e4fbe assets/tjchase/models/item/netherite_harp.json
 a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/proficiency_stick.json
 5209cf11eafe640dd650073ce0c52c61b64d0684 assets/tjchase/models/item/rocket_editor.json
+7d692db7e018e64d1b1c3c426b9e55bdc941b447 assets/tjchase/models/item/stamp.json
 fd92816d370a6b3c9f53a128f3fb91e67c276483 assets/tjchase/models/item/vine_seed.json

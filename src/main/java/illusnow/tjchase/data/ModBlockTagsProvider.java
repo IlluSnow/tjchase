@@ -70,6 +70,8 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 ModBlocks.TEMPORARY_OAK_LEAVES.get(),
                 ModBlocks.TEMPORARY_SPRUCE_LEAVES.get()
         );
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.MAILBOX.get());
+        tag(BlockTags.NEEDS_STONE_TOOL).add(ModBlocks.MAILBOX.get());
         tag(BlockTags.DIRT).add(ModBlocks.TEMPORARY_MOSS_BLOCK.get());
         tag(BlockTags.SMALL_DRIPLEAF_PLACEABLE).add(ModBlocks.TEMPORARY_MOSS_BLOCK.get());
         tag(BlockTags.SNIFFER_DIGGABLE_BLOCK).add(ModBlocks.TEMPORARY_MOSS_BLOCK.get());

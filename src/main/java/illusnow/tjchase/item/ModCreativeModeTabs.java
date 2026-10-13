@@ -29,7 +29,7 @@ public final class ModCreativeModeTabs {
     public static final String GAMEPLAY_TAB_ID = "itemGroups." + TJChase.MODID + ".gameplay";
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TJChase.MODID);
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = CREATIVE_MODE_TABS.register(TJChase.MODID + "_tab", () -> CreativeModeTab.builder()
-            .icon(() -> ModItems.VINE_SEED.get().getDefaultInstance())
+            .icon(() -> ModItems.GOLDEN_FEATHER.get().getDefaultInstance())
             .title(Component.translatable(TAB_ID))
             .build());
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> GAMEPLAY_TAB = CREATIVE_MODE_TABS.register(TJChase.MODID + "_gameplay_tab", () -> CreativeModeTab.builder()

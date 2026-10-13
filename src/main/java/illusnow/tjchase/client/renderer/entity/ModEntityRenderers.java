@@ -18,12 +18,14 @@
 package illusnow.tjchase.client.renderer.entity;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.block.entity.ModBlockEntities;
 import illusnow.tjchase.entity.ModEntities;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 @EventBusSubscriber(modid = TJChase.MODID, value = Dist.CLIENT)
@@ -41,6 +43,8 @@ public final class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.VINE_SEED.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntities.YOGA_BALL.get(), context -> new YogaBallRenderer<>(context).withScale(0.5F));
         event.registerEntityRenderer(ModEntities.ZURI.get(), context -> new ZuriRenderer<>(context).withScale(0.75F));
+
+        event.registerBlockEntityRenderer(ModBlockEntities.MAILBOX.get(), context -> new GeoBlockRenderer<>(ModBlockEntities.MAILBOX.get()));
     }
 
     private ModEntityRenderers() {}

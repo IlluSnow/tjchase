@@ -18,6 +18,8 @@
 package illusnow.tjchase.item;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.block.ModBlockNames;
+import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.entity.ModEntities;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.HarpConstants;
@@ -25,13 +27,19 @@ import illusnow.tjchase.world.gameplay.object.ModGameplayObjectTypes;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.DamageResistant;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 public final class ModItems {
@@ -44,6 +52,11 @@ public final class ModItems {
             properties -> properties.stacksTo(1)
                     .rarity(Rarity.EPIC)
                     .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
+    public static final DeferredHolder<Item, EnvelopeItem> ENVELOPE = register(ModItemNames.ENVELOPE, EnvelopeItem::new, properties -> properties);
+    public static final DeferredHolder<Item, Item> GOLDEN_FEATHER = register(ModItemNames.GOLDEN_FEATHER, GoldenFeatherItem::new, properties -> properties
+            .stacksTo(1).rarity(Rarity.EPIC)
+            .component(DataComponents.DAMAGE_RESISTANT, new DamageResistant(DamageTypeTags.IS_EXPLOSION))
+            .fireResistant());
     public static final DeferredHolder<Item, HarpItem> HARP = ITEMS.register(ModItemNames.HARP, () ->
             new HarpItem(new Item.Properties().setId(createItemId(ModItemNames.HARP)).rarity(ModRarities.HARP_CUSTOM.getValue()).durability(HarpConstants.DURABILITY).enchantable(HarpConstants.ENCHANTMENT_VALUE).repairable(ItemTags.GOLD_TOOL_MATERIALS),
                     HarpConstants.BASE_ORBITING_BLOCK_COUNT,
@@ -65,12 +78,27 @@ public final class ModItems {
     public static final DeferredHolder<Item, RemoteControlItem> REMOTE_CONTROL = register(ModItemNames.REMOTE_CONTROL, RemoteControlItem::new,
             properties -> properties.stacksTo(1));
     public static final DeferredHolder<Item, Item> ROCKET_EDITOR = register(ModItemNames.ROCKET_EDITOR, properties -> new InGamePlacedEntityEditorItem<>(properties, ModEntities.ROCKET, ModGameplayObjectTypes.ROCKET), properties -> properties.stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredHolder<Item, Item> STAMP = register(ModItemNames.STAMP, properties -> properties.rarity(Rarity.RARE));
     public static final DeferredHolder<Item, Item> VINE_SEED = register(ModItemNames.VINE_SEED, VineSeedItem::new, properties -> properties.stacksTo(16).rarity(ModRarities.VINE_SEED_CUSTOM.getValue()));
+
+    public static final DeferredHolder<Item, BlockItem> MAILBOX = registerGeoBlock(ModBlockNames.MAILBOX, ModBlocks.MAILBOX);
 
     private ModItems() {}
 
     private static DeferredHolder<Item, Item> register(String name, UnaryOperator<Item.Properties> op) {
         return register(name, Item::new, op);
+    }
+
+    private static DeferredHolder<Item, BlockItem> registerSimpleBlock(String name, Supplier<? extends Block> block) {
+        return registerBlock(name, block, BlockItem::new);
+    }
+
+    private static DeferredHolder<Item, BlockItem> registerGeoBlock(String name, Supplier<? extends Block> block) {
+        return registerBlock(name, block, (block1, properties) -> new GeoBlockItem<>(name, block1, properties));
+    }
+
+    private static DeferredHolder<Item, BlockItem> registerBlock(String name, Supplier<? extends Block> block, BiFunction<? super Block, ? super Item.Properties, ? extends BlockItem> factory) {
+        return register(name, properties -> factory.apply(block.get(), properties), properties -> properties);
     }
 
     private static <T extends Item> DeferredHolder<Item, T> register(String name, Function<? super Item.Properties, ? extends T> factory, UnaryOperator<Item.Properties> op) {

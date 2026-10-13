@@ -30,6 +30,7 @@ import illusnow.tjchase.item.*;
 import illusnow.tjchase.item.enchantment.ModEnchantments;
 import illusnow.tjchase.sound.ModSoundSubtitles;
 import illusnow.tjchase.tag.ModBlockTags;
+import illusnow.tjchase.tag.ModEntityTypeTags;
 import illusnow.tjchase.tag.ModItemTags;
 import illusnow.tjchase.util.ModComponents;
 import illusnow.tjchase.util.ModKeyMappingNames;
@@ -40,7 +41,11 @@ import illusnow.tjchase.world.gameplay.object.editablevalue.EditableValueBehavio
 import illusnow.tjchase.world.gameplay.object.editablevalue.ModEditableValues;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+
+import java.util.function.Supplier;
 
 import static illusnow.tjchase.client.data.ModDataGenerators.getDamageTypeMsg;
 import static illusnow.tjchase.item.enchantment.ModEnchantments.getEnchantmentDescriptionId;
@@ -58,6 +63,14 @@ public abstract class ModLanguageProvider extends LanguageProvider {
         add(categoryId.toLanguageKey("key.category"), name);
     }
 
+    @Override
+    public void addBlock(Supplier<? extends Block> key, String name) {
+        super.addBlock(key, name);
+        if (key.get().asItem() != Items.AIR) {
+            addItem(() -> key.get().asItem(), name);
+        }
+    }
+
     public static class EnUs extends ModLanguageProvider {
         public EnUs(PackOutput output) {
             super(output, "en_us");
@@ -65,6 +78,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
 
         @Override
         protected void addTranslations() {
+            addBlock(ModBlocks.MAILBOX, "Mailbox");
             add(ModComponents.SPACED_LEFT_PARENTHESIS_MSGID, " (");
             add(ModComponents.SPACED_RIGHT_PARENTHESIS_MSGID, ") ");
             add(ModComponents.CONTAINER_RENAME_MSGID, "Rename");
@@ -167,6 +181,8 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
             add(ModItems.CAT_EARS.get(), "Cat Ears");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "Entity Debug Stick");
+            add(ModItems.ENVELOPE.get(), "Envelope");
+            add(ModItems.GOLDEN_FEATHER.get(), "Golden Feather");
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
             add(ModItems.HARP.get(), "Angel Tom's Harp");
             add(ModItems.MOUSE_EARS.get(), "Mouse Ears");
@@ -174,6 +190,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.PROFICIENCY_STICK.get(), "Proficiency Stick");
             add(ModItems.REMOTE_CONTROL.get(), "Remote Control");
             add(ModItems.ROCKET_EDITOR.get(), "Rocket Editor");
+            add(ModItems.STAMP.get(), "Stamp");
             add(ModItems.VINE_SEED.get(), "Robin Hood Tuffy's Bean");
             add(GameplayObjectEditorItem.NAME_TRANSLATION_KEY, "%s (Carrying %s)");
             add(EntityDebugStickItem.KILL, "Killed %s");
@@ -187,13 +204,6 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ProficiencyStickItem.SET_PROFICIENCY, "Set %1$s's proficiency to %2$s");
             add(ProficiencyStickItem.INVALID_ENTITY, "Invalid entity: %1$s");
             add(ProficiencyStickItem.PROFICIENCY_NOT_SET, "%1$s's proficiency is not set");
-            add(ModBlockTags.SPEED_BOOSTING_VINE, "Speed Boosting Vine");
-            add(ModBlockTags.TEMPORARY_BLOCKS_OF_VINES, "Temporary Blocks Of Blocks");
-            add(ModBlockTags.EXPLOSIVE_ORBITING_BLOCK_TAG_SPECIAL, "Special Explosive Blocks");
-            add(ModBlockTags.HEAVY_ORBITING_BLOCK_TAG_SPECIAL, "Special Heavy Blocks");
-            add(ModBlockTags.HARD_ORBITING_BLOCK_TAG_SPECIAL, "Special Hard Blocks");
-            add(ModBlockTags.SOFT_ORBITING_BLOCK_TAG_SPECIAL, "Special Soft Blocks");
-            add(ModItemTags.HARPS, "Harps");
             addKeyCategory(ModKeyMappingNames.TJCHASE_MAIN, "TJChase");
             add(ModKeyMappingNames.KEY_STRUGGLE, "Struggle");
             add(ModSoundSubtitles.ARMOR_EQUIP_CAT_EARS, "Cat ears equipped");
@@ -223,6 +233,19 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModSoundSubtitles.ZURI_HURT, "Zuri hurts");
             add(ModSoundSubtitles.ZURI_THROW_YOGA_BALL, "Zuri throws Yoga Ball");
             add(ModSoundSubtitles.ZURI_WEAK, "Zuri becomes weak");
+            add(ModBlockTags.EXPLOSIVE_ORBITING_BLOCK_TAG_SPECIAL, "Special Explosive Flying Blocks");
+            add(ModBlockTags.HARD_ORBITING_BLOCK_TAG_SPECIAL, "Special Hard Flying Blocks");
+            add(ModBlockTags.HEAVY_ORBITING_BLOCK_TAG_SPECIAL, "Special Heavy Flying Blocks");
+            add(ModBlockTags.SOFT_ORBITING_BLOCK_TAG_SPECIAL, "Special Soft Flying Blocks");
+            add(ModBlockTags.SPEED_BOOSTING_VINE, "Speed Boosting Vine");
+            add(ModBlockTags.TEMPORARY_BLOCKS_OF_VINES, "Vine's Temporary Blocks");
+            add(ModEntityTypeTags.TJCHASE_FRIENDLY_CATS, "Friendly Cats");
+            add(ModEntityTypeTags.TJCHASE_FRIENDLY_MICE, "Friendly Mice");
+            add(ModEntityTypeTags.TJCHASE_FRIENDLY_MOBS, "Friendly TJChase Mobs");
+            add(ModEntityTypeTags.ZURI_FULLY_CONTROLLABLE, "Zuri Fully Controllable");
+            add(ModEntityTypeTags.ZURI_PARTIALLY_CONTROLLABLE, "Zuri Partially Controllable");
+            add(ModEntityTypeTags.ZURI_UNCONTROLLABLE, "Zuri Uncontrollable");
+            add(ModItemTags.HARPS, "Harps");
         }
     }
 
@@ -233,6 +256,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
 
         @Override
         protected void addTranslations() {
+            addBlock(ModBlocks.MAILBOX, "邮箱");
             add(ModComponents.SPACED_LEFT_PARENTHESIS_MSGID, "（");
             add(ModComponents.SPACED_RIGHT_PARENTHESIS_MSGID, "）");
             add(ModComponents.CONTAINER_RENAME_MSGID, "重命名");
@@ -335,6 +359,8 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModItems.CAT_EARS.get(), "猫猫的耳朵");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "实体调试棒");
+            add(ModItems.ENVELOPE.get(), "信封");
+            add(ModItems.GOLDEN_FEATHER.get(), "金羽毛");
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");
             add(ModItems.HARP.get(), "天使汤姆的竖琴");
             add(ModItems.MOUSE_EARS.get(), "鼠鼠的耳朵");
@@ -342,6 +368,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.PROFICIENCY_STICK.get(), "专精度设置棒");
             add(ModItems.REMOTE_CONTROL.get(), "遥控器");
             add(ModItems.ROCKET_EDITOR.get(), "火箭编辑器");
+            add(ModItems.STAMP.get(), "邮票");
             add(ModItems.VINE_SEED.get(), "罗宾汉泰菲的藤蔓种子");
             add(GameplayObjectEditorItem.NAME_TRANSLATION_KEY, "%s（携带了%s）");
             add(EntityDebugStickItem.KILL, "杀死了%s");
@@ -355,13 +382,6 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ProficiencyStickItem.SET_PROFICIENCY, "%1$s的专精度已设为%2$s");
             add(ProficiencyStickItem.INVALID_ENTITY, "无效的实体：%1$s");
             add(ProficiencyStickItem.PROFICIENCY_NOT_SET, "%1$s的专精度尚未设置");
-            add(ModBlockTags.SPEED_BOOSTING_VINE, "加速藤蔓");
-            add(ModBlockTags.TEMPORARY_BLOCKS_OF_VINES, "藤蔓的临时方块");
-            add(ModBlockTags.EXPLOSIVE_ORBITING_BLOCK_TAG_SPECIAL, "特殊的爆炸性方块");
-            add(ModBlockTags.HEAVY_ORBITING_BLOCK_TAG_SPECIAL, "特殊的沉重方块");
-            add(ModBlockTags.HARD_ORBITING_BLOCK_TAG_SPECIAL, "特殊的坚硬方块");
-            add(ModBlockTags.SOFT_ORBITING_BLOCK_TAG_SPECIAL, "特殊的柔软方块");
-            add(ModItemTags.HARPS, "竖琴");
             addKeyCategory(ModKeyMappingNames.TJCHASE_MAIN, "猫鼠");
             add(ModKeyMappingNames.KEY_STRUGGLE, "挣扎");
             add(ModSoundSubtitles.ARMOR_EQUIP_CAT_EARS, "猫耳：穿戴");
@@ -391,6 +411,19 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModSoundSubtitles.ZURI_HURT, "苏蕊：受伤");
             add(ModSoundSubtitles.ZURI_THROW_YOGA_BALL, "苏蕊：投掷瑜伽球");
             add(ModSoundSubtitles.ZURI_WEAK, "苏蕊：虚弱");
+            add(ModBlockTags.EXPLOSIVE_ORBITING_BLOCK_TAG_SPECIAL, "特殊的爆炸性的飞行的方块");
+            add(ModBlockTags.HARD_ORBITING_BLOCK_TAG_SPECIAL, "特殊的坚硬的飞行的方块");
+            add(ModBlockTags.HEAVY_ORBITING_BLOCK_TAG_SPECIAL, "特殊的沉重的飞行的方块");
+            add(ModBlockTags.SOFT_ORBITING_BLOCK_TAG_SPECIAL, "特殊的柔软的飞行的方块");
+            add(ModBlockTags.SPEED_BOOSTING_VINE, "可加速攀爬的藤蔓");
+            add(ModBlockTags.TEMPORARY_BLOCKS_OF_VINES, "藤蔓的临时方块");
+            add(ModEntityTypeTags.TJCHASE_FRIENDLY_CATS, "友好的猫");
+            add(ModEntityTypeTags.TJCHASE_FRIENDLY_MICE, "友好的老鼠");
+            add(ModEntityTypeTags.TJCHASE_FRIENDLY_MOBS, "友好的猫鼠中的生物");
+            add(ModEntityTypeTags.ZURI_FULLY_CONTROLLABLE, "苏蕊能完全控制的生物");
+            add(ModEntityTypeTags.ZURI_PARTIALLY_CONTROLLABLE, "苏蕊能部分控制的生物");
+            add(ModEntityTypeTags.ZURI_UNCONTROLLABLE, "苏蕊不能控制的生物");
+            add(ModItemTags.HARPS, "竖琴");
         }
     }
 }

@@ -1,4 +1,4 @@
-// 1.21.11	2026-05-29T00:29:24.5638677	Tags for minecraft:block mod id tjchase
+// 1.21.11	2026-10-11T22:36:42.3076338	Tags for minecraft:block mod id tjchase
 6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/climbable.json
 24312980296576e28b7d3af48d8f9766aaf287ed data/minecraft/tags/block/dirt.json
 723aeb43f8887050f18a490e6d06034e9cac374f data/minecraft/tags/block/leaves.json
@@ -6,6 +6,8 @@
 6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/mangrove_roots_can_grow_through.json
 6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/mineable/axe.json
 376e43775d4f669474ee64396b7d78040a62de73 data/minecraft/tags/block/mineable/hoe.json
+9fc7acbc4475bb77703bb2b3330cc1aeea087d38 data/minecraft/tags/block/mineable/pickaxe.json
+9fc7acbc4475bb77703bb2b3330cc1aeea087d38 data/minecraft/tags/block/needs_stone_tool.json
 6dcdcd76d693ee4252948fd0e0b5fe503c231346 data/minecraft/tags/block/replaceable_by_trees.json
 24312980296576e28b7d3af48d8f9766aaf287ed data/minecraft/tags/block/small_dripleaf_placeable.json
 24312980296576e28b7d3af48d8f9766aaf287ed data/minecraft/tags/block/sniffer_diggable_block.json

@@ -18,6 +18,7 @@
 package illusnow.tjchase.block;
 
 public final class ModBlockNames {
+    public static final String MAILBOX = "mailbox";
     public static final String TEMPORARY_ACACIA_LEAVES = "temporary_acacia_leaves";
     public static final String TEMPORARY_AZALEA_LEAVES = "temporary_azalea_leaves";
     public static final String TEMPORARY_BIRCH_LEAVES = "temporary_birch_leaves";

@@ -17,10 +17,13 @@
 
 package illusnow.tjchase.block;
 
+import com.mojang.serialization.MapCodec;
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.mixin.BlockAccessor;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -34,6 +37,14 @@ import java.util.function.UnaryOperator;
 
 public final class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.createBlocks(TJChase.MODID);
+    public static final DeferredRegister<MapCodec<? extends Block>> BLOCK_TYPES = DeferredRegister.create(Registries.BLOCK_TYPE, TJChase.MODID);
+    public static final DeferredHolder<Block, MailboxBlock> MAILBOX = registerWithCustomCodec(ModBlockNames.MAILBOX, id ->
+            new MailboxBlock(BlockBehaviour.Properties.of()
+                    .setId(ResourceKey.create(Registries.BLOCK, id))
+                    .mapColor(MapColor.COLOR_RED)
+                    .sound(SoundType.IRON)
+                    .requiresCorrectToolForDrops()
+                    .strength(5F, 6F)));
     public static final DeferredHolder<Block, TintedParticleLeavesBlock> TEMPORARY_ACACIA_LEAVES
             = registerLeafCopy(ModBlockNames.TEMPORARY_ACACIA_LEAVES, TintedParticleLeavesBlock::new, Blocks.ACACIA_LEAVES, BlockBehaviour.Properties::noLootTable);
     public static final DeferredHolder<Block, UntintedParticleLeavesBlock> TEMPORARY_AZALEA_LEAVES
@@ -86,6 +97,12 @@ public final class ModBlocks {
 
     private static <T extends LeavesBlock> DeferredHolder<Block, T> registerLeafCopy(String name, BiFunction<? super Float, ? super Block.Properties, ? extends T> factory, float leafParticleChance, BlockBehaviour block, UnaryOperator<Block.Properties> op) {
         return BLOCKS.register(name, () -> factory.apply(leafParticleChance, op.apply(BlockBehaviour.Properties.ofFullCopy(block).setId(createBlockId(name)))));
+    }
+
+    private static <I extends Block> DeferredHolder<Block, I> registerWithCustomCodec(String name, Function<Identifier, ? extends I> func) {
+        DeferredHolder<Block, I> registered = BLOCKS.register(name, func);
+        BLOCK_TYPES.register(name, () -> ((BlockAccessor) registered.get()).callCodec());
+        return registered;
     }
 
     private static ResourceKey<Block> createBlockId(String name) {

@@ -20,6 +20,7 @@ package illusnow.tjchase;
 import com.mojang.logging.LogUtils;
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.block.ModBlocks;
+import illusnow.tjchase.block.entity.ModBlockEntities;
 import illusnow.tjchase.entity.ModEntities;
 import illusnow.tjchase.entity.ModEntityDataSerializers;
 import illusnow.tjchase.item.ModCreativeModeTabs;
@@ -54,6 +55,8 @@ public class TJChase {
         ModActions.ACTIONS.register(bus);
         ModAttachments.ATTACHMENT_TYPES.register(bus);
         ModBlocks.BLOCKS.register(bus);
+        ModBlockEntities.BLOCK_ENTITIES.register(bus);
+        ModBlocks.BLOCK_TYPES.register(bus);
         ModCreativeModeTabs.CREATIVE_MODE_TABS.register(bus);
         ModDataComponents.DATA_COMPONENTS.register(bus);
         ModEditableValues.EDITABLE_VALUES.register(bus);
