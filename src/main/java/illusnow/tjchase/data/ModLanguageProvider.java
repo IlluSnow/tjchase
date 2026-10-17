@@ -181,7 +181,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
             add(ModItems.CAT_EARS.get(), "Cat Ears");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "Entity Debug Stick");
-            add(ModItems.ENVELOPE.get(), "Envelope");
+            add(ModItems.ENVELOPE.get(), "Common Reply Letter");
             add(ModItems.GOLDEN_FEATHER.get(), "Golden Feather");
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
             add(ModItems.HARP.get(), "Angel Tom's Harp");
@@ -190,6 +190,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.PROFICIENCY_STICK.get(), "Proficiency Stick");
             add(ModItems.REMOTE_CONTROL.get(), "Remote Control");
             add(ModItems.ROCKET_EDITOR.get(), "Rocket Editor");
+            add(ModItems.SENT_ENVELOPE.get(), "Sent Letter");
             add(ModItems.STAMP.get(), "Stamp");
             add(ModItems.VINE_SEED.get(), "Robin Hood Tuffy's Bean");
             add(GameplayObjectEditorItem.NAME_TRANSLATION_KEY, "%s (Carrying %s)");
@@ -363,7 +364,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModItems.CAT_EARS.get(), "猫猫的耳朵");
             add(ModItems.ENTITY_DEBUG_STICK.get(), "实体调试棒");
-            add(ModItems.ENVELOPE.get(), "信封");
+            add(ModItems.ENVELOPE.get(), "普通回信");
             add(ModItems.GOLDEN_FEATHER.get(), "金羽毛");
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");
             add(ModItems.HARP.get(), "天使汤姆的竖琴");
@@ -372,6 +373,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.PROFICIENCY_STICK.get(), "专精度设置棒");
             add(ModItems.REMOTE_CONTROL.get(), "遥控器");
             add(ModItems.ROCKET_EDITOR.get(), "火箭编辑器");
+            add(ModItems.SENT_ENVELOPE.get(), "寄出的信");
             add(ModItems.STAMP.get(), "邮票");
             add(ModItems.VINE_SEED.get(), "罗宾汉泰菲的藤蔓种子");
             add(GameplayObjectEditorItem.NAME_TRANSLATION_KEY, "%s（携带了%s）");

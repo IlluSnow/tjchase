@@ -24,9 +24,10 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.ItemStack;
 
-public record OpenEnvelopeScreenPayload(ItemStack reward, boolean offHand) implements CustomPacketPayload {
+public record OpenEnvelopeScreenPayload(ItemStack envelope, ItemStack reward, boolean offHand) implements CustomPacketPayload {
     public static final Type<OpenEnvelopeScreenPayload> TYPE = new Type<>(TJChase.prefix("open_envelope_screen"));
     public static final StreamCodec<RegistryFriendlyByteBuf, OpenEnvelopeScreenPayload> STREAM_CODEC = StreamCodec.composite(
+            ItemStack.STREAM_CODEC, OpenEnvelopeScreenPayload::envelope,
             ItemStack.STREAM_CODEC, OpenEnvelopeScreenPayload::reward,
             ByteBufCodecs.BOOL, OpenEnvelopeScreenPayload::offHand,
             OpenEnvelopeScreenPayload::new

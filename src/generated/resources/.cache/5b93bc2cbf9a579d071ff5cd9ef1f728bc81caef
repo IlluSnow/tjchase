@@ -1,4 +1,4 @@
-// 1.21.11	2026-10-14T00:17:21.6175757	Model Definitions - tjchase
+// 1.21.11	2026-10-17T17:29:42.1474256	Model Definitions - tjchase
 7670a6701c843a8c7df1c02b67ee717a91dbcb79 assets/tjchase/blockstates/mailbox.json
 2606791521eac27fa77ebbeeea442b8073802a51 assets/tjchase/blockstates/temporary_acacia_leaves.json
 5a49eaf2e8e03519cd1c8bb9acc727119658c60e assets/tjchase/blockstates/temporary_azalea_leaves.json
@@ -19,6 +19,7 @@ adb7ac38fa7c74b02213274bd35b30181dc25111 assets/tjchase/items/harp_tester.json
 a48a02a9551b72f8ebf4adbd8caac813b203d10b assets/tjchase/items/netherite_harp.json
 d185fad651f93d56a874ab1e73b2c59d8d4f7cf9 assets/tjchase/items/proficiency_stick.json
 08864e86d7a5537b6f75f405fca47e31c7ab9cc0 assets/tjchase/items/rocket_editor.json
+5a606666f24cda659f7fed2384b12d6f05259ee1 assets/tjchase/items/sent_envelope.json
 cb831c20e4a4ce5256b5a7d1d4ce5c5fb4621ab1 assets/tjchase/items/stamp.json
 6b9a52b14915ea4940e8ba9ff6e0aff897813a0f assets/tjchase/items/vine_seed.json
 926994fc875ad043280c467e04eb4c5c64b917ed assets/tjchase/models/block/mailbox.json
@@ -32,5 +33,6 @@ a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/harp_tester.
 6a41a5297f92976bdfe18e08e675a2964c8e4fbe assets/tjchase/models/item/netherite_harp.json
 a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/proficiency_stick.json
 5209cf11eafe640dd650073ce0c52c61b64d0684 assets/tjchase/models/item/rocket_editor.json
+93a827edb466378692a02465d05f74a197729de4 assets/tjchase/models/item/sent_envelope.json
 7d692db7e018e64d1b1c3c426b9e55bdc941b447 assets/tjchase/models/item/stamp.json
 fd92816d370a6b3c9f53a128f3fb91e67c276483 assets/tjchase/models/item/vine_seed.json

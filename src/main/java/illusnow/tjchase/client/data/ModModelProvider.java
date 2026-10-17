@@ -79,6 +79,7 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.BLUEPRINT.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.ENVELOPE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.GOLDEN_FEATHER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.SENT_ENVELOPE.get(), ModItems.ENVELOPE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.STAMP.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.VINE_SEED.get(), ModelTemplates.FLAT_ITEM);
 

@@ -28,6 +28,7 @@ public final class ModAttachmentNames {
     public static final String HARP_TESTER = "harp_tester";
     public static final String NEGATIVE_EFFECT_BLUEPRINT = "negative_effect_blueprint";
     public static final String ORBITING_BLOCKS = "orbiting_blocks";
+    public static final String MAILBOX_DELIVERY = "mailbox_delivery";
     public static final String POSITIVE_EFFECT_BLUEPRINT = "positive_effect_blueprint";
     public static final String STRUGGLE = "struggle";
     public static final String TIED_TO = "tied_to";

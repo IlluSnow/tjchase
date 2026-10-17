@@ -17,6 +17,7 @@
 
 package illusnow.tjchase.item;
 
+import com.mojang.datafixers.util.Pair;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.data.loot.ModLootContextParamSets;
 import illusnow.tjchase.data.loot.ModLootTables;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,17 +63,25 @@ public class EnvelopeItem extends Item {
             return InteractionResult.FAIL;
         }
 
-        boolean goldenFeather = player.getRandom().nextBoolean();
         ItemStack reward = generateLoot(serverPlayer);
-        if (player.isShiftKeyDown()) {
+        if (showsContent(player)) {
+            PENDING_REWARDS.put(player.getUUID(), new PendingReward(reward, hand));
+            PacketDistributor.sendToPlayer(serverPlayer, new OpenEnvelopeScreenPayload(new ItemStack(this), reward, hand == InteractionHand.OFF_HAND));
+        } else {
             giveReward(serverPlayer, reward);
             stack.shrink(1);
-        } else {
-            PENDING_REWARDS.put(player.getUUID(), new PendingReward(reward, hand));
-            PacketDistributor.sendToPlayer(serverPlayer, new OpenEnvelopeScreenPayload(reward, hand == InteractionHand.OFF_HAND));
         }
         level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSoundEvents.ENVELOPE_OPEN.get(), SoundSource.PLAYERS);
         return InteractionResult.SUCCESS_SERVER;
+    }
+
+    @Nullable
+    public Pair<String, String> getGreetingTranslationKeyPair() {
+        return Pair.of(ENVELOPE_GREETING, ENVELOPE_GREETING_BAD_WEATHER);
+    }
+
+    protected boolean showsContent(Player player) {
+        return !player.isShiftKeyDown();
     }
 
     public static void claimReward(ServerPlayer player, boolean offHand) {
@@ -98,7 +108,7 @@ public class EnvelopeItem extends Item {
         }
     }
 
-    private static ItemStack generateLoot(ServerPlayer player) {
+    protected ItemStack generateLoot(ServerPlayer player) {
         ItemStack reward;
         LootParams params = new LootParams.Builder(player.level())
                 .withParameter(LootContextParams.ORIGIN, player.position())

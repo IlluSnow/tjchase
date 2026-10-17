@@ -30,8 +30,11 @@ import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.entity.projectile.YogaBall;
+import illusnow.tjchase.block.ModBlocks;
+import illusnow.tjchase.world.MailboxDelivery;
 import illusnow.tjchase.item.HarpItem;
 import illusnow.tjchase.item.ModDataComponents;
+import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.item.enchantment.ModEnchantmentEffectComponents;
 import illusnow.tjchase.tag.ModBlockTags;
 import illusnow.tjchase.tag.ModItemTags;
@@ -46,12 +49,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -63,6 +68,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -70,6 +76,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -118,6 +125,36 @@ public class CommonEvents {
         handleHugAndTie(event);
     }
 
+    @SubscribeEvent
+    public static void onStampingMailbox(PlayerInteractEvent.RightClickBlock event) {
+        if (!event.getLevel().getBlockState(event.getPos()).is(ModBlocks.MAILBOX.get())
+                || !event.getItemStack().is(ModItems.STAMP.get())) {
+            return;
+        }
+
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+
+        Player player = event.getEntity();
+        boolean success = false;
+        if (player.isShiftKeyDown()) {
+            ItemStack envelope = new ItemStack(ModItems.ENVELOPE.get());
+            if (!player.getInventory().add(envelope)) {
+                player.drop(envelope, false);
+            }
+            success = true;
+        } else if (player instanceof ServerPlayer serverPlayer) {
+            success = MailboxDelivery.start((ServerLevel) event.getLevel(), event.getPos(), serverPlayer);
+        }
+        if (success) {
+            event.getItemStack().shrink(1);
+            player.awardStat(Stats.ITEM_USED.get(ModItems.STAMP.get()));
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+        }
+    }
+
     private static void handleHugAndTie(PlayerInteractEvent.EntityInteractSpecific event) {
         if (event.getTarget() instanceof ServerPlayer player && player.getData(ModAttachments.WEAK_STATE).isWeak() && TyingHelper.getTiedTo(player) == null) {
             TyingHelper.tie(player, event.getEntity());
@@ -138,6 +175,16 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         untieIfDisconnected(event);
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            MailboxDelivery.tryPause(serverPlayer);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onServerTick(ServerTickEvent.Post event) {
+        for (ServerLevel level : event.getServer().getAllLevels()) {
+            MailboxDelivery.tickAll(level);
+        }
     }
 
     @SubscribeEvent
@@ -172,6 +219,13 @@ public class CommonEvents {
         Entity tiedTo = TyingHelper.getTiedTo(player);
         if (tiedTo instanceof Rocket rocket) {
             rocket.unfreezeOnConnect((ServerPlayer) player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityTravelToDimension(EntityTravelToDimensionEvent event) {
+        if (!event.getEntity().level().isClientSide() && event.getEntity() instanceof Allay allay && MailboxDelivery.isAllayDelivering(allay)) {
+            event.setCanceled(true);
         }
     }
 

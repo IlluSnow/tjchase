@@ -99,7 +99,7 @@ public final class ModClientPayloadHandlers {
     }
 
     public static void handleOpenEnvelopeScreen(OpenEnvelopeScreenPayload payload, IPayloadContext context) {
-        Minecraft.getInstance().setScreen(new EnvelopeScreen(payload.reward(), payload.offHand()));
+        Minecraft.getInstance().setScreen(new EnvelopeScreen(payload.envelope(), payload.reward(), payload.offHand()));
     }
 
     public static void handleTiePlayer(TiePlayerPayload payload, IPayloadContext context) {

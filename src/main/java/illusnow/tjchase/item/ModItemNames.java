@@ -32,6 +32,7 @@ public final class ModItemNames {
     public static final String PROFICIENCY_STICK = "proficiency_stick";
     public static final String REMOTE_CONTROL = "remote_control";
     public static final String ROCKET_EDITOR = "rocket_editor";
+    public static final String SENT_ENVELOPE = "sent_envelope";
     public static final String STAMP = "stamp";
     public static final String VINE_SEED = ModEntityNames.VINE_SEED;
 

@@ -18,6 +18,7 @@
 package illusnow.tjchase.client.gui.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.datafixers.util.Pair;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.item.EnvelopeItem;
 import illusnow.tjchase.network.c2s.ClaimEnvelopeRewardPayload;
@@ -31,6 +32,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -39,14 +41,16 @@ public class EnvelopeScreen extends Screen {
     private static final int PAGE_WIDTH = 220;
     private static final int PAGE_HEIGHT = 180;
     private static final Identifier BACKGROUND = TJChase.prefix("textures/gui/letter_background.png");
+    private final ItemStack envelope;
     private final ItemStack reward;
     private final boolean offHand;
     private boolean claimed;
     @Nullable
     private Component greeting;
 
-    public EnvelopeScreen(ItemStack reward, boolean offHand) {
+    public EnvelopeScreen(ItemStack envelope, ItemStack reward, boolean offHand) {
         super(Component.translatable(EnvelopeItem.ENVELOPE_TITLE));
+        this.envelope = envelope;
         this.reward = reward;
         this.offHand = offHand;
     }
@@ -83,7 +87,17 @@ public class EnvelopeScreen extends Screen {
             return Component.empty();
         }
         if (greeting == null) {
-            greeting = Component.translatable(player.level().isRaining() || player.level().isThundering() ? EnvelopeItem.ENVELOPE_GREETING_BAD_WEATHER : EnvelopeItem.ENVELOPE_GREETING, player.getDisplayName());
+            Item item = envelope.getItem();
+            if (item instanceof EnvelopeItem envelopeItem) {
+                Pair<String, String> pair = envelopeItem.getGreetingTranslationKeyPair();
+                if (pair != null) {
+                    greeting = Component.translatable(player.level().isRaining() || player.level().isThundering() ? pair.getSecond() : pair.getFirst(), player.getDisplayName());
+                } else {
+                    greeting = Component.empty();
+                }
+            } else {
+                greeting = Component.empty();
+            }
         }
         return greeting;
     }

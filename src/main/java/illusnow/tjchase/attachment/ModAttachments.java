@@ -21,6 +21,7 @@ import com.google.common.base.Predicates;
 import com.mojang.serialization.Codec;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.entity.Zuri;
+import illusnow.tjchase.world.MailboxDelivery;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.dataentity.HarpTester;
 import illusnow.tjchase.util.AngelTomPassive2Tracker;
@@ -66,6 +67,8 @@ public final class ModAttachments {
             AttachmentType.builder(() -> Controllable.Holder.EMPTY).serialize(Controllable.Holder.Serializer.INSTANCE).sync(Controllable.Holder.Syncer.INSTANCE).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<OrbitingBlockHolder>> ORBITING_BLOCKS = ATTACHMENT_TYPES.register(ModAttachmentNames.ORBITING_BLOCKS, () ->
             AttachmentType.builder(OrbitingBlockHolder::emptyHolder).serialize(OrbitingBlockHolder.Serializer.INSTANCE).sync(OrbitingBlockHolder.STREAM_CODEC).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<MailboxDelivery.Manager>> MAILBOX_DELIVERY = ATTACHMENT_TYPES.register(ModAttachmentNames.MAILBOX_DELIVERY, () ->
+            AttachmentType.builder(MailboxDelivery.Manager::new).serialize(MailboxDelivery.Manager.Serializer.INSTANCE).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> VINE_CD = ATTACHMENT_TYPES.register(ModAttachmentNames.VINE_CD, () ->
             AttachmentType.builder(() -> 0L).serialize(Codec.LONG.fieldOf(ModAttachmentNames.VINE_CD)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Optional<EntityReference<HarpTester>>>> HARP_TESTER = ATTACHMENT_TYPES.register(ModAttachmentNames.HARP_TESTER, () ->

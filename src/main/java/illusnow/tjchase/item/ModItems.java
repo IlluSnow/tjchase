@@ -78,6 +78,7 @@ public final class ModItems {
     public static final DeferredHolder<Item, RemoteControlItem> REMOTE_CONTROL = register(ModItemNames.REMOTE_CONTROL, RemoteControlItem::new,
             properties -> properties.stacksTo(1));
     public static final DeferredHolder<Item, Item> ROCKET_EDITOR = register(ModItemNames.ROCKET_EDITOR, properties -> new InGamePlacedEntityEditorItem<>(properties, ModEntities.ROCKET, ModGameplayObjectTypes.ROCKET), properties -> properties.stacksTo(1).rarity(Rarity.RARE));
+    public static final DeferredHolder<Item, EnvelopeItem> SENT_ENVELOPE = register(ModItemNames.SENT_ENVELOPE, SentEnvelopeItem::new, properties -> properties);
     public static final DeferredHolder<Item, Item> STAMP = register(ModItemNames.STAMP, properties -> properties.rarity(Rarity.RARE));
     public static final DeferredHolder<Item, Item> VINE_SEED = register(ModItemNames.VINE_SEED, VineSeedItem::new, properties -> properties.stacksTo(16).rarity(ModRarities.VINE_SEED_CUSTOM.getValue()));
 
