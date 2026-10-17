@@ -116,9 +116,9 @@ public class ModModelProvider extends ModelProvider {
 //        ModModelTemplates.HARP.create(harp, TextureMapping.layer0(harp), itemModels.modelOutput);
     }
 
-    private static void copyBlockModelOnly(BlockModelGenerators blockModelGenerators, Block sourceBlock, Block targetBlock) {
+    private static void copyBlockModelOnly(BlockModelGenerators blockModels, Block sourceBlock, Block targetBlock) {
         MultiVariant variant = BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(sourceBlock));
-        blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(targetBlock, variant));
+        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(targetBlock, variant));
     }
 
     private static void createTemporaryVine(BlockModelGenerators blockModels) {

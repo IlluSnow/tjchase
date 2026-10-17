@@ -200,6 +200,9 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(EntityDebugStickItem.SET_FACING_SOUTH, "Set facing south");
             add(EntityDebugStickItem.SET_FACING_WEST, "Set facing west");
             add(EntityDebugStickItem.SET_FACING_EAST, "Set facing east");
+            add(EnvelopeItem.ENVELOPE_TITLE, "Common Reply Letter");
+            add(EnvelopeItem.ENVELOPE_GREETING, "Dear %s, \n\nThank you for your letter! The weather today is very nice, and I'm delighted. I'd like to bring this good mood to you!\nThis is my gift for you. I hope you'll like it.");
+            add(EnvelopeItem.ENVELOPE_GREETING_BAD_WEATHER, "Dear %s, \n\nThank you for your letter! I'm so happy today despite the bad weather. I'd like to bring this good mood to you!\nThis is my gift for you. I hope you'll like it.");
             add(ProficiencyStickItem.GET_PROFICIENCY, "%1$s's proficiency is %2$s");
             add(ProficiencyStickItem.SET_PROFICIENCY, "Set %1$s's proficiency to %2$s");
             add(ProficiencyStickItem.INVALID_ENTITY, "Invalid entity: %1$s");
@@ -215,6 +218,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModSoundSubtitles.EVILINIA_AMBIENT, "Evilinia screams");
             add(ModSoundSubtitles.EVILINIA_DEATH, "Evilinia dies");
             add(ModSoundSubtitles.EVILINIA_HURT, "Evilinia hurts");
+            add(ModSoundSubtitles.ENVELOPE_OPEN, "Envelope opens");
             add(ModSoundSubtitles.HARP_ATTRACT_BLOCKS, "Harp attracts blocks");
             add(ModSoundSubtitles.HARP_THROW_BLOCK, "Block thrown");
             add(ModSoundSubtitles.LINIA_AMBIENT, "Linia screams");
@@ -378,6 +382,9 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(EntityDebugStickItem.SET_FACING_SOUTH, "设为面向南方");
             add(EntityDebugStickItem.SET_FACING_WEST, "设为面向西方");
             add(EntityDebugStickItem.SET_FACING_EAST, "设为面向东方");
+            add(EnvelopeItem.ENVELOPE_TITLE, "普通回信");
+            add(EnvelopeItem.ENVELOPE_GREETING, "亲爱的%s：\n\n感谢你的来信！今天的天气十分晴朗，我的心情也非常愉悦，希望把这份好心情带给你！\n这是我送给你的礼物，希望你能喜欢。");
+            add(EnvelopeItem.ENVELOPE_GREETING_BAD_WEATHER, "亲爱的%s：\n\n感谢你的来信！糟糕的天气也不能抑制我的愉悦之情，希望把这份好心情带给你！\n这是我送给你的礼物，希望你能喜欢。");
             add(ProficiencyStickItem.GET_PROFICIENCY, "%1$s的专精度为%2$s");
             add(ProficiencyStickItem.SET_PROFICIENCY, "%1$s的专精度已设为%2$s");
             add(ProficiencyStickItem.INVALID_ENTITY, "无效的实体：%1$s");
@@ -393,6 +400,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModSoundSubtitles.EVILINIA_AMBIENT, "邪恶线灵：尖叫");
             add(ModSoundSubtitles.EVILINIA_DEATH, "邪恶线灵：死亡");
             add(ModSoundSubtitles.EVILINIA_HURT, "邪恶线灵：受伤");
+            add(ModSoundSubtitles.ENVELOPE_OPEN, "信封：打开");
             add(ModSoundSubtitles.HARP_ATTRACT_BLOCKS, "竖琴：吸引方块");
             add(ModSoundSubtitles.HARP_THROW_BLOCK, "方块：被扔出");
             add(ModSoundSubtitles.LINIA_AMBIENT, "线灵：尖叫");

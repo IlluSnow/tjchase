@@ -19,6 +19,7 @@ package illusnow.tjchase.client.network;
 
 import com.mojang.logging.LogUtils;
 import illusnow.tjchase.client.gui.screen.GameplayObjectEditScreen;
+import illusnow.tjchase.client.gui.screen.EnvelopeScreen;
 import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
 import illusnow.tjchase.client.resources.sounds.PrimedRocketSoundInstance;
 import illusnow.tjchase.entity.controllable.Controllable;
@@ -95,6 +96,10 @@ public final class ModClientPayloadHandlers {
             return;
         }
         Minecraft.getInstance().setScreen(new GameplayObjectEditScreen<>(entity.getDisplayName().copy(), entity, entity.createTemplate()));
+    }
+
+    public static void handleOpenEnvelopeScreen(OpenEnvelopeScreenPayload payload, IPayloadContext context) {
+        Minecraft.getInstance().setScreen(new EnvelopeScreen(payload.reward(), payload.offHand()));
     }
 
     public static void handleTiePlayer(TiePlayerPayload payload, IPayloadContext context) {

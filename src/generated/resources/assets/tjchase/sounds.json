@@ -23,6 +23,14 @@
     ],
     "subtitle": "subtitles.tjchase.dance_time"
   },
+  "envelope_open": {
+    "sounds": [
+      "tjchase:item/envelope/open1",
+      "tjchase:item/envelope/open2",
+      "tjchase:item/envelope/open3"
+    ],
+    "subtitle": "subtitles.tjchase.envelope_open"
+  },
   "evilinia_ambient": {
     "sounds": [
       "tjchase:entity/linia/idle1",

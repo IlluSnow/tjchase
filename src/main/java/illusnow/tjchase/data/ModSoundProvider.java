@@ -82,6 +82,11 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
                 .with(modSound("entity/%s/yoga_ball_hit1".formatted(ModEntityNames.ZURI)))
                 .with(modSound("entity/%s/yoga_ball_hit2".formatted(ModEntityNames.ZURI)))
                 .with(modSound("entity/%s/yoga_ball_hit3".formatted(ModEntityNames.ZURI))));
+        add(ModSoundEvents.ENVELOPE_OPEN, definition()
+                .subtitle(ModSoundSubtitles.ENVELOPE_OPEN)
+                .with(modSound("item/%s/open1".formatted(ModItemNames.ENVELOPE)))
+                .with(modSound("item/%s/open2".formatted(ModItemNames.ENVELOPE)))
+                .with(modSound("item/%s/open3".formatted(ModItemNames.ENVELOPE))));
 
         modIdleSound(ModSoundEvents.ZURI_AMBIENT, ModSoundSubtitles.ZURI_AMBIENT, ModEntityNames.ZURI, 3);
         modEntitySoundWithType(ModSoundEvents.ZURI_ATTACK, catAttack, ModSoundSubtitles.ZURI_ATTACK, "", 3);

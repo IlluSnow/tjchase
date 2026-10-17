@@ -17,10 +17,98 @@
 
 package illusnow.tjchase.item;
 
+import illusnow.tjchase.TJChase;
+import illusnow.tjchase.data.loot.ModLootContextParamSets;
+import illusnow.tjchase.data.loot.ModLootTables;
+import illusnow.tjchase.network.s2c.OpenEnvelopeScreenPayload;
+import illusnow.tjchase.sound.ModSoundEvents;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class EnvelopeItem extends Item {
+    public static final String ENVELOPE_TITLE = TJChase.prefixGuiMsg("envelope.title");
+    public static final String ENVELOPE_GREETING = TJChase.prefixGuiMsg("envelope.greeting");
+    public static final String ENVELOPE_GREETING_BAD_WEATHER = TJChase.prefixGuiMsg("envelope.greeting_bad_weather");
+    private static final Map<UUID, PendingReward> PENDING_REWARDS = new HashMap<>();
+
     public EnvelopeItem(Properties properties) {
         super(properties);
     }
+
+    @Override
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
+
+        if (!(player instanceof ServerPlayer serverPlayer) || PENDING_REWARDS.containsKey(player.getUUID())) {
+            return InteractionResult.FAIL;
+        }
+
+        boolean goldenFeather = player.getRandom().nextBoolean();
+        ItemStack reward = generateLoot(serverPlayer);
+        if (player.isShiftKeyDown()) {
+            giveReward(serverPlayer, reward);
+            stack.shrink(1);
+        } else {
+            PENDING_REWARDS.put(player.getUUID(), new PendingReward(reward, hand));
+            PacketDistributor.sendToPlayer(serverPlayer, new OpenEnvelopeScreenPayload(reward, hand == InteractionHand.OFF_HAND));
+        }
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), ModSoundEvents.ENVELOPE_OPEN.get(), SoundSource.PLAYERS);
+        return InteractionResult.SUCCESS_SERVER;
+    }
+
+    public static void claimReward(ServerPlayer player, boolean offHand) {
+        PendingReward pending = PENDING_REWARDS.remove(player.getUUID());
+        if (pending == null || pending.hand() != (offHand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND)) {
+            return;
+        }
+
+        ItemStack envelope = player.getItemInHand(pending.hand());
+        if (!(envelope.getItem() instanceof EnvelopeItem)) {
+            return;
+        }
+        envelope.shrink(1);
+        giveReward(player, pending.reward().copy());
+    }
+
+    public static void clearPendingReward(UUID playerId) {
+        PENDING_REWARDS.remove(playerId);
+    }
+
+    private static void giveReward(ServerPlayer player, ItemStack reward) {
+        if (!reward.isEmpty() && !player.getInventory().add(reward)) {
+            player.drop(reward, false);
+        }
+    }
+
+    private static ItemStack generateLoot(ServerPlayer player) {
+        ItemStack reward;
+        LootParams params = new LootParams.Builder(player.level())
+                .withParameter(LootContextParams.ORIGIN, player.position())
+                .withParameter(LootContextParams.THIS_ENTITY, player)
+                .create(ModLootContextParamSets.COMMON_REPLY_LETTER_REWARD);
+        LootTable lootTable = player.level().getServer().reloadableRegistries().getLootTable(ModLootTables.COMMON_REPLY_LETTER_REWARD);
+        List<ItemStack> loots = lootTable.getRandomItems(params);
+        reward = loots.isEmpty() ? ItemStack.EMPTY : loots.getFirst();
+        return reward;
+    }
+
+    private record PendingReward(ItemStack reward, InteractionHand hand) {}
 }

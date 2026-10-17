@@ -22,12 +22,14 @@ import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.controllable.ControllableMovementHandler;
 import illusnow.tjchase.entity.gameplay.InGamePlacedEntity;
+import illusnow.tjchase.item.EnvelopeItem;
 import illusnow.tjchase.item.ModDataComponents;
 import illusnow.tjchase.network.bidirectional.SyncInGameEntityPayload;
 import illusnow.tjchase.network.c2s.*;
 import illusnow.tjchase.world.gameplay.object.Template;
 import illusnow.tjchase.world.gameplay.struggle.StruggleInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -117,5 +119,11 @@ public final class ModServerPayloadHandlers {
 
     private static void warnNotFound(int id) {
         LOGGER.warn("Unable to find entity with id {}", id);
+    }
+
+    public static void handleClaimEnvelopeReward(ClaimEnvelopeRewardPayload payload, IPayloadContext context) {
+        if (context.player() instanceof ServerPlayer serverPlayer) {
+            EnvelopeItem.claimReward(serverPlayer, payload.offHand());
+        }
     }
 }

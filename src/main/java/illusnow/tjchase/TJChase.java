@@ -90,6 +90,10 @@ public class TJChase {
         return prefix("commands", name);
     }
 
+    public static String prefixGuiMsg(String name) {
+        return prefix("gui", name);
+    }
+
     public static String prefixEnum(String name) {
         return MODID + ":" + name;
     }

@@ -84,6 +84,10 @@ public class ClientModEvents {
                 ModClientPayloadHandlers::handleOpenGameObjectEditScreen
         );
         event.register(
+                OpenEnvelopeScreenPayload.TYPE,
+                ModClientPayloadHandlers::handleOpenEnvelopeScreen
+        );
+        event.register(
                 TiePlayerPayload.TYPE,
                 ModClientPayloadHandlers::handleTiePlayer
         );

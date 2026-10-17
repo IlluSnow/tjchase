@@ -19,6 +19,7 @@ package illusnow.tjchase.client.data;
 
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.data.*;
+import illusnow.tjchase.data.loot.ModLootProvider;
 import illusnow.tjchase.item.enchantment.ModEnchantments;
 import illusnow.tjchase.world.ModDamageSources;
 import net.minecraft.core.RegistrySetBuilder;

@@ -27,7 +27,7 @@ public final class ModComponents {
     public static final Component SPACED_RIGHT_PARENTHESIS = Component.translatable(SPACED_RIGHT_PARENTHESIS_MSGID);
     public static final String CONTAINER_RENAME_MSGID = TJChase.prefix("container", "rename");
     public static final Component CONTAINER_RENAME = Component.translatable(CONTAINER_RENAME_MSGID);
-    public static final String GUI_RESET_TO_DEFAULT_MSGID = TJChase.prefix("gui", "reset_to_default");
+    public static final String GUI_RESET_TO_DEFAULT_MSGID = TJChase.prefixGuiMsg("reset_to_default");
     public static final Component GUI_RESET_TO_DEFAULT = Component.translatable(GUI_RESET_TO_DEFAULT_MSGID);
 
     private ModComponents() {}

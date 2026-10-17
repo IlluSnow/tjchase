@@ -29,6 +29,7 @@ public final class ModSoundSubtitles {
     public static final String EVILINIA_AMBIENT = prefix(ModSoundNames.EVILINIA_AMBIENT);
     public static final String EVILINIA_DEATH = prefix(ModSoundNames.EVILINIA_DEATH);
     public static final String EVILINIA_HURT = prefix(ModSoundNames.EVILINIA_HURT);
+    public static final String ENVELOPE_OPEN = prefix(ModSoundNames.ENVELOPE_OPEN);
     public static final String HARP_ATTRACT_BLOCKS = prefix(ModSoundNames.HARP_ATTRACT_BLOCKS);
     public static final String HARP_THROW_BLOCK = prefix(ModSoundNames.HARP_THROW_BLOCK);
     public static final String LINIA_AMBIENT = prefix(ModSoundNames.LINIA_AMBIENT);

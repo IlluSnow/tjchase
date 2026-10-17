@@ -15,9 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package illusnow.tjchase.data;
+package illusnow.tjchase.data.loot;
 
-import illusnow.tjchase.data.loot.ModBlockLoot;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
@@ -30,7 +29,8 @@ import java.util.concurrent.CompletableFuture;
 public class ModLootProvider extends LootTableProvider {
     public ModLootProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, Set.of(), List.of(
-            new SubProviderEntry(ModBlockLoot::new, LootContextParamSets.BLOCK)
+                new SubProviderEntry(ModBlockLoot::new, LootContextParamSets.BLOCK),
+                new SubProviderEntry(CommonReplyLetterRewardLootSubProvider::new, ModLootContextParamSets.COMMON_REPLY_LETTER_REWARD)
         ), registries);
     }
 }

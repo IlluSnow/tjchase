@@ -35,6 +35,7 @@ public final class ModSoundEvents {
     public static final DeferredHolder<SoundEvent, SoundEvent> EVILINIA_AMBIENT = register(ModSoundNames.EVILINIA_AMBIENT);
     public static final DeferredHolder<SoundEvent, SoundEvent> EVILINIA_DEATH = register(ModSoundNames.EVILINIA_DEATH);
     public static final DeferredHolder<SoundEvent, SoundEvent> EVILINIA_HURT = register(ModSoundNames.EVILINIA_HURT);
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENVELOPE_OPEN = register(ModSoundNames.ENVELOPE_OPEN);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_ATTRACT_BLOCKS = register(ModSoundNames.HARP_ATTRACT_BLOCKS);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_1 = register(ModSoundNames.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_1);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_2 = register(ModSoundNames.HARP_ATTRACT_BLOCKS_LIGHTWEIGHT_2);

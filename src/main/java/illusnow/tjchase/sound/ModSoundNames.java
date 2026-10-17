@@ -27,6 +27,7 @@ public final class ModSoundNames {
     public static final String BLUEPRINT_RELEASE = ModItemNames.BLUEPRINT + "_release";
     public static final String BLUEPRINT_THROW = ModItemNames.BLUEPRINT + "_throw";
     public static final String DANCE_TIME = "dance_time";
+    public static final String ENVELOPE_OPEN = "envelope_open";
     public static final String EVILINIA_AMBIENT = ModEntityNames.EVILINIA + "_ambient";
     public static final String EVILINIA_HURT = ModEntityNames.EVILINIA + "_hurt";
     public static final String EVILINIA_DEATH = ModEntityNames.EVILINIA + "_death";

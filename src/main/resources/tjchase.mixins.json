@@ -12,6 +12,7 @@
     "LivingEntityAccessor",
     "LivingEntityMixin",
     "LookControlAccessor",
+    "LootContextParamSetsAccessor",
     "MobMixin",
     "PlayerListMixin",
     "PlayerMixin",

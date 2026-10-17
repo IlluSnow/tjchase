@@ -17,6 +17,7 @@
 
 package illusnow.tjchase;
 
+import illusnow.tjchase.item.EnvelopeItem;
 import illusnow.tjchase.item.ModCreativeModeTabs;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.network.ModServerPayloadHandlers;
@@ -27,6 +28,7 @@ import illusnow.tjchase.util.ModRegistries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.HandlerThread;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -67,6 +69,15 @@ public class ModEvents {
         registrar.playToClient(
                 OpenGameplayObjectEditScreenForInGameEntityPayload.TYPE,
                 OpenGameplayObjectEditScreenForInGameEntityPayload.STREAM_CODEC
+        );
+        registrar.playToClient(
+                OpenEnvelopeScreenPayload.TYPE,
+                OpenEnvelopeScreenPayload.STREAM_CODEC
+        );
+        registrar.playToServer(
+                ClaimEnvelopeRewardPayload.TYPE,
+                ClaimEnvelopeRewardPayload.STREAM_CODEC,
+                ModServerPayloadHandlers::handleClaimEnvelopeReward
         );
         registrar.playToServer(
                 LoadTemplatePayload.TYPE,
@@ -125,5 +136,10 @@ public class ModEvents {
         event.register(ModRegistries.EDITABLE_VALUES);
         event.register(ModRegistries.GAMEPLAY_OBJECT_TYPES);
         event.register(ModRegistries.STRUGGLE_TYPES);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        EnvelopeItem.clearPendingReward(event.getEntity().getUUID());
     }
 }
