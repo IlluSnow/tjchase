@@ -67,6 +67,8 @@ public final class ModAttachments {
             AttachmentType.builder(() -> Controllable.Holder.EMPTY).serialize(Controllable.Holder.Serializer.INSTANCE).sync(Controllable.Holder.Syncer.INSTANCE).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<OrbitingBlockHolder>> ORBITING_BLOCKS = ATTACHMENT_TYPES.register(ModAttachmentNames.ORBITING_BLOCKS, () ->
             AttachmentType.builder(OrbitingBlockHolder::emptyHolder).serialize(OrbitingBlockHolder.Serializer.INSTANCE).sync(OrbitingBlockHolder.STREAM_CODEC).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Integer>> LUCKINESS_GOLDEN_FEATHER = ATTACHMENT_TYPES.register(ModAttachmentNames.LUCKINESS_GOLDEN_FEATHER, () ->
+            AttachmentType.builder(() -> 0).serialize(Codec.INT.fieldOf(ModAttachmentNames.LUCKINESS_GOLDEN_FEATHER)).sync(ByteBufCodecs.VAR_INT).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<MailboxDelivery.Manager>> MAILBOX_DELIVERY = ATTACHMENT_TYPES.register(ModAttachmentNames.MAILBOX_DELIVERY, () ->
             AttachmentType.builder(MailboxDelivery.Manager::new).serialize(MailboxDelivery.Manager.Serializer.INSTANCE).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> VINE_CD = ATTACHMENT_TYPES.register(ModAttachmentNames.VINE_CD, () ->

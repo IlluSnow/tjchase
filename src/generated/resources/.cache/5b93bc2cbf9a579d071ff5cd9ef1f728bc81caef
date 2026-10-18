@@ -1,4 +1,4 @@
-// 1.21.11	2026-10-17T17:29:42.1474256	Model Definitions - tjchase
+// 1.21.11	2026-10-17T20:35:14.414487	Model Definitions - tjchase
 7670a6701c843a8c7df1c02b67ee717a91dbcb79 assets/tjchase/blockstates/mailbox.json
 2606791521eac27fa77ebbeeea442b8073802a51 assets/tjchase/blockstates/temporary_acacia_leaves.json
 5a49eaf2e8e03519cd1c8bb9acc727119658c60e assets/tjchase/blockstates/temporary_azalea_leaves.json
@@ -16,6 +16,7 @@ d12cf72eaf496d86ef4f9be1733a5702e20a4dc7 assets/tjchase/items/envelope.json
 da4c390109ed3d9a799b4fe029c4d609beea7eeb assets/tjchase/items/golden_feather.json
 1f87dc047c4bc0b801b64304df25626b89469567 assets/tjchase/items/harp.json
 adb7ac38fa7c74b02213274bd35b30181dc25111 assets/tjchase/items/harp_tester.json
+76aa09d12992843678bd56c795312b4e0a132b67 assets/tjchase/items/mysterious_envelope.json
 a48a02a9551b72f8ebf4adbd8caac813b203d10b assets/tjchase/items/netherite_harp.json
 d185fad651f93d56a874ab1e73b2c59d8d4f7cf9 assets/tjchase/items/proficiency_stick.json
 08864e86d7a5537b6f75f405fca47e31c7ab9cc0 assets/tjchase/items/rocket_editor.json
@@ -30,6 +31,7 @@ a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/entity_debug
 2e365f23917a85a0455a93008686d8b53662bcf6 assets/tjchase/models/item/golden_feather.json
 c85438ea7549bed01ef7752e0fa237da3a58c0ed assets/tjchase/models/item/harp.json
 a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/harp_tester.json
+93a827edb466378692a02465d05f74a197729de4 assets/tjchase/models/item/mysterious_envelope.json
 6a41a5297f92976bdfe18e08e675a2964c8e4fbe assets/tjchase/models/item/netherite_harp.json
 a821fbb4a244b26bb80ec044cb0d3d8261fb0730 assets/tjchase/models/item/proficiency_stick.json
 5209cf11eafe640dd650073ce0c52c61b64d0684 assets/tjchase/models/item/rocket_editor.json

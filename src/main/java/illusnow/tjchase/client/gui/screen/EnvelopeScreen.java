@@ -18,7 +18,6 @@
 package illusnow.tjchase.client.gui.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.datafixers.util.Pair;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.item.EnvelopeItem;
 import illusnow.tjchase.network.c2s.ClaimEnvelopeRewardPayload;
@@ -49,10 +48,15 @@ public class EnvelopeScreen extends Screen {
     private Component greeting;
 
     public EnvelopeScreen(ItemStack envelope, ItemStack reward, boolean offHand) {
-        super(Component.translatable(EnvelopeItem.ENVELOPE_TITLE));
+        super(Component.translatable(getTitleKey(envelope)));
         this.envelope = envelope;
         this.reward = reward;
         this.offHand = offHand;
+    }
+
+    private static String getTitleKey(ItemStack envelope) {
+        return envelope.getItem() instanceof EnvelopeItem envelopeItem && envelopeItem.getEnvelopeTextKeys() != null ?
+                envelopeItem.getEnvelopeTextKeys().title() : EnvelopeItem.ENVELOPE_TITLE;
     }
 
     @Override
@@ -89,9 +93,9 @@ public class EnvelopeScreen extends Screen {
         if (greeting == null) {
             Item item = envelope.getItem();
             if (item instanceof EnvelopeItem envelopeItem) {
-                Pair<String, String> pair = envelopeItem.getGreetingTranslationKeyPair();
-                if (pair != null) {
-                    greeting = Component.translatable(player.level().isRaining() || player.level().isThundering() ? pair.getSecond() : pair.getFirst(), player.getDisplayName());
+                EnvelopeItem.EnvelopeTextKeys textKeys = envelopeItem.getEnvelopeTextKeys();
+                if (textKeys != null) {
+                    greeting = Component.translatable(player.getRandom().nextDouble() < 0.2 ? textKeys.greetingBadWeather() : textKeys.greeting(), player.getDisplayName());
                 } else {
                     greeting = Component.empty();
                 }

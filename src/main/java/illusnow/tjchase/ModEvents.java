@@ -119,6 +119,7 @@ public class ModEvents {
             event.accept(ModItems.VINE_SEED.get());
             event.accept(ModItems.STAMP.get());
             event.accept(ModItems.ENVELOPE.get());
+            event.accept(ModItems.MYSTERIOUS_ENVELOPE.get());
             event.accept(ModItems.GOLDEN_FEATHER.get());
             event.accept(ModItems.REMOTE_CONTROL.get());
             event.accept(ModItems.MAILBOX.get());

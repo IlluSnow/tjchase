@@ -186,6 +186,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
             add(ModItems.HARP.get(), "Angel Tom's Harp");
             add(ModItems.MOUSE_EARS.get(), "Mouse Ears");
+            add(ModItems.MYSTERIOUS_ENVELOPE.get(), "Mysterious Envelope");
             add(ModItems.NETHERITE_HARP.get(), "Angel Tom's Netherite Harp");
             add(ModItems.PROFICIENCY_STICK.get(), "Proficiency Stick");
             add(ModItems.REMOTE_CONTROL.get(), "Remote Control");
@@ -202,8 +203,10 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(EntityDebugStickItem.SET_FACING_WEST, "Set facing west");
             add(EntityDebugStickItem.SET_FACING_EAST, "Set facing east");
             add(EnvelopeItem.ENVELOPE_TITLE, "Common Reply Letter");
-            add(EnvelopeItem.ENVELOPE_GREETING, "Dear %s, \n\nThank you for your letter! The weather today is very nice, and I'm delighted. I'd like to bring this good mood to you!\nThis is my gift for you. I hope you'll like it.");
-            add(EnvelopeItem.ENVELOPE_GREETING_BAD_WEATHER, "Dear %s, \n\nThank you for your letter! I'm so happy today despite the bad weather. I'd like to bring this good mood to you!\nThis is my gift for you. I hope you'll like it.");
+            add(EnvelopeItem.ENVELOPE_GREETING, "Dear %s, \n\nThank you for your letter! The weather here today is very nice, and I'm delighted. I'd like to bring this good mood to you!\nThis is my gift for you. I hope you'll like it.");
+            add(EnvelopeItem.ENVELOPE_GREETING_BAD_WEATHER, "Dear %s, \n\nThank you for your letter! I'm so happy today despite the bad weather here. I'd like to bring this good mood to you!\nThis is my gift for you. I hope you'll like it.");
+            add(MysteriousEnvelopeItem.MYSTERIOUS_ENVELOPE_TITLE, "Mysterious Reply Letter");
+            add(MysteriousEnvelopeItem.MYSTERIOUS_ENVELOPE_GREETING, "Dear %s, \n\nThank you for your letter! I'm in a great mood today because my magic show has once again won the audience's favor. Would you like to know what kind of show it is?\nHere is a feather I used in my performance. Guess what kind of show it is!");
             add(ProficiencyStickItem.GET_PROFICIENCY, "%1$s's proficiency is %2$s");
             add(ProficiencyStickItem.SET_PROFICIENCY, "Set %1$s's proficiency to %2$s");
             add(ProficiencyStickItem.INVALID_ENTITY, "Invalid entity: %1$s");
@@ -369,6 +372,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");
             add(ModItems.HARP.get(), "天使汤姆的竖琴");
             add(ModItems.MOUSE_EARS.get(), "鼠鼠的耳朵");
+            add(ModItems.MYSTERIOUS_ENVELOPE.get(), "神秘回信");
             add(ModItems.NETHERITE_HARP.get(), "天使汤姆的下界合金竖琴");
             add(ModItems.PROFICIENCY_STICK.get(), "专精度设置棒");
             add(ModItems.REMOTE_CONTROL.get(), "遥控器");
@@ -385,8 +389,10 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(EntityDebugStickItem.SET_FACING_WEST, "设为面向西方");
             add(EntityDebugStickItem.SET_FACING_EAST, "设为面向东方");
             add(EnvelopeItem.ENVELOPE_TITLE, "普通回信");
-            add(EnvelopeItem.ENVELOPE_GREETING, "亲爱的%s：\n\n感谢你的来信！今天的天气十分晴朗，我的心情也非常愉悦，希望把这份好心情带给你！\n这是我送给你的礼物，希望你能喜欢。");
-            add(EnvelopeItem.ENVELOPE_GREETING_BAD_WEATHER, "亲爱的%s：\n\n感谢你的来信！糟糕的天气也不能抑制我的愉悦之情，希望把这份好心情带给你！\n这是我送给你的礼物，希望你能喜欢。");
+            add(EnvelopeItem.ENVELOPE_GREETING, "亲爱的%s：\n\n感谢你的来信！今天我这里的天气十分晴朗，我的心情也非常愉悦，希望把这份好心情带给你！\n这是我送给你的礼物，希望你能喜欢。");
+            add(EnvelopeItem.ENVELOPE_GREETING_BAD_WEATHER, "亲爱的%s：\n\n感谢你的来信！虽然我这儿天气不好，可是我仍然十分愉悦，希望把这份好心情带给你！\n这是我送给你的礼物，希望你能喜欢。");
+            add(MysteriousEnvelopeItem.MYSTERIOUS_ENVELOPE_TITLE, "神秘回信");
+            add(MysteriousEnvelopeItem.MYSTERIOUS_ENVELOPE_GREETING, "亲爱的%s：\n\n感谢你的来信！我今天的心情非常好，因为我的魔术表演节目又获得了观众的喜爱。你想知道是什么节目么？\n这里有一根我在表演中使用的羽毛，你来猜猜是什么节目吧！");
             add(ProficiencyStickItem.GET_PROFICIENCY, "%1$s的专精度为%2$s");
             add(ProficiencyStickItem.SET_PROFICIENCY, "%1$s的专精度已设为%2$s");
             add(ProficiencyStickItem.INVALID_ENTITY, "无效的实体：%1$s");

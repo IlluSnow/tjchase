@@ -17,7 +17,6 @@
 
 package illusnow.tjchase.item;
 
-import com.mojang.datafixers.util.Pair;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.data.loot.ModLootContextParamSets;
 import illusnow.tjchase.data.loot.ModLootTables;
@@ -43,9 +42,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class EnvelopeItem extends Item {
-    public static final String ENVELOPE_TITLE = TJChase.prefixGuiMsg("envelope.title");
-    public static final String ENVELOPE_GREETING = TJChase.prefixGuiMsg("envelope.greeting");
-    public static final String ENVELOPE_GREETING_BAD_WEATHER = TJChase.prefixGuiMsg("envelope.greeting_bad_weather");
+    public static final String ENVELOPE_TITLE = TJChase.prefixGuiMsg(ModItemNames.ENVELOPE + ".title");
+    public static final String ENVELOPE_GREETING = TJChase.prefixGuiMsg(ModItemNames.ENVELOPE + ".greeting");
+    public static final String ENVELOPE_GREETING_BAD_WEATHER = TJChase.prefixGuiMsg(ModItemNames.ENVELOPE + ".greeting_bad_weather");
     private static final Map<UUID, PendingReward> PENDING_REWARDS = new HashMap<>();
 
     public EnvelopeItem(Properties properties) {
@@ -76,8 +75,8 @@ public class EnvelopeItem extends Item {
     }
 
     @Nullable
-    public Pair<String, String> getGreetingTranslationKeyPair() {
-        return Pair.of(ENVELOPE_GREETING, ENVELOPE_GREETING_BAD_WEATHER);
+    public EnvelopeTextKeys getEnvelopeTextKeys() {
+        return new EnvelopeTextKeys(ENVELOPE_TITLE, ENVELOPE_GREETING, ENVELOPE_GREETING_BAD_WEATHER);
     }
 
     protected boolean showsContent(Player player) {
@@ -119,6 +118,8 @@ public class EnvelopeItem extends Item {
         reward = loots.isEmpty() ? ItemStack.EMPTY : loots.getFirst();
         return reward;
     }
+
+    public record EnvelopeTextKeys(String title, String greeting, String greetingBadWeather) {}
 
     private record PendingReward(ItemStack reward, InteractionHand hand) {}
 }

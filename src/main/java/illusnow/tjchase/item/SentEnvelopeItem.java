@@ -17,7 +17,6 @@
 
 package illusnow.tjchase.item;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +39,7 @@ public class SentEnvelopeItem extends EnvelopeItem {
 
     @Nullable
     @Override
-    public Pair<String, String> getGreetingTranslationKeyPair() {
+    public EnvelopeTextKeys getEnvelopeTextKeys() {
         return null;
     }
 }

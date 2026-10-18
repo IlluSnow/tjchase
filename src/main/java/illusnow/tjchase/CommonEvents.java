@@ -30,15 +30,14 @@ import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.gameplay.TyingHelper;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.entity.projectile.YogaBall;
-import illusnow.tjchase.block.ModBlocks;
-import illusnow.tjchase.world.MailboxDelivery;
 import illusnow.tjchase.item.HarpItem;
 import illusnow.tjchase.item.ModDataComponents;
-import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.item.enchantment.ModEnchantmentEffectComponents;
 import illusnow.tjchase.tag.ModBlockTags;
 import illusnow.tjchase.tag.ModItemTags;
 import illusnow.tjchase.util.*;
+import illusnow.tjchase.world.MailboxDelivery;
+import illusnow.tjchase.world.StampDropHelper;
 import illusnow.tjchase.world.gameplay.WeakState;
 import illusnow.tjchase.world.gameplay.action.ActionHolder;
 import illusnow.tjchase.world.gameplay.action.ModActions;
@@ -49,7 +48,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -123,36 +121,6 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onClickingWeakPlayer(PlayerInteractEvent.EntityInteractSpecific event) {
         handleHugAndTie(event);
-    }
-
-    @SubscribeEvent
-    public static void onStampingMailbox(PlayerInteractEvent.RightClickBlock event) {
-        if (!event.getLevel().getBlockState(event.getPos()).is(ModBlocks.MAILBOX.get())
-                || !event.getItemStack().is(ModItems.STAMP.get())) {
-            return;
-        }
-
-        if (event.getLevel().isClientSide()) {
-            return;
-        }
-
-        Player player = event.getEntity();
-        boolean success = false;
-        if (player.isShiftKeyDown()) {
-            ItemStack envelope = new ItemStack(ModItems.ENVELOPE.get());
-            if (!player.getInventory().add(envelope)) {
-                player.drop(envelope, false);
-            }
-            success = true;
-        } else if (player instanceof ServerPlayer serverPlayer) {
-            success = MailboxDelivery.start((ServerLevel) event.getLevel(), event.getPos(), serverPlayer);
-        }
-        if (success) {
-            event.getItemStack().shrink(1);
-            player.awardStat(Stats.ITEM_USED.get(ModItems.STAMP.get()));
-            event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.SUCCESS);
-        }
     }
 
     private static void handleHugAndTie(PlayerInteractEvent.EntityInteractSpecific event) {
@@ -346,6 +314,11 @@ public class CommonEvents {
         if (event.getEntity() instanceof Player player && player.getData(ModAttachments.WEAK_STATE).isWeak()) {
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDrops(LivingDropsEvent event) {
+        StampDropHelper.mayDropStamp(event);
     }
 
     @SubscribeEvent

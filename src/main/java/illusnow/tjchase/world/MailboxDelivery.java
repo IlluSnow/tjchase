@@ -226,7 +226,8 @@ public final class MailboxDelivery {
                 }
                 case WAITING_TO_RETURN -> {
                     if (ticks >= RETURN_DELAY) {
-                        Allay allay = spawnAllay(level, destination, new ItemStack(ModItems.ENVELOPE.get()));
+                        boolean goldenFeather = GoldenFeatherLuckinessHelper.checkWhetherToGiveGoldenFeather(player);
+                        Allay allay = spawnAllay(level, destination, new ItemStack(goldenFeather ? ModItems.MYSTERIOUS_ENVELOPE.get() : ModItems.ENVELOPE.get()));
                         if (allay == null) {
                             giveEnvelope(player);
                         } else {
@@ -249,7 +250,7 @@ public final class MailboxDelivery {
                     }
                     moveAllay(allay, nextPosition);
                     if (allay.distanceToSqr(playerPosition) <= 1.44) {
-                        allay.spawnAtLocation(level, new ItemStack(ModItems.ENVELOPE.get()), 0.25F);
+                        allay.spawnAtLocation(level, allay.getItemInHand(InteractionHand.MAIN_HAND).copy(), 0.25F);
                         allay.spawnAnim();
                         allay.discard();
                         finish();
@@ -330,7 +331,8 @@ public final class MailboxDelivery {
         }
 
         private void giveEnvelope(ServerPlayer player) {
-            ItemStack envelope = new ItemStack(ModItems.ENVELOPE.get());
+            boolean goldenFeather = GoldenFeatherLuckinessHelper.checkWhetherToGiveGoldenFeather(player);
+            ItemStack envelope = new ItemStack(goldenFeather ? ModItems.MYSTERIOUS_ENVELOPE.get() : ModItems.ENVELOPE.get());
             if (!player.getInventory().add(envelope)) {
                 player.drop(envelope, false);
             }

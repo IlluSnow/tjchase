@@ -44,6 +44,14 @@ public class ModRecipeProvider extends RecipeProvider {
     @Override
     protected void buildRecipes() {
         netheriteSmithing(ModItems.HARP.get(), RecipeCategory.COMBAT, ModItems.NETHERITE_HARP.get());
+        shaped(RecipeCategory.MISC, ModItems.MAILBOX.get())
+                .define('#', Items.IRON_INGOT)
+                .define('.', ModItems.STAMP.get())
+                .pattern("###")
+                .pattern("#.#")
+                .pattern("###")
+                .unlockedBy("has_stamp", has(ModItems.STAMP.get()))
+                .save(output);
         // disabled now
         /*
         shaped(RecipeCategory.MISC, ModItems.VINE_SEED.get(), 8)

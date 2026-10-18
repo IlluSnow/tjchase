@@ -28,6 +28,7 @@ public final class ModItemNames {
     public static final String HARP = "harp";
     public static final String HARP_TESTER = ModEntityNames.HARP_TESTER;
     public static final String MOUSE_EARS = "mouse_ears";
+    public static final String MYSTERIOUS_ENVELOPE = "mysterious_envelope";
     public static final String NETHERITE_HARP = "netherite_harp";
     public static final String PROFICIENCY_STICK = "proficiency_stick";
     public static final String REMOTE_CONTROL = "remote_control";

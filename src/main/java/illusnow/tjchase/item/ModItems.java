@@ -61,6 +61,9 @@ public final class ModItems {
             new HarpItem(new Item.Properties().setId(createItemId(ModItemNames.HARP)).rarity(ModRarities.HARP_CUSTOM.getValue()).durability(HarpConstants.DURABILITY).enchantable(HarpConstants.ENCHANTMENT_VALUE).repairable(ItemTags.GOLD_TOOL_MATERIALS),
                     HarpConstants.BASE_ORBITING_BLOCK_COUNT,
                     0));
+    public static final DeferredHolder<Item, MysteriousEnvelopeItem> MYSTERIOUS_ENVELOPE = register(ModItemNames.MYSTERIOUS_ENVELOPE, MysteriousEnvelopeItem::new, properties -> properties
+            .rarity(Rarity.EPIC)
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
     public static final DeferredHolder<Item, HarpItem> NETHERITE_HARP = ITEMS.register(ModItemNames.NETHERITE_HARP, () ->
             new HarpItem(new Item.Properties().setId(createItemId(ModItemNames.NETHERITE_HARP)).fireResistant().rarity(ModRarities.NETHERITE_HARP_CUSTOM.getValue()).durability(HarpConstants.DURABILITY_NETHERITE).enchantable(HarpConstants.ENCHANTMENT_VALUE_NETHERITE).repairable(ItemTags.NETHERITE_TOOL_MATERIALS),
                     HarpConstants.BASE_ORBITING_BLOCK_COUNT + HarpConstants.ORBITING_BLOCK_COUNT_NETHERITE_BONUS,
@@ -78,8 +81,8 @@ public final class ModItems {
     public static final DeferredHolder<Item, RemoteControlItem> REMOTE_CONTROL = register(ModItemNames.REMOTE_CONTROL, RemoteControlItem::new,
             properties -> properties.stacksTo(1));
     public static final DeferredHolder<Item, Item> ROCKET_EDITOR = register(ModItemNames.ROCKET_EDITOR, properties -> new InGamePlacedEntityEditorItem<>(properties, ModEntities.ROCKET, ModGameplayObjectTypes.ROCKET), properties -> properties.stacksTo(1).rarity(Rarity.RARE));
-    public static final DeferredHolder<Item, EnvelopeItem> SENT_ENVELOPE = register(ModItemNames.SENT_ENVELOPE, SentEnvelopeItem::new, properties -> properties);
-    public static final DeferredHolder<Item, Item> STAMP = register(ModItemNames.STAMP, properties -> properties.rarity(Rarity.RARE));
+    public static final DeferredHolder<Item, SentEnvelopeItem> SENT_ENVELOPE = register(ModItemNames.SENT_ENVELOPE, SentEnvelopeItem::new, properties -> properties);
+    public static final DeferredHolder<Item, Item> STAMP = register(ModItemNames.STAMP, StampItem::new, properties -> properties.rarity(Rarity.RARE));
     public static final DeferredHolder<Item, Item> VINE_SEED = register(ModItemNames.VINE_SEED, VineSeedItem::new, properties -> properties.stacksTo(16).rarity(ModRarities.VINE_SEED_CUSTOM.getValue()));
 
     public static final DeferredHolder<Item, BlockItem> MAILBOX = registerGeoBlock(ModBlockNames.MAILBOX, ModBlocks.MAILBOX);

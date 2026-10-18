@@ -57,6 +57,11 @@ public final class ClientUtils {
         poseStack.popPose();
     }
 
+    public static void facePlayer(PoseStack poseStack) {
+        Quaternionf rotation = Minecraft.getInstance().gameRenderer.getMainCamera().rotation();
+        poseStack.mulPose(new Quaternionf(rotation.x, rotation.y, rotation.z, rotation.w));
+    }
+
     public static void facePlayerHorizontally(PoseStack poseStack) {
         Quaternionf rotation = Minecraft.getInstance().gameRenderer.getMainCamera().rotation();
         poseStack.mulPose(new Quaternionf(0, rotation.y, 0, rotation.w));
