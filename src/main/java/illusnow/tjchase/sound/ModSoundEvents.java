@@ -44,6 +44,7 @@ public final class ModSoundEvents {
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_THROW_BLOCK_LIGHTWEIGHT_1 = register(ModSoundNames.HARP_THROW_BLOCK_LIGHTWEIGHT_1);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_THROW_BLOCK_LIGHTWEIGHT_2 = register(ModSoundNames.HARP_THROW_BLOCK_LIGHTWEIGHT_2);
     public static final DeferredHolder<SoundEvent, SoundEvent> HARP_THROW_BLOCK_LIGHTWEIGHT_3 = register(ModSoundNames.HARP_THROW_BLOCK_LIGHTWEIGHT_3);
+    public static final DeferredHolder<SoundEvent, SoundEvent> INVITATION_LETTER_OPEN = register(ModSoundNames.INVITATION_LETTER_OPEN);
     public static final DeferredHolder<SoundEvent, SoundEvent> LINIA_AMBIENT = register(ModSoundNames.LINIA_AMBIENT);
     public static final DeferredHolder<SoundEvent, SoundEvent> LINIA_DEATH = register(ModSoundNames.LINIA_DEATH);
     public static final DeferredHolder<SoundEvent, SoundEvent> LINIA_HURT = register(ModSoundNames.LINIA_HURT);

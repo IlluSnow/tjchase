@@ -20,6 +20,7 @@ package illusnow.tjchase.client.gui.screen;
 import com.mojang.blaze3d.platform.InputConstants;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.item.EnvelopeItem;
+import illusnow.tjchase.item.MysteriousEnvelopeItem;
 import illusnow.tjchase.network.c2s.ClaimEnvelopeRewardPayload;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 public class EnvelopeScreen extends Screen {
     private static final int PAGE_WIDTH = 220;
     private static final int PAGE_HEIGHT = 180;
-    private static final Identifier BACKGROUND = TJChase.prefix("textures/gui/letter_background.png");
+    private static final Identifier BACKGROUND = TJChase.prefix("textures/gui/container/letter_background.png");
     private final ItemStack envelope;
     private final ItemStack reward;
     private final boolean offHand;
@@ -80,8 +81,12 @@ public class EnvelopeScreen extends Screen {
                 textY += font.lineHeight + 3;
             }
 
-            guiGraphics.renderItem(reward, width / 2 - 8, top + 119);
-            guiGraphics.renderItemDecorations(font, reward, width / 2 - 8, top + 119);
+            int itemY = top + 119;
+            if (envelope.getItem() instanceof MysteriousEnvelopeItem) {
+                itemY += 20;
+            }
+            guiGraphics.renderItem(reward, width / 2 - 8, itemY);
+            guiGraphics.renderItemDecorations(font, reward, width / 2 - 8, itemY);
         }
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }

@@ -23,6 +23,7 @@ import illusnow.tjchase.TJChase;
 import illusnow.tjchase.block.ModBlocks;
 import illusnow.tjchase.client.editablevalue.ClientEditableValueHelper;
 import illusnow.tjchase.client.gui.ModHudLayers;
+import illusnow.tjchase.client.gui.screen.MysteriousShopScreen;
 import illusnow.tjchase.client.key.ModKeyMappings;
 import illusnow.tjchase.client.model.ModArmPoses;
 import illusnow.tjchase.client.network.ModClientPayloadHandlers;
@@ -45,6 +46,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import illusnow.tjchase.world.inventory.ModMenuTypes;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -63,6 +65,11 @@ public class ClientModEvents {
     public static void onClientSetup(FMLClientSetupEvent event) {
         ClientEditableValueHelper.registerFactories();
         event.enqueueWork(ModPlayerAnimationRegistry::registerPlayerAnimations);
+    }
+
+    @SubscribeEvent
+    public static void registerMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(ModMenuTypes.MYSTERIOUS_SHOP.get(), MysteriousShopScreen::new);
     }
 
     @SubscribeEvent // on the mod event bus only on the physical client

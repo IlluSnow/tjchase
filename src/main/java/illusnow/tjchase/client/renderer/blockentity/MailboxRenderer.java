@@ -23,7 +23,7 @@ import illusnow.tjchase.block.entity.MailboxBlockEntity;
 import illusnow.tjchase.block.entity.ModBlockEntities;
 import illusnow.tjchase.client.ClientUtils;
 import illusnow.tjchase.client.renderer.renderstate.MailboxRenderState;
-import illusnow.tjchase.world.GoldenFeatherLuckinessHelper;
+import illusnow.tjchase.world.LuckinessHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
@@ -67,7 +67,7 @@ public class MailboxRenderer<R extends MailboxRenderState & GeoRenderState> exte
                     }
                 }
             }
-            renderState.setLuckiness(GoldenFeatherLuckinessHelper.getLuckiness(player));
+            renderState.setLuckiness(LuckinessHelper.getGoldenFeatherLuckiness(player));
         }
     }
 
@@ -87,7 +87,7 @@ public class MailboxRenderer<R extends MailboxRenderState & GeoRenderState> exte
 
             float textX = -font.width(luckinessText) / 2.0f;
             float textY = -4.5f;
-            boolean changeColor = luckiness >= GoldenFeatherLuckinessHelper.UNLUCKY_THRESHOLD;
+            boolean changeColor = luckiness >= LuckinessHelper.GOLDEN_FEATHER_UNLUCKY_THRESHOLD;
             int color = changeColor ? 0xFFFFF2B3 : 0xFFFFFFFF;
             int outlineColor = changeColor ? 0xFF332A0F : 0xFF333333;
 

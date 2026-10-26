@@ -20,6 +20,7 @@ package illusnow.tjchase.world;
 import com.mojang.logging.LogUtils;
 import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.item.ModItems;
+import illusnow.tjchase.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -226,7 +227,7 @@ public final class MailboxDelivery {
                 }
                 case WAITING_TO_RETURN -> {
                     if (ticks >= RETURN_DELAY) {
-                        boolean goldenFeather = GoldenFeatherLuckinessHelper.checkWhetherToGiveGoldenFeather(player);
+                        boolean goldenFeather = LuckinessHelper.checkWhetherToGiveGoldenFeather(player);
                         Allay allay = spawnAllay(level, destination, new ItemStack(goldenFeather ? ModItems.MYSTERIOUS_ENVELOPE.get() : ModItems.ENVELOPE.get()));
                         if (allay == null) {
                             giveEnvelope(player);
@@ -331,11 +332,9 @@ public final class MailboxDelivery {
         }
 
         private void giveEnvelope(ServerPlayer player) {
-            boolean goldenFeather = GoldenFeatherLuckinessHelper.checkWhetherToGiveGoldenFeather(player);
+            boolean goldenFeather = LuckinessHelper.checkWhetherToGiveGoldenFeather(player);
             ItemStack envelope = new ItemStack(goldenFeather ? ModItems.MYSTERIOUS_ENVELOPE.get() : ModItems.ENVELOPE.get());
-            if (!player.getInventory().add(envelope)) {
-                player.drop(envelope, false);
-            }
+            Utils.giveItem(player, envelope);
             finish();
         }
 

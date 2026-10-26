@@ -22,14 +22,17 @@ import illusnow.tjchase.entity.ModEntityNames;
 public final class ModItemNames {
     public static final String BLUEPRINT = ModEntityNames.BLUEPRINT;
     public static final String CAT_EARS = "cat_ears";
+    public static final String DIAMOND_VIP_INVITATION_LETTER = "diamond_vip_invitation_letter";
     public static final String ENTITY_DEBUG_STICK = "entity_debug_stick";
     public static final String ENVELOPE = "envelope";
+    public static final String GOLD_VIP_INVITATION_LETTER = "gold_vip_invitation_letter";
     public static final String GOLDEN_FEATHER = "golden_feather";
     public static final String HARP = "harp";
     public static final String HARP_TESTER = ModEntityNames.HARP_TESTER;
     public static final String MOUSE_EARS = "mouse_ears";
     public static final String MYSTERIOUS_ENVELOPE = "mysterious_envelope";
     public static final String NETHERITE_HARP = "netherite_harp";
+    public static final String NETHERITE_VIP_INVITATION_LETTER = "netherite_vip_invitation_letter";
     public static final String PROFICIENCY_STICK = "proficiency_stick";
     public static final String REMOTE_CONTROL = "remote_control";
     public static final String ROCKET_EDITOR = "rocket_editor";

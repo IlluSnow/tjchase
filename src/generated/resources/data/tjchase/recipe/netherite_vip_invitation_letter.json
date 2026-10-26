@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:netherite_scrap",
+    "minecraft:netherite_scrap",
+    "#c:ingots/gold",
+    "#c:ingots/gold",
+    "minecraft:writable_book"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tjchase:netherite_vip_invitation_letter"
+  }
+}

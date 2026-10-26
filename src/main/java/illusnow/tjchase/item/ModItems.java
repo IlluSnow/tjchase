@@ -24,6 +24,7 @@ import illusnow.tjchase.entity.ModEntities;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.HarpConstants;
 import illusnow.tjchase.world.gameplay.object.ModGameplayObjectTypes;
+import illusnow.tjchase.world.vip.VIPType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -84,6 +85,9 @@ public final class ModItems {
     public static final DeferredHolder<Item, SentEnvelopeItem> SENT_ENVELOPE = register(ModItemNames.SENT_ENVELOPE, SentEnvelopeItem::new, properties -> properties);
     public static final DeferredHolder<Item, Item> STAMP = register(ModItemNames.STAMP, StampItem::new, properties -> properties.rarity(Rarity.RARE));
     public static final DeferredHolder<Item, Item> VINE_SEED = register(ModItemNames.VINE_SEED, VineSeedItem::new, properties -> properties.stacksTo(16).rarity(ModRarities.VINE_SEED_CUSTOM.getValue()));
+    public static final DeferredHolder<Item, Item> GOLD_VIP_INVITATION_LETTER = register(ModItemNames.GOLD_VIP_INVITATION_LETTER, VIPInvitationLetterItem::new, properties -> properties.rarity(Rarity.UNCOMMON).component(ModDataComponents.VIP_TYPE, VIPType.GOLD));
+    public static final DeferredHolder<Item, Item> DIAMOND_VIP_INVITATION_LETTER = register(ModItemNames.DIAMOND_VIP_INVITATION_LETTER, VIPInvitationLetterItem::new, properties -> properties.rarity(Rarity.RARE).component(ModDataComponents.VIP_TYPE, VIPType.DIAMOND));
+    public static final DeferredHolder<Item, Item> NETHERITE_VIP_INVITATION_LETTER = register(ModItemNames.NETHERITE_VIP_INVITATION_LETTER, VIPInvitationLetterItem::new, properties -> properties.rarity(Rarity.EPIC).component(ModDataComponents.VIP_TYPE, VIPType.NETHERITE));
 
     public static final DeferredHolder<Item, BlockItem> MAILBOX = registerGeoBlock(ModBlockNames.MAILBOX, ModBlocks.MAILBOX);
 

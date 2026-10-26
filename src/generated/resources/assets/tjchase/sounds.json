@@ -101,6 +101,14 @@
     ],
     "subtitle": "subtitles.tjchase.harp_throw_block"
   },
+  "invitation_letter_open": {
+    "sounds": [
+      "tjchase:item/envelope/open1",
+      "tjchase:item/envelope/open2",
+      "tjchase:item/envelope/open3"
+    ],
+    "subtitle": "subtitles.tjchase.invitation_letter_open"
+  },
   "item.armor.equip_cat_ears": {
     "sounds": [
       "item/armor/equip_generic1",

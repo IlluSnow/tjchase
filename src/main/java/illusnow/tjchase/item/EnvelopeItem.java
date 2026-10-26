@@ -22,6 +22,7 @@ import illusnow.tjchase.data.loot.ModLootContextParamSets;
 import illusnow.tjchase.data.loot.ModLootTables;
 import illusnow.tjchase.network.s2c.OpenEnvelopeScreenPayload;
 import illusnow.tjchase.sound.ModSoundEvents;
+import illusnow.tjchase.util.Utils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -102,8 +103,8 @@ public class EnvelopeItem extends Item {
     }
 
     private static void giveReward(ServerPlayer player, ItemStack reward) {
-        if (!reward.isEmpty() && !player.getInventory().add(reward)) {
-            player.drop(reward, false);
+        if (!reward.isEmpty()) {
+            Utils.giveItem(player, reward);
         }
     }
 

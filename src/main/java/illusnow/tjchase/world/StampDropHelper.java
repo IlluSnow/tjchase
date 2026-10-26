@@ -26,10 +26,15 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.villager.VillagerTrades.ItemsForEmeralds;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 public final class StampDropHelper {
+    public static final ItemsForEmeralds VILLAGER_LV2_TRADE = new ItemsForEmeralds(ModItems.STAMP.get(), 6, 1, 4, 8);
+    public static final ItemsForEmeralds VILLAGER_LV5_TRADE = new ItemsForEmeralds(ModItems.STAMP.get(), 15, 3, 4, 24);
+    public static final ItemsForEmeralds WANDERING_TRADER_GENERIC_TRADE = new ItemsForEmeralds(ModItems.STAMP.get(), 8, 1, 1, 1);
+    public static final ItemsForEmeralds WANDERING_TRADER_RARE_TRADE = new ItemsForEmeralds(ModItems.STAMP.get(), 36, 6, 1, 1);
     private static final double INITIAL_DROP = 4;
     private static final double MUL1 = 0.75;
     private static final double MUL2 = 0.9;

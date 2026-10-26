@@ -44,6 +44,7 @@ import illusnow.tjchase.world.gameplay.action.ModActions;
 import illusnow.tjchase.world.gameplay.action.TieAction;
 import illusnow.tjchase.world.gameplay.struggle.StruggleInstance;
 import illusnow.tjchase.world.gameplay.struggle.StruggleTypes;
+import illusnow.tjchase.world.vip.VIPManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
@@ -55,6 +56,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -75,6 +77,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
+import net.neoforged.neoforge.event.village.WandererTradesEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -109,6 +113,9 @@ public class CommonEvents {
             }
         }
         StruggleInstance.updateBidirectionally(player);
+        if (!player.level().isClientSide()) {
+            VIPManager.updateServer(player);
+        }
     }
 
     @SubscribeEvent
@@ -507,5 +514,20 @@ public class CommonEvents {
         if (!stack.has(ModDataComponents.CARRYING_TEMPLATE)) {
             stack.addToTooltip(ModDataComponents.PLACE_TEMPLATE, event.getContext(), tooltipDisplay, event.getToolTip()::add, event.getFlags());
         }
+        stack.addToTooltip(ModDataComponents.VIP_TYPE, event.getContext(), tooltipDisplay, event.getToolTip()::add, event.getFlags());
+    }
+
+    @SubscribeEvent
+    public static void onVillagerTrades(VillagerTradesEvent event) {
+        if (event.getType() == VillagerProfession.CARTOGRAPHER) {
+            event.getTrades().get(2).add(StampDropHelper.VILLAGER_LV2_TRADE);
+            event.getTrades().get(5).add(StampDropHelper.VILLAGER_LV5_TRADE);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onWandererTrades(WandererTradesEvent event) {
+        event.getGenericTrades().add(StampDropHelper.WANDERING_TRADER_GENERIC_TRADE);
+        event.getRareTrades().add(StampDropHelper.WANDERING_TRADER_RARE_TRADE);
     }
 }

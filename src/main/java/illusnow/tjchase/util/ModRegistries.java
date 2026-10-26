@@ -18,6 +18,7 @@
 package illusnow.tjchase.util;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.world.MysteriousShopTrade;
 import illusnow.tjchase.world.gameplay.action.Action;
 import illusnow.tjchase.world.gameplay.object.GameplayObjectType;
 import illusnow.tjchase.world.gameplay.object.editablevalue.EditableValue;
@@ -35,6 +36,8 @@ public final class ModRegistries {
     public static final Registry<GameplayObjectType<?>> GAMEPLAY_OBJECT_TYPES = new RegistryBuilder<>(ModRegistries.GAMEPLAY_OBJECT_TYPES_KEY).sync(true).create();
     public static final ResourceKey<Registry<StruggleType>> STRUGGLE_TYPES_KEY = ResourceKey.createRegistryKey(TJChase.prefix("struggle_types"));
     public static final Registry<StruggleType> STRUGGLE_TYPES = new RegistryBuilder<>(ModRegistries.STRUGGLE_TYPES_KEY).sync(true).create();
+    public static final ResourceKey<Registry<MysteriousShopTrade>> MYSTERIOUS_SHOP_TRADES_KEY = ResourceKey.createRegistryKey(TJChase.prefix(MysteriousShopTrade.NAME + "s"));
+    public static final Registry<MysteriousShopTrade> MYSTERIOUS_SHOP_TRADES = new RegistryBuilder<>(ModRegistries.MYSTERIOUS_SHOP_TRADES_KEY).sync(true).create();
 
     private ModRegistries() {}
 }

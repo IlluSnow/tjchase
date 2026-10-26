@@ -30,27 +30,24 @@ import illusnow.tjchase.item.enchantment.ModEnchantmentEffectComponents;
 import illusnow.tjchase.particle.ModParticleTypes;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.ModMolangQueries;
+import illusnow.tjchase.world.MysteriousShopTrade;
 import illusnow.tjchase.world.gameplay.action.ModActions;
 import illusnow.tjchase.world.gameplay.object.ModGameplayObjectTypes;
 import illusnow.tjchase.world.gameplay.object.editablevalue.ModEditableValues;
 import illusnow.tjchase.world.gameplay.struggle.StruggleTypes;
+import illusnow.tjchase.world.inventory.ModMenuTypes;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
 
-// The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(TJChase.MODID)
 public class TJChase {
-    // Define mod id in a common place for everything to reference
     public static final String MODID = "tjchase";
-    // Directly reference a slf4j logger
+    public static final String AUTHOR = "IlluSnow";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    // The constructor for the mod class is the first code that is run when your mod is loaded.
-    // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public TJChase(IEventBus bus, ModContainer modContainer) {
         ModActions.ACTIONS.register(bus);
         ModAttachments.ATTACHMENT_TYPES.register(bus);
@@ -65,12 +62,13 @@ public class TJChase {
         ModEntityDataSerializers.ENTITY_DATA_SERIALIZERS.register(bus);
         ModGameplayObjectTypes.GAMEPLAY_OBJECT_TYPES.register(bus);
         ModItems.ITEMS.register(bus);
+        ModMenuTypes.MENUS.register(bus);
+        MysteriousShopTrade.MYSTERIOUS_TRADES.register(bus);
         ModParticleTypes.PARTICLE_TYPES.register(bus);
         ModSoundEvents.SOUND_EVENTS.register(bus);
         StruggleTypes.STRUGGLE_TYPES.register(bus);
 
-        // Register our mod's ModConfigSpec so that FML can create and load the config file for us
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+//        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         ModMolangQueries.register();
     }
 

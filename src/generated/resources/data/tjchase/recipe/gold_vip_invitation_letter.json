@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:ingots/gold",
+    "#c:ingots/gold",
+    "minecraft:writable_book"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tjchase:gold_vip_invitation_letter"
+  }
+}

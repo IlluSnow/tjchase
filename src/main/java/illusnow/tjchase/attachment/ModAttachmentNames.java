@@ -35,6 +35,7 @@ public final class ModAttachmentNames {
     public static final String TIED_TO = "tied_to";
     public static final String TYING = "tying";
     public static final String VINE_CD = "vine_cd";
+    public static final String VIP_MANAGER = "vip_manager";
     public static final String WEAK_STATE = "weak_state";
 
     private ModAttachmentNames() {}

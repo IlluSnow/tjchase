@@ -19,6 +19,7 @@ package illusnow.tjchase.item;
 
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.world.gameplay.object.Template;
+import illusnow.tjchase.world.vip.VIPType;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -38,6 +39,8 @@ public final class ModDataComponents {
             builder.persistent(Template.CODEC).networkSynchronized(Template.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Component>> GAMEPLAY_OBJECT_NAME = DATA_COMPONENTS.registerComponentType("gameplay_object_name", builder ->
             builder.persistent(ComponentSerialization.CODEC).networkSynchronized(ComponentSerialization.STREAM_CODEC).cacheEncoding());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<VIPType>> VIP_TYPE = DATA_COMPONENTS.registerComponentType("vip_type", builder ->
+            builder.persistent(VIPType.CODEC).networkSynchronized(VIPType.STREAM_CODEC));
 
     private ModDataComponents() {}
 }

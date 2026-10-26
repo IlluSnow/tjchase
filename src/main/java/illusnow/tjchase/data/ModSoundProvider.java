@@ -87,6 +87,11 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
                 .with(modSound("item/%s/open1".formatted(ModItemNames.ENVELOPE)))
                 .with(modSound("item/%s/open2".formatted(ModItemNames.ENVELOPE)))
                 .with(modSound("item/%s/open3".formatted(ModItemNames.ENVELOPE))));
+        add(ModSoundEvents.INVITATION_LETTER_OPEN, definition()
+                .subtitle(ModSoundSubtitles.INVITATION_LETTER_OPEN)
+                .with(modSound("item/%s/open1".formatted(ModItemNames.ENVELOPE)))
+                .with(modSound("item/%s/open2".formatted(ModItemNames.ENVELOPE)))
+                .with(modSound("item/%s/open3".formatted(ModItemNames.ENVELOPE))));
 
         modIdleSound(ModSoundEvents.ZURI_AMBIENT, ModSoundSubtitles.ZURI_AMBIENT, ModEntityNames.ZURI, 3);
         modEntitySoundWithType(ModSoundEvents.ZURI_ATTACK, catAttack, ModSoundSubtitles.ZURI_ATTACK, "", 3);

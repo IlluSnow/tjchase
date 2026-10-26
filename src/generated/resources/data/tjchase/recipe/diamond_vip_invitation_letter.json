@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:gems/diamond",
+    "#c:gems/diamond",
+    "minecraft:writable_book"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tjchase:diamond_vip_invitation_letter"
+  }
+}

@@ -19,6 +19,7 @@
 package illusnow.tjchase.data;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.item.ModItemNames;
 import illusnow.tjchase.item.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,6 +34,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -45,29 +47,41 @@ public class ModRecipeProvider extends RecipeProvider {
     protected void buildRecipes() {
         netheriteSmithing(ModItems.HARP.get(), RecipeCategory.COMBAT, ModItems.NETHERITE_HARP.get());
         shaped(RecipeCategory.MISC, ModItems.MAILBOX.get())
-                .define('#', Items.IRON_INGOT)
+                .define('#', Tags.Items.INGOTS_IRON)
                 .define('.', ModItems.STAMP.get())
                 .pattern("###")
                 .pattern("#.#")
                 .pattern("###")
                 .unlockedBy("has_stamp", has(ModItems.STAMP.get()))
                 .save(output);
-        // disabled now
-        /*
-        shaped(RecipeCategory.MISC, ModItems.VINE_SEED.get(), 8)
-                .define('#', Tags.Items.SEEDS_WHEAT)
-                .define('.', Items.GHAST_TEAR)
-                .pattern("###")
-                .pattern("#.#")
-                .pattern("###")
-                .unlockedBy("has_wheat_seeds", has(Tags.Items.SEEDS_WHEAT))
-                .save(output, findItemName(ModItems.VINE_SEED.get()) + "_economical");
-        shapeless(RecipeCategory.MISC, ModItems.VINE_SEED.get())
-                .requires(Tags.Items.SEEDS_WHEAT)
-                .requires(Items.GHAST_TEAR)
-                .unlockedBy("has_wheat_seeds", has(Tags.Items.SEEDS_WHEAT))
+        shapeless(RecipeCategory.MISC, ModItems.GOLD_VIP_INVITATION_LETTER.get())
+                .requires(Tags.Items.INGOTS_GOLD)
+                .requires(Tags.Items.INGOTS_GOLD)
+                .requires(Items.WRITABLE_BOOK)
+                .unlockedBy("has_gold_ingot", has(Tags.Items.INGOTS_GOLD))
                 .save(output);
-         */
+        shapeless(RecipeCategory.MISC, ModItems.DIAMOND_VIP_INVITATION_LETTER.get())
+                .requires(Tags.Items.GEMS_DIAMOND)
+                .requires(Tags.Items.GEMS_DIAMOND)
+                .requires(Items.WRITABLE_BOOK)
+                .unlockedBy("has_diamond", has(Tags.Items.GEMS_DIAMOND))
+                .save(output);
+        shapeless(RecipeCategory.MISC, ModItems.NETHERITE_VIP_INVITATION_LETTER.get())
+                .requires(Items.NETHERITE_SCRAP)
+                .requires(Items.NETHERITE_SCRAP)
+                .requires(Tags.Items.INGOTS_GOLD)
+                .requires(Tags.Items.INGOTS_GOLD)
+                .requires(Items.WRITABLE_BOOK)
+                .unlockedBy("has_gold_ingot", has(Tags.Items.INGOTS_GOLD))
+                .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
+                .save(output);
+        shapeless(RecipeCategory.MISC, ModItems.NETHERITE_VIP_INVITATION_LETTER.get())
+                .requires(Items.NETHERITE_SCRAP)
+                .requires(Items.NETHERITE_SCRAP)
+                .requires(ModItems.GOLD_VIP_INVITATION_LETTER.get())
+                .unlockedBy("has_gold_ingot", has(Tags.Items.INGOTS_GOLD))
+                .unlockedBy("has_netherite_scrap", has(Items.NETHERITE_SCRAP))
+                .save(output, TJChase.prefix(ModItemNames.NETHERITE_VIP_INVITATION_LETTER + "_from_" + ModItemNames.GOLD_VIP_INVITATION_LETTER).toString());
     }
 
     @Override

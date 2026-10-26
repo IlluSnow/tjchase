@@ -30,6 +30,7 @@ import illusnow.tjchase.util.OrbitingBlockHolder;
 import illusnow.tjchase.world.gameplay.WeakState;
 import illusnow.tjchase.world.gameplay.action.ActionHolder;
 import illusnow.tjchase.world.gameplay.struggle.StruggleInstance;
+import illusnow.tjchase.world.vip.VIPManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -91,6 +92,8 @@ public final class ModAttachments {
             AttachmentType.builder(WeakState::new).serialize(WeakState.MAP_CODEC).sync(WeakState.STREAM_CODEC).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Optional<StruggleInstance>>> STRUGGLE = ATTACHMENT_TYPES.register(ModAttachmentNames.STRUGGLE, () ->
             AttachmentType.<Optional<StruggleInstance>>builder(Optional::empty).serialize(optionalSerializer(StruggleInstance.CODEC)).sync(optionalSyncer(StruggleInstance.STREAM_CODEC)).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<VIPManager>> VIP_MANAGER = ATTACHMENT_TYPES.register(ModAttachmentNames.VIP_MANAGER, () ->
+            AttachmentType.builder(VIPManager::new).serialize(VIPManager.MAP_CODEC).copyOnDeath().build());
 
     private ModAttachments() {}
 

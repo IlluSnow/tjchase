@@ -29,6 +29,7 @@ public final class ModComponents {
     public static final Component CONTAINER_RENAME = Component.translatable(CONTAINER_RENAME_MSGID);
     public static final String GUI_RESET_TO_DEFAULT_MSGID = TJChase.prefixGuiMsg("reset_to_default");
     public static final Component GUI_RESET_TO_DEFAULT = Component.translatable(GUI_RESET_TO_DEFAULT_MSGID);
+    public static final String VANILLA_CONTAINER_ITEM_COUNT_MSGID = "item.container.item_count";
 
     private ModComponents() {}
 }

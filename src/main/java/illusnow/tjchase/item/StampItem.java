@@ -17,9 +17,14 @@
 
 package illusnow.tjchase.item;
 
-import illusnow.tjchase.block.ModBlocks;
-import illusnow.tjchase.world.GoldenFeatherLuckinessHelper;
+import illusnow.tjchase.TJChase;
+import illusnow.tjchase.block.MailboxBlock;
+import illusnow.tjchase.util.Utils;
+import illusnow.tjchase.world.LuckinessHelper;
 import illusnow.tjchase.world.MailboxDelivery;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -30,6 +35,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 public class StampItem extends Item {
+    public static final String INVALID_MAILBOX = TJChase.prefixMsg(ModItemNames.STAMP + ".invalid_mailbox");
+
     public StampItem(Properties properties) {
         super(properties);
     }
@@ -37,24 +44,26 @@ public class StampItem extends Item {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
-        if (!level.getBlockState(context.getClickedPos()).is(ModBlocks.MAILBOX.get())) {
-            return super.useOn(context);
-        }
         if (level.isClientSide()) {
             return super.useOn(context);
         }
+        BlockPos pos = context.getClickedPos();
         ServerPlayer player = (ServerPlayer) context.getPlayer();
+        if (!MailboxBlock.isValidMailbox(level, pos)) {
+            if (player != null) {
+                player.sendSystemMessage(Component.translatable(INVALID_MAILBOX).withStyle(ChatFormatting.RED));
+            }
+            return super.useOn(context);
+        }
         boolean success = false;
         if (player != null) {
             if (player.isShiftKeyDown()) {
-                boolean goldenFeather = GoldenFeatherLuckinessHelper.checkWhetherToGiveGoldenFeather(player);
+                boolean goldenFeather = LuckinessHelper.checkWhetherToGiveGoldenFeather(player);
                 ItemStack envelope = new ItemStack(goldenFeather ? ModItems.MYSTERIOUS_ENVELOPE.get() : ModItems.ENVELOPE.get());
-                if (!player.getInventory().add(envelope)) {
-                    player.drop(envelope, false);
-                }
+                Utils.giveItem(player, envelope);
                 success = true;
             } else {
-                success = MailboxDelivery.start((ServerLevel) level, context.getClickedPos(), player);
+                success = MailboxDelivery.start((ServerLevel) level, pos, player);
             }
         }
         if (success) {

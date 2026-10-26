@@ -237,4 +237,18 @@ public final class Utils {
         }
         return server.isSingleplayerOwner(player.nameAndId());
     }
+
+    public static int getDay(Level level) {
+        return (int) (level.getDayTime() / 24000L);
+    }
+
+    public static int getTimeOfDay(Level level) {
+        return Math.toIntExact(level.getDayTime() % 24000L);
+    }
+
+    public static void giveItem(Player player, ItemStack stack) {
+        if (!player.getInventory().add(stack)) {
+            player.drop(stack, false);
+        }
+    }
 }

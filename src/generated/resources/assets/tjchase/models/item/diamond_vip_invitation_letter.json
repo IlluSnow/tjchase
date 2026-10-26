@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tjchase:item/diamond_vip_invitation_letter"
+  }
+}

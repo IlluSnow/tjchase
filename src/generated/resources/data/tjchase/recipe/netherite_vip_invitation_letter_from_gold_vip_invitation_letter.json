@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:netherite_scrap",
+    "minecraft:netherite_scrap",
+    "tjchase:gold_vip_invitation_letter"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tjchase:netherite_vip_invitation_letter"
+  }
+}
