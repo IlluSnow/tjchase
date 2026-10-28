@@ -50,7 +50,7 @@ public class StampItem extends Item {
         BlockPos pos = context.getClickedPos();
         ServerPlayer player = (ServerPlayer) context.getPlayer();
         if (!MailboxBlock.isValidMailbox(level, pos)) {
-            if (player != null) {
+            if (player != null && level.getBlockState(pos).getBlock() instanceof MailboxBlock) {
                 player.sendSystemMessage(Component.translatable(INVALID_MAILBOX).withStyle(ChatFormatting.RED));
             }
             return super.useOn(context);
