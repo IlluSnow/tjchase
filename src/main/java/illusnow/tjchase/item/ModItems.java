@@ -45,6 +45,7 @@ import java.util.function.UnaryOperator;
 
 public final class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(TJChase.MODID);
+    public static final DeferredHolder<Item, BaxSpiderItem> BAX_SPIDER = register(ModItemNames.BAX_SPIDER, BaxSpiderItem::new, properties -> properties.durability(120).rarity(ModRarities.BAX_SPIDER_CUSTOM.getValue()).enchantable(10));
     public static final DeferredHolder<Item, BlueprintItem> BLUEPRINT = register(ModItemNames.BLUEPRINT, BlueprintItem::new, properties -> properties.stacksTo(16).rarity(ModRarities.BLUEPRINT_CUSTOM.getValue()));
     public static final DeferredHolder<Item, TJChaseEarsItem> CAT_EARS = register(ModItemNames.CAT_EARS, properties -> new TJChaseEarsItem(ModSoundEvents.ARMOR_EQUIP_CAT_EARS, properties),
             properties -> properties.stacksTo(1)

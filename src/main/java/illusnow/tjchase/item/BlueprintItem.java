@@ -22,29 +22,23 @@ import illusnow.tjchase.sound.ModSoundEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class BlueprintItem extends TJChaseProjectileItem {
+public class BlueprintItem extends TJChaseProjectileItem<ThrownBlueprint> {
     public BlueprintItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected Projectile createProjectileFromPos(Level level, double x, double y, double z, ItemStack stack) {
+    protected ThrownBlueprint createProjectileFromPos(Level level, double x, double y, double z, ItemStack stack) {
         return new ThrownBlueprint(level, x, y, z, stack);
     }
 
     @Override
-    protected Projectile createProjectileFromOwner(ServerLevel level, LivingEntity owner, ItemStack stack) {
+    protected ThrownBlueprint createProjectileFromOwner(ServerLevel level, LivingEntity owner, ItemStack stack) {
         return new ThrownBlueprint(level, owner, stack);
-    }
-
-    @Override
-    protected int getCooldown() {
-        return 60;
     }
 
     @Nullable

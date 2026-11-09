@@ -26,6 +26,10 @@ import net.neoforged.fml.common.asm.enumextension.EnumProxy;
 import java.util.function.UnaryOperator;
 
 public final class ModRarities {
+    public static final EnumProxy<Rarity> BAX_SPIDER_CUSTOM = new EnumProxy<>(
+            Rarity.class, -1, prefixCustom(ModItemNames.BAX_SPIDER), (UnaryOperator<Style>) style ->
+            style.withItalic(true).withColor(ChatFormatting.GRAY)
+    );
     public static final EnumProxy<Rarity> BLUEPRINT_CUSTOM = new EnumProxy<>(
             Rarity.class, -1, prefixCustom(ModItemNames.BLUEPRINT), (UnaryOperator<Style>) style ->
             style.withItalic(true).withColor(ChatFormatting.BLUE)

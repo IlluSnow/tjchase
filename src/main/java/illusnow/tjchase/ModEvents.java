@@ -101,6 +101,15 @@ public class ModEvents {
                 StrugglePayload.STREAM_CODEC,
                 ModServerPayloadHandlers::handleStruggle
         );
+        registrar.playToClient(
+                BaxSpiderDestroyBlockPayload.TYPE,
+                BaxSpiderDestroyBlockPayload.STREAM_CODEC
+        );
+        registrar.playToServer(
+                RetractBaxSpiderPayload.TYPE,
+                RetractBaxSpiderPayload.STREAM_CODEC,
+                ModServerPayloadHandlers::handleRetractBaxSpider
+        );
         registrar = registrar.executesOn(HandlerThread.NETWORK);
         registrar.playBidirectional(
                 SyncInGameEntityPayload.TYPE,
@@ -117,6 +126,7 @@ public class ModEvents {
             event.accept(ModItems.HARP.get());
             event.accept(ModItems.NETHERITE_HARP.get());
             event.accept(ModItems.VINE_SEED.get());
+            event.accept(ModItems.BAX_SPIDER.get());
             event.accept(ModItems.STAMP.get());
             event.accept(ModItems.ENVELOPE.get());
             event.accept(ModItems.MYSTERIOUS_ENVELOPE.get());

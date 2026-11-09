@@ -37,12 +37,12 @@ public class YogaBallRenderer<R extends EntityRenderState & GeoRenderState> exte
 
     @Override
     public void addRenderData(YogaBall yogaBall, @Nullable Void relatedObject, R renderState, float partialTick) {
-        renderState.addGeckolibData(ModDataTickets.YOGA_BALL_RENDER_SCALE, getRenderScaleWhenDeflating(yogaBall, partialTick));
+        renderState.addGeckolibData(ModDataTickets.RENDER_SCALE, getRenderScaleWhenDeflating(yogaBall, partialTick));
     }
 
     @Override
     public void scaleModelForRender(RenderPassInfo<R> renderPassInfo, float widthScale, float heightScale) {
-        float renderScale = Objects.requireNonNull(renderPassInfo.renderState().getGeckolibData(ModDataTickets.YOGA_BALL_RENDER_SCALE));
+        float renderScale = Objects.requireNonNull(renderPassInfo.renderState().getGeckolibData(ModDataTickets.RENDER_SCALE));
         super.scaleModelForRender(renderPassInfo, widthScale * renderScale, heightScale * renderScale);
     }
 

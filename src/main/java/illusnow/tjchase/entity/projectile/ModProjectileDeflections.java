@@ -35,6 +35,10 @@ public final class ModProjectileDeflections {
         ((YogaBall) projectile).updateRotationWhenBouncing();
         projectile.needsSync = true;
     };
+    public static final ProjectileDeflection BAX_SPIDER_BOUNCE_BACK = (projectile, entity, random) -> {
+        projectile.setDeltaMovement(projectile.getDeltaMovement().scale(-1));
+        projectile.needsSync = true;
+    };
 
     private ModProjectileDeflections() {}
 }

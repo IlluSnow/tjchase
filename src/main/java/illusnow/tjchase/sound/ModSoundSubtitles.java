@@ -22,9 +22,12 @@ import illusnow.tjchase.TJChase;
 public final class ModSoundSubtitles {
     public static final String ARMOR_EQUIP_CAT_EARS = prefix(ModSoundNames.ARMOR_EQUIP_CAT_EARS);
     public static final String ARMOR_EQUIP_MOUSE_EARS = prefix(ModSoundNames.ARMOR_EQUIP_MOUSE_EARS);
+    public static final String BAX_SPIDER_THROW = prefix(ModSoundNames.BAX_SPIDER_THROW);
     public static final String BLUEPRINT_FOLD = prefix(ModSoundNames.BLUEPRINT_FOLD);
     public static final String BLUEPRINT_RELEASE = prefix(ModSoundNames.BLUEPRINT_RELEASE);
     public static final String BLUEPRINT_THROW = prefix(ModSoundNames.BLUEPRINT_THROW);
+    public static final String COCOON_BROKEN = prefix(ModSoundNames.COCOON_BROKEN);
+    public static final String COCOON_CREATED = prefix(ModSoundNames.COCOON_CREATED);
     public static final String DANCE_TIME = prefix(ModSoundNames.DANCE_TIME);
     public static final String EVILINIA_AMBIENT = prefix(ModSoundNames.EVILINIA_AMBIENT);
     public static final String EVILINIA_DEATH = prefix(ModSoundNames.EVILINIA_DEATH);

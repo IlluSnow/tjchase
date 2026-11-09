@@ -18,6 +18,7 @@
 package illusnow.tjchase.client;
 
 import illusnow.tjchase.TJChase;
+import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.client.key.ModKeyMappings;
 import illusnow.tjchase.client.network.ModClientPayloadHandlers;
 import illusnow.tjchase.client.resources.sounds.DanceTimeSoundInstance;
@@ -30,11 +31,10 @@ import illusnow.tjchase.entity.dataentity.BlueprintManager;
 import illusnow.tjchase.entity.gameplay.InGamePlacedEntity;
 import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.gameplay.TyingHelper;
+import illusnow.tjchase.entity.projectile.BaxSpider;
+import illusnow.tjchase.item.BaxSpiderItem;
 import illusnow.tjchase.mixin.client.ClientInputAccessor;
-import illusnow.tjchase.network.c2s.LoadTemplatePayload;
-import illusnow.tjchase.network.c2s.StrugglePayload;
-import illusnow.tjchase.network.c2s.UpdateControlledEntityPositionPayload;
-import illusnow.tjchase.network.c2s.UpdateInputPayload;
+import illusnow.tjchase.network.c2s.*;
 import illusnow.tjchase.util.OriginalInputAccessor;
 import illusnow.tjchase.util.Utils;
 import illusnow.tjchase.world.gameplay.struggle.StruggleInstance;
@@ -45,6 +45,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.TriState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
@@ -57,8 +58,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
+import java.util.List;
 import java.util.Objects;
 
 @EventBusSubscriber(modid = TJChase.MODID, value = Dist.CLIENT)
@@ -142,6 +145,19 @@ public class ClientEvents {
     public static void onRenderNameTagConditionCheck(RenderNameTagEvent.CanRender event) {
         if (event.getEntity() instanceof InGamePlacedEntity<?>) {
             event.setCanRender(TriState.FALSE);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickEmpty(PlayerInteractEvent.RightClickEmpty event) {
+        List<EntityReference<BaxSpider>> baxSpiders = event.getEntity().getData(ModAttachments.FORWARDING_BAX_SPIDERS);
+        if (!baxSpiders.isEmpty() && (event.getHand() == InteractionHand.MAIN_HAND && !(event.getEntity().getOffhandItem().getItem() instanceof BaxSpiderItem) || event.getHand() == InteractionHand.OFF_HAND && !event.getEntity().getMainHandItem().isEmpty())) {
+            BaxSpider baxSpider = EntityReference.get(baxSpiders.getFirst(), event.getLevel(), BaxSpider.class);
+            if (baxSpider != null) {
+                int id = baxSpider.getId();
+                ClientPacketDistributor.sendToServer(new RetractBaxSpiderPayload(id));
+                baxSpiders.removeFirst();
+            }
         }
     }
 

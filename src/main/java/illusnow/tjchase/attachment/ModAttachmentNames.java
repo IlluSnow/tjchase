@@ -25,6 +25,7 @@ public final class ModAttachmentNames {
     public static final String CONTROLLING_ENTITY = "controlling_entity";
     public static final String DANCE_EFFECT_TYPE = "dance_effect_type";
     public static final String DANCING_WITH = "dancing_with";
+    public static final String FORWARDING_BAX_SPIDERS = "forwarding_bax_spiders";
     public static final String HARP_TESTER = "harp_tester";
     public static final String LUCKINESS_GOLDEN_FEATHER = "luckiness_golden_feather";
     public static final String NEGATIVE_EFFECT_BLUEPRINT = "negative_effect_blueprint";

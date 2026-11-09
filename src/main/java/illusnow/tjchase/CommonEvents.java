@@ -28,6 +28,7 @@ import illusnow.tjchase.entity.dataentity.BlueprintManager;
 import illusnow.tjchase.entity.dataentity.HarpTester;
 import illusnow.tjchase.entity.gameplay.Rocket;
 import illusnow.tjchase.entity.gameplay.TyingHelper;
+import illusnow.tjchase.entity.projectile.BaxSpider;
 import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
 import illusnow.tjchase.entity.projectile.YogaBall;
 import illusnow.tjchase.item.HarpItem;
@@ -56,11 +57,13 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
@@ -71,9 +74,11 @@ import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
 import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -81,6 +86,7 @@ import net.neoforged.neoforge.event.village.VillagerTradesEvent;
 import net.neoforged.neoforge.event.village.WandererTradesEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 @EventBusSubscriber(modid = TJChase.MODID)
@@ -115,6 +121,37 @@ public class CommonEvents {
         StruggleInstance.updateBidirectionally(player);
         if (!player.level().isClientSide()) {
             VIPManager.updateServer(player);
+        }
+        updateBaxSpiders(player);
+    }
+
+    private static void updateBaxSpiders(Player player) {
+        List<EntityReference<BaxSpider>> data = player.getData(ModAttachments.FORWARDING_BAX_SPIDERS);
+        boolean needsSync = false;
+        for (var itr = data.iterator(); itr.hasNext(); ) {
+            EntityReference<BaxSpider> spiderRef = itr.next();
+            BaxSpider spider = EntityReference.get(spiderRef, player.level(), BaxSpider.class);
+            if (spider != null && (!spider.isAlive() || spider.isReturning())) {
+                itr.remove();
+                needsSync = true;
+            }
+        }
+        if (needsSync) {
+            player.syncData(ModAttachments.FORWARDING_BAX_SPIDERS);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBaxSpiderLeaveLevel(EntityLeaveLevelEvent event) {
+        if (!(event.getEntity() instanceof BaxSpider spider) || event.getLevel().isClientSide()) {
+            return;
+        }
+        Entity.RemovalReason reason = spider.getRemovalReason();
+        if (reason == null || !reason.shouldDestroy() || !(spider.getOwner() instanceof Player owner)) {
+            return;
+        }
+        if (owner.getData(ModAttachments.FORWARDING_BAX_SPIDERS).remove(EntityReference.of(spider))) {
+            owner.syncData(ModAttachments.FORWARDING_BAX_SPIDERS);
         }
     }
 
@@ -248,6 +285,9 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onProjectileImpact(ProjectileImpactEvent event) {
         if (event.getProjectile() instanceof YogaBall && event.getRayTraceResult().getType() == HitResult.Type.ENTITY) {
+            event.setCanceled(true);
+        }
+        if (event.getProjectile() instanceof BaxSpider baxSpider && baxSpider.isReturning()) {
             event.setCanceled(true);
         }
     }
@@ -529,5 +569,17 @@ public class CommonEvents {
     public static void onWandererTrades(WandererTradesEvent event) {
         event.getGenericTrades().add(StampDropHelper.WANDERING_TRADER_GENERIC_TRADE);
         event.getRareTrades().add(StampDropHelper.WANDERING_TRADER_RARE_TRADE);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onBlockDropsLowest(BlockDropsEvent event) {
+        if (BaxSpider.isSpiderCausedDrop() && event.getBreaker() instanceof ServerPlayer player) {
+            event.getDrops().stream().map(ItemEntity::getItem).forEach(stack -> player.getInventory().placeItemBackInInventory(stack));
+            event.getDrops().clear();
+            if (player.level().getGameRules().get(GameRules.BLOCK_DROPS) && !player.level().restoringBlockSnapshots) {
+                player.giveExperiencePoints(event.getDroppedExperience());
+                event.setDroppedExperience(0);
+            }
+        }
     }
 }

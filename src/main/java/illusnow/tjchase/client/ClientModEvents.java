@@ -106,6 +106,10 @@ public class ClientModEvents {
                 UpdateWeakStatusPayload.TYPE,
                 ModClientPayloadHandlers::handleUpdateWeakStatus
         );
+        event.register(
+                BaxSpiderDestroyBlockPayload.TYPE,
+                ModClientPayloadHandlers::handleBaxSpiderDestroyBlock
+        );
     }
 
     @SubscribeEvent

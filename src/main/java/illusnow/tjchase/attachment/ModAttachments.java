@@ -21,6 +21,7 @@ import com.google.common.base.Predicates;
 import com.mojang.serialization.Codec;
 import illusnow.tjchase.TJChase;
 import illusnow.tjchase.entity.Zuri;
+import illusnow.tjchase.entity.projectile.BaxSpider;
 import illusnow.tjchase.world.MailboxDelivery;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.dataentity.HarpTester;
@@ -48,6 +49,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -94,8 +97,14 @@ public final class ModAttachments {
             AttachmentType.<Optional<StruggleInstance>>builder(Optional::empty).serialize(optionalSerializer(StruggleInstance.CODEC)).sync(optionalSyncer(StruggleInstance.STREAM_CODEC)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<VIPManager>> VIP_MANAGER = ATTACHMENT_TYPES.register(ModAttachmentNames.VIP_MANAGER, () ->
             AttachmentType.builder(VIPManager::new).serialize(VIPManager.MAP_CODEC).copyOnDeath().build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<List<EntityReference<BaxSpider>>>> FORWARDING_BAX_SPIDERS = ATTACHMENT_TYPES.register(ModAttachmentNames.FORWARDING_BAX_SPIDERS, () ->
+            AttachmentType.<List<EntityReference<BaxSpider>>>builder(() -> new ArrayList<>()).serialize(mutableList(EntityReference.<BaxSpider>codec()).fieldOf(ModAttachmentNames.FORWARDING_BAX_SPIDERS)).sync(EntityReference.<BaxSpider>streamCodec().apply(ByteBufCodecs.list())).build());
 
     private ModAttachments() {}
+
+    private static <T> Codec<List<T>> mutableList(Codec<T> codec) {
+        return Codec.list(codec).xmap(ArrayList::new, ArrayList::new);
+    }
 
     private static <T> IAttachmentSerializer<Optional<T>> optionalSerializer(Codec<T> codec) {
         return optionalSerializer(codec, Predicates.alwaysTrue());

@@ -3,7 +3,7 @@
 # The overall format is standard TOML format, v0.5.0.
 # Note that there are a couple of TOML lists in this file.
 # Find more information on toml format here:  https://github.com/toml-lang/toml
-# The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
+# The name of the mod loader adjacencyType to load - for regular FML @Mod mods it should be javafml
 modLoader = "javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the the FML version. This is currently 47.
 loaderVersion = "${loader_version_range}" #mandatory
@@ -40,6 +40,9 @@ enumExtensions="META-INF/enumextensions.json"
 [[mixins]]
 config = "${mod_id}.mixins.json"
 
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
+
 # The [[accessTransformers]] block allows you to declare where your AT file is.
 # If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
 #[[accessTransformers]]
@@ -51,10 +54,10 @@ config = "${mod_id}.mixins.json"
 [[dependencies."${mod_id}"]] #optional
 # the modid of the dependency
 modId = "neoforge" #mandatory
-# The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
+# The adjacencyType of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
 # 'required' requires the mod to exist, 'optional' does not
 # 'incompatible' will prevent the game from loading when the mod exists, and 'discouraged' will show a warning
-type = "required" #mandatory
+adjacencyType = "required" #mandatory
 # Optional field describing why the dependency is required or why it is incompatible
 # reason="..."
 # The version range of the dependency
@@ -68,7 +71,7 @@ side = "BOTH"
 # Here's another dependency
 [[dependencies."${mod_id}"]]
 modId = "minecraft"
-type = "required"
+adjacencyType = "required"
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
@@ -76,13 +79,13 @@ side = "BOTH"
 
 [[dependencies."${mod_id}"]] # 替换为你的模组 ID
 modId = "geckolib"
-type = "required"        # 设为 required 表示强制前置
+adjacencyType = "required"        # 设为 required 表示强制前置
 versionRange = "[5.4.5, 6.0.0)"  # 对应的版本范围
 side = "BOTH"
 
 [[dependencies."${mod_id}"]] # 替换为你的模组 ID
 modId = "player_animation_library"
-type = "required"        # 设为 required 表示强制前置
+adjacencyType = "required"        # 设为 required 表示强制前置
 versionRange = "[1.1.10, 1.2.0)"  # 对应的版本范围
 side = "BOTH"
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares

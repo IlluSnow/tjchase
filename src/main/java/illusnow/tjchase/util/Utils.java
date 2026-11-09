@@ -51,7 +51,9 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -64,10 +66,7 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public final class Utils {
     public static final AABB ZERO_AABB = new AABB(0, 0, 0, 0, 0, 0);
@@ -247,8 +246,42 @@ public final class Utils {
     }
 
     public static void giveItem(Player player, ItemStack stack) {
+        if (stack.isEmpty()) {
+            return;
+        }
         if (!player.getInventory().add(stack)) {
             player.drop(stack, false);
         }
+    }
+
+    public static void giveItem(Player player, ItemStack stack, int preferredSlot) {
+        if (stack.isEmpty()) {
+            return;
+        }
+        Inventory inventory = player.getInventory();
+        if (preferredSlot == Inventory.SLOT_OFFHAND && inventory.getItem(Inventory.SLOT_OFFHAND).isEmpty()) {
+            inventory.setItem(Inventory.SLOT_OFFHAND, stack);
+            stack.setPopTime(5);
+        } else if (inventory.getItem(preferredSlot).isEmpty()) {
+            inventory.add(preferredSlot, stack);
+        } else {
+            giveItem(player, stack);
+        }
+    }
+
+    public static OptionalDouble calculateHitAngle(Entity attacker, Vec3 lookAngle) {
+        Vec3 attackerLookAngle = attacker instanceof Projectile ? attacker.getDeltaMovement().normalize() : attacker.getLookAngle();
+        if (attackerLookAngle.lengthSqr() <= 1e-4 || Math.abs(attackerLookAngle.dot(Direction.UP.getUnitVec3())) > 0.99) {
+            return OptionalDouble.empty();
+        }
+        Vec3 toPlayerVec2 = new Vec3(-attackerLookAngle.x, 0, -attackerLookAngle.z);
+        Vec3 lookingVec2 = new Vec3(lookAngle.x, 0, lookAngle.z);
+        double dotProduct = lookingVec2.dot(toPlayerVec2);
+        double angle = Math.acos(dotProduct / toPlayerVec2.length() / lookingVec2.length()) * 180 / Math.PI;
+        Vec3 crossProduct = lookingVec2.cross(toPlayerVec2);
+        if (crossProduct.y > 0) {
+            angle = 360 - angle;
+        }
+        return OptionalDouble.of(angle);
     }
 }

@@ -28,9 +28,12 @@ public final class ModSoundEvents {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(Registries.SOUND_EVENT, TJChase.MODID);
     public static final DeferredHolder<SoundEvent, SoundEvent> ARMOR_EQUIP_CAT_EARS = register(ModSoundNames.ARMOR_EQUIP_CAT_EARS);
     public static final DeferredHolder<SoundEvent, SoundEvent> ARMOR_EQUIP_MOUSE_EARS = register(ModSoundNames.ARMOR_EQUIP_MOUSE_EARS);
+    public static final DeferredHolder<SoundEvent, SoundEvent> BAX_SPIDER_THROW = register(ModSoundNames.BAX_SPIDER_THROW);
     public static final DeferredHolder<SoundEvent, SoundEvent> BLUEPRINT_FOLD = register(ModSoundNames.BLUEPRINT_FOLD);
     public static final DeferredHolder<SoundEvent, SoundEvent> BLUEPRINT_RELEASE = register(ModSoundNames.BLUEPRINT_RELEASE);
     public static final DeferredHolder<SoundEvent, SoundEvent> BLUEPRINT_THROW = register(ModSoundNames.BLUEPRINT_THROW);
+    public static final DeferredHolder<SoundEvent, SoundEvent> COCOON_BROKEN = register(ModSoundNames.COCOON_BROKEN);
+    public static final DeferredHolder<SoundEvent, SoundEvent> COCOON_CREATED = register(ModSoundNames.COCOON_CREATED);
     public static final DeferredHolder<SoundEvent, SoundEvent> DANCE_TIME = register(ModSoundNames.DANCE_TIME);
     public static final DeferredHolder<SoundEvent, SoundEvent> EVILINIA_AMBIENT = register(ModSoundNames.EVILINIA_AMBIENT);
     public static final DeferredHolder<SoundEvent, SoundEvent> EVILINIA_DEATH = register(ModSoundNames.EVILINIA_DEATH);

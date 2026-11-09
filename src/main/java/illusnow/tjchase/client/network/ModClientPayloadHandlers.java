@@ -36,6 +36,7 @@ import net.minecraft.client.resources.sounds.AbstractSoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.LevelEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -157,6 +158,13 @@ public final class ModClientPayloadHandlers {
             if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?>) {
                 Minecraft.getInstance().setScreen(null);
             }
+        }
+    }
+
+    public static void handleBaxSpiderDestroyBlock(BaxSpiderDestroyBlockPayload payload, IPayloadContext context) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level != null) {
+            minecraft.level.levelEvent(minecraft.player, LevelEvent.PARTICLES_DESTROY_BLOCK, payload.pos(), payload.stateId());
         }
     }
 

@@ -93,6 +93,7 @@ public class CommonReplyLetterRewardLootSubProvider implements LootTableSubProvi
                         .add(lootTableItem(Items.LEATHER).setWeight(25))
                         .add(lootTableItem(ModItems.NETHERITE_HARP.get()).setWeight(1))
                         .add(lootTableItem(ModItems.HARP.get()).setWeight(12))
+                        .add(lootTableItem(ModItems.BAX_SPIDER.get()).setWeight(13))
                         .add(lootTableItem(ModItems.VINE_SEED.get()).setWeight(35).apply(SetItemCountFunction.setCount(ConstantValue.exactly(3))))
                         .add(lootTableItem(ModItems.BLUEPRINT.get()).setWeight(35).apply(SetItemCountFunction.setCount(ConstantValue.exactly(3))))));
     }

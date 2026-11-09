@@ -1,5 +1,5 @@
-// 1.21.11	2026-08-28T23:46:23.7989262	Tags for minecraft:entity_type mod id tjchase
-d958f4559257ee008f948dd292e3b69daaff6716 data/c/tags/entity_type/capturing_not_supported.json
+// 1.21.11	2026-11-08T18:57:48.1395622	Tags for minecraft:entity_type mod id tjchase
+6677b18d6d4a2fa671b911dad924b2fd5230368e data/c/tags/entity_type/capturing_not_supported.json
 d958f4559257ee008f948dd292e3b69daaff6716 data/c/tags/entity_type/teleporting_not_supported.json
 39af2e631a2e2f78eccc9bf5681b029156f09b30 data/minecraft/tags/entity_type/fall_damage_immune.json
 24d449383636b0a26bcd8ec065940fe9c391be05 data/tjchase/tags/entity_type/tjchase_friendly_cats.json

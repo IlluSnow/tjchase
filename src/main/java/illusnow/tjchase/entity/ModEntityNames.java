@@ -18,8 +18,10 @@
 package illusnow.tjchase.entity;
 
 public final class ModEntityNames {
+    public static final String BAX_SPIDER = "bax_spider";
     public static final String BLUEPRINT = "blueprint";
     public static final String BLUEPRINT_MANAGER = "blueprint_manager";
+    public static final String COCOON = "cocoon";
     public static final String EVILINIA = "evilinia";
     public static final String HARP_TESTER = "harp_tester";
     public static final String LINIA = "linia";

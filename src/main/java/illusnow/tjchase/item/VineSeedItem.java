@@ -22,31 +22,23 @@ import illusnow.tjchase.sound.ModSoundEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.level.Level;
 
-public class VineSeedItem extends TJChaseProjectileItem implements ProjectileItem {
-    private static final int COOLDOWN = 60;
-
+public class VineSeedItem extends TJChaseProjectileItem<VineSeed> implements ProjectileItem {
     public VineSeedItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected Projectile createProjectileFromPos(Level level, double x, double y, double z, ItemStack stack) {
+    protected VineSeed createProjectileFromPos(Level level, double x, double y, double z, ItemStack stack) {
         return new VineSeed(level, x, y, z, stack);
     }
 
     @Override
-    protected Projectile createProjectileFromOwner(ServerLevel level, LivingEntity owner, ItemStack stack) {
+    protected VineSeed createProjectileFromOwner(ServerLevel level, LivingEntity owner, ItemStack stack) {
         return new VineSeed(level, owner, stack);
-    }
-
-    @Override
-    protected int getCooldown() {
-        return COOLDOWN;
     }
 
     @Override

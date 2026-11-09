@@ -3,6 +3,7 @@
     "tjchase:blueprint_manager",
     "tjchase:harp_tester",
     "tjchase:rocket",
+    "tjchase:cocoon",
     "tjchase:vine_manager"
   ]
 }

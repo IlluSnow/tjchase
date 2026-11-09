@@ -24,6 +24,7 @@ import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.network.s2c.PlayFuseSoundPayload;
 import illusnow.tjchase.sound.ModSoundEvents;
 import illusnow.tjchase.util.Freezable;
+import illusnow.tjchase.util.Utils;
 import illusnow.tjchase.world.gameplay.action.ActionHolder;
 import illusnow.tjchase.world.gameplay.action.ModActions;
 import illusnow.tjchase.world.gameplay.object.GameplayObjectType;
@@ -53,7 +54,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -346,28 +346,17 @@ public class Rocket extends InGamePlacedEntity<Rocket> implements GeoEntity, Fre
     }
 
     private void playHitAnimation(Entity attacker) {
-        Vec3 attackerLookAngle = attacker instanceof Projectile ? attacker.getDeltaMovement().normalize() : attacker.getLookAngle();
-        if (attackerLookAngle.lengthSqr() <= 1e-4 || Math.abs(attackerLookAngle.dot(Direction.UP.getUnitVec3())) > 0.99) {
-            return;
-        }
-        Vec3 toPlayerVec2 = new Vec3(-attackerLookAngle.x, 0, -attackerLookAngle.z);
-        Vec3 lookAngle = getLookAngle();
-        Vec3 lookingVec2 = new Vec3(lookAngle.x, 0, lookAngle.z);
-        double dotProduct = lookingVec2.dot(toPlayerVec2);
-        double angle = Math.acos(dotProduct / toPlayerVec2.length() / lookingVec2.length()) * 180 / Math.PI;
-        Vec3 crossProduct = lookingVec2.cross(toPlayerVec2);
-        if (crossProduct.y > 0) {
-            angle = 360 - angle;
-        }
-        if (angle < 45 || angle >= 315) {
-            triggerAnim(HIT_CONTROLLER_NAME, HIT_N_NAME);
-        } else if (angle < 135) {
-            triggerAnim(HIT_CONTROLLER_NAME, HIT_E_NAME);
-        } else if (angle < 225) {
-            triggerAnim(HIT_CONTROLLER_NAME, HIT_S_NAME);
-        } else {
-            triggerAnim(HIT_CONTROLLER_NAME, HIT_W_NAME);
-        }
+        Utils.calculateHitAngle(attacker, getLookAngle()).ifPresent(angle -> {
+            if (angle < 45 || angle >= 315) {
+                triggerAnim(HIT_CONTROLLER_NAME, HIT_N_NAME);
+            } else if (angle < 135) {
+                triggerAnim(HIT_CONTROLLER_NAME, HIT_E_NAME);
+            } else if (angle < 225) {
+                triggerAnim(HIT_CONTROLLER_NAME, HIT_S_NAME);
+            } else {
+                triggerAnim(HIT_CONTROLLER_NAME, HIT_W_NAME);
+            }
+        });
     }
 
     @Override

@@ -37,7 +37,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         tag(ModItemTags.HARPS).add(ModItems.HARP.get(), ModItems.NETHERITE_HARP.get());
         tag(Tags.Items.RANGED_WEAPON_TOOLS).addTag(ModItemTags.HARPS);
-        tag(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.HARP.get(), ModItems.NETHERITE_HARP.get());
-        tag(ItemTags.VANISHING_ENCHANTABLE).add(ModItems.HARP.get(), ModItems.NETHERITE_HARP.get());
+        tag(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.HARP.get(), ModItems.NETHERITE_HARP.get(), ModItems.BAX_SPIDER.get());
+        tag(ItemTags.VANISHING_ENCHANTABLE).add(ModItems.HARP.get(), ModItems.NETHERITE_HARP.get(), ModItems.BAX_SPIDER.get());
     }
 }

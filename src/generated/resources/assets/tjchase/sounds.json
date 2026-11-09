@@ -1,4 +1,11 @@
 {
+  "bax_spider_throw": {
+    "sounds": [
+      "tjchase:item/bax_spider/throw1",
+      "tjchase:item/bax_spider/throw2"
+    ],
+    "subtitle": "subtitles.tjchase.bax_spider_throw"
+  },
   "blueprint_fold": {
     "sounds": [
       "tjchase:item/blueprint/fold"
@@ -16,6 +23,23 @@
       "tjchase:item/blueprint/fold"
     ],
     "subtitle": "subtitles.tjchase.blueprint_throw"
+  },
+  "cocoon_broken": {
+    "sounds": [
+      "block/cobweb/break1",
+      "block/cobweb/break2",
+      "block/cobweb/break3",
+      "block/cobweb/break4",
+      "block/cobweb/break5",
+      "block/cobweb/break6"
+    ],
+    "subtitle": "subtitles.tjchase.cocoon_broken"
+  },
+  "cocoon_created": {
+    "sounds": [
+      "tjchase:entity/cocoon/catch"
+    ],
+    "subtitle": "subtitles.tjchase.cocoon_created"
   },
   "dance_time": {
     "sounds": [

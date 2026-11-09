@@ -22,10 +22,7 @@ import illusnow.tjchase.entity.dataentity.BlueprintManager;
 import illusnow.tjchase.entity.dataentity.HarpTester;
 import illusnow.tjchase.entity.dataentity.VineManager;
 import illusnow.tjchase.entity.gameplay.Rocket;
-import illusnow.tjchase.entity.projectile.ThrownBlueprint;
-import illusnow.tjchase.entity.projectile.OrbitingBlockEntity;
-import illusnow.tjchase.entity.projectile.VineSeed;
-import illusnow.tjchase.entity.projectile.YogaBall;
+import illusnow.tjchase.entity.projectile.*;
 import illusnow.tjchase.util.HarpConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -37,10 +34,14 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, TJChase.MODID);
+    public static final DeferredHolder<EntityType<?>, EntityType<BaxSpider>> BAX_SPIDER = register(ModEntityNames.BAX_SPIDER,
+            EntityType.Builder.<BaxSpider>of(BaxSpider::new, MobCategory.MISC).noLootTable().sized(0.5F, 0.25F).eyeHeight(0.125F).clientTrackingRange(8).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<ThrownBlueprint>> BLUEPRINT = register(ModEntityNames.BLUEPRINT,
             EntityType.Builder.<ThrownBlueprint>of(ThrownBlueprint::new, MobCategory.MISC).noLootTable().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<BlueprintManager>> BLUEPRINT_MANAGER = register(ModEntityNames.BLUEPRINT_MANAGER,
             EntityType.Builder.of(BlueprintManager::new, MobCategory.MISC).noLootTable().noSummon().sized(0, 0).clientTrackingRange(8).updateInterval(20));
+    public static final DeferredHolder<EntityType<?>, EntityType<Cocoon>> COCOON = register(ModEntityNames.COCOON,
+            EntityType.Builder.of(Cocoon::new, MobCategory.MISC).noLootTable().sized(0.7F, 0.6875f).eyeHeight(0.6F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<Evilinia>> EVILINIA = register(ModEntityNames.EVILINIA,
             EntityType.Builder.of(Evilinia::new, MobCategory.MONSTER).noLootTable().sized(0.35F, 0.6F).eyeHeight(0.36F).ridingOffset(0.04F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<HarpTester>> HARP_TESTER = register(ModEntityNames.HARP_TESTER,

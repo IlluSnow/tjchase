@@ -134,6 +134,22 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
                 .with(sound("item/armor/equip_generic4"))
                 .with(sound("item/armor/equip_generic5"))
                 .with(sound("item/armor/equip_generic6")));
+
+        add(ModSoundEvents.BAX_SPIDER_THROW, definition()
+                .subtitle(ModSoundSubtitles.BAX_SPIDER_THROW)
+                .with(modSound("item/%s/throw1".formatted(ModItemNames.BAX_SPIDER)))
+                .with(modSound("item/%s/throw2".formatted(ModItemNames.BAX_SPIDER))));
+        add(ModSoundEvents.COCOON_CREATED, definition()
+                .subtitle(ModSoundSubtitles.COCOON_CREATED)
+                .with(modSound("entity/%s/catch".formatted(ModEntityNames.COCOON))));
+        add(ModSoundEvents.COCOON_BROKEN, definition()
+                .subtitle(ModSoundSubtitles.COCOON_BROKEN)
+                .with(sound("block/cobweb/break1"))
+                .with(sound("block/cobweb/break2"))
+                .with(sound("block/cobweb/break3"))
+                .with(sound("block/cobweb/break4"))
+                .with(sound("block/cobweb/break5"))
+                .with(sound("block/cobweb/break6")));
     }
 
     private void modIdleSound(Holder<SoundEvent> sound, String subtitle, String name, int count) {

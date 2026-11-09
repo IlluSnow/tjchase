@@ -20,6 +20,7 @@ package illusnow.tjchase.item;
 import illusnow.tjchase.entity.ModEntityNames;
 
 public final class ModItemNames {
+    public static final String BAX_SPIDER = ModEntityNames.BAX_SPIDER;
     public static final String BLUEPRINT = ModEntityNames.BLUEPRINT;
     public static final String CAT_EARS = "cat_ears";
     public static final String DIAMOND_VIP_INVITATION_LETTER = "diamond_vip_invitation_letter";

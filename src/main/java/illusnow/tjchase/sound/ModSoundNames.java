@@ -23,9 +23,12 @@ import illusnow.tjchase.item.ModItemNames;
 public final class ModSoundNames {
     public static final String ARMOR_EQUIP_CAT_EARS = "item.armor.equip_" + ModItemNames.CAT_EARS;
     public static final String ARMOR_EQUIP_MOUSE_EARS = "item.armor.equip_" + ModItemNames.MOUSE_EARS;
+    public static final String BAX_SPIDER_THROW = ModItemNames.BAX_SPIDER + "_throw";
     public static final String BLUEPRINT_FOLD = ModItemNames.BLUEPRINT + "_fold";
     public static final String BLUEPRINT_RELEASE = ModItemNames.BLUEPRINT + "_release";
     public static final String BLUEPRINT_THROW = ModItemNames.BLUEPRINT + "_throw";
+    public static final String COCOON_BROKEN = ModEntityNames.COCOON + "_broken";
+    public static final String COCOON_CREATED = ModEntityNames.COCOON + "_created";
     public static final String DANCE_TIME = "dance_time";
     public static final String ENVELOPE_OPEN = "envelope_open";
     public static final String EVILINIA_AMBIENT = ModEntityNames.EVILINIA + "_ambient";

@@ -22,6 +22,7 @@ import illusnow.tjchase.attachment.ModAttachments;
 import illusnow.tjchase.entity.controllable.Controllable;
 import illusnow.tjchase.entity.controllable.ControllableMovementHandler;
 import illusnow.tjchase.entity.gameplay.InGamePlacedEntity;
+import illusnow.tjchase.entity.projectile.BaxSpider;
 import illusnow.tjchase.item.EnvelopeItem;
 import illusnow.tjchase.item.ModDataComponents;
 import illusnow.tjchase.network.bidirectional.SyncInGameEntityPayload;
@@ -30,11 +31,15 @@ import illusnow.tjchase.world.gameplay.object.Template;
 import illusnow.tjchase.world.gameplay.struggle.StruggleInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.slf4j.Logger;
+
+import java.util.List;
+import java.util.Optional;
 
 public final class ModServerPayloadHandlers {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -115,6 +120,27 @@ public final class ModServerPayloadHandlers {
             StruggleInstance.setStruggle(player, null);
         }
         player.syncData(ModAttachments.STRUGGLE);
+    }
+
+    public static void handleRetractBaxSpider(RetractBaxSpiderPayload payload, IPayloadContext context) {
+        Player player = context.player();
+        List<EntityReference<BaxSpider>> baxSpiders = player.getData(ModAttachments.FORWARDING_BAX_SPIDERS);
+        if (baxSpiders.isEmpty()) {
+            LOGGER.warn("Player {} attempted to retract a Bax's Spider but has no Bax's Spiders", player.getName().getString());
+            return;
+        }
+        baxSpiders.stream()
+                .map(ref -> Optional.ofNullable(EntityReference.get(ref, player.level(), BaxSpider.class)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(spider -> spider.getId() == payload.spiderId())
+                .findFirst()
+                .ifPresentOrElse(spider -> {
+                            spider.startReturning(null);
+                            spider.setDeltaMovement(spider.getDeltaMovement().scale(-1));
+                            spider.needsSync = true;
+                            },
+                        () -> LOGGER.warn("Player {} attempted to retract a Bax's Spider with id {} but no such Bax's Spider was found", player.getName().getString(), payload.spiderId()));
     }
 
     private static void warnNotFound(int id) {

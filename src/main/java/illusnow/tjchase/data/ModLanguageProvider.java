@@ -184,8 +184,10 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(getDamageTypeMsg(ModDamageSources.YOGA_BALL), "%1$s was squashed by a inflating yoga ball thrown by %2$s");
             add(HarpTester.NAME, "Monster Rush");
             add(HarpTester.NAME_REMAINING, "Monster Rush - %d remaining");
+            add(ModEntities.BAX_SPIDER.get(), "Bax's Spider");
             add(ModEntities.BLUEPRINT.get(), "Line's Blueprint");
             add(ModEntities.BLUEPRINT_MANAGER.get(), "Blueprint Manager");
+            add(ModEntities.COCOON.get(), "Cocoon");
             add(ModEntities.EVILINIA.get(), "Evilinia");
             add(ModEntities.HARP_TESTER.get(), "Harp Tester");
             add(ModEntities.LINIA.get(), "Linia");
@@ -212,6 +214,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModCreativeModeTabs.TAB_ID, "TJChase");
             add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "TJChase - Gameplay");
             add(WeakState.WEAK_COUNTDOWN_TEXT, "Weak time remaining: %ds");
+            add(ModItems.BAX_SPIDER.get(), "Bax's Spider");
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
             add(ModItems.CAT_EARS.get(), "Cat Ears");
             add(ModItems.DIAMOND_VIP_INVITATION_LETTER.get(), "Diamond Member Invitation Letter");
@@ -267,9 +270,12 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModKeyMappingNames.KEY_STRUGGLE, "Struggle");
             add(ModSoundSubtitles.ARMOR_EQUIP_CAT_EARS, "Cat ears equipped");
             add(ModSoundSubtitles.ARMOR_EQUIP_MOUSE_EARS, "Mouse ears equipped");
+            add(ModSoundSubtitles.BAX_SPIDER_THROW, "Spider thrown");
             add(ModSoundSubtitles.BLUEPRINT_FOLD, "Blueprint folds");
             add(ModSoundSubtitles.BLUEPRINT_RELEASE, "Blueprint expands");
             add(ModSoundSubtitles.BLUEPRINT_THROW, "Blueprint thrown");
+            add(ModSoundSubtitles.COCOON_BROKEN, "Cocoon broken");
+            add(ModSoundSubtitles.COCOON_CREATED, "Cocoon spun");
             add(ModSoundSubtitles.DANCE_TIME, "\"Dance Time\"");
             add(ModSoundSubtitles.EVILINIA_AMBIENT, "Evilinia screams");
             add(ModSoundSubtitles.EVILINIA_DEATH, "Evilinia dies");
@@ -419,8 +425,10 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(getEnchantmentDescriptionId(ModEnchantments.ANGEL_TOM_WEAPON_3), "不死之身");
             add(HarpTester.NAME, "怪物之潮");
             add(HarpTester.NAME_REMAINING, "怪物之潮 - 剩余：%d");
+            add(ModEntities.BAX_SPIDER.get(), "巴特的小蜘蛛");
             add(ModEntities.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModEntities.BLUEPRINT_MANAGER.get(), "蓝图管理器");
+            add(ModEntities.COCOON.get(), "蛛丝茧");
             add(ModEntities.EVILINIA.get(), "邪恶线灵");
             add(ModEntities.HARP_TESTER.get(), "竖琴测试器");
             add(ModEntities.LINIA.get(), "线灵");
@@ -447,6 +455,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModCreativeModeTabs.TAB_ID, "猫鼠");
             add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "猫鼠 - 主游戏");
             add(WeakState.WEAK_COUNTDOWN_TEXT, "虚弱时间剩余：%ds");
+            add(ModItems.BAX_SPIDER.get(), "巴特的小蜘蛛");
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModItems.CAT_EARS.get(), "猫猫的耳朵");
             add(ModItems.DIAMOND_VIP_INVITATION_LETTER.get(), "钻石会员邀请函");
@@ -502,9 +511,12 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModKeyMappingNames.KEY_STRUGGLE, "挣扎");
             add(ModSoundSubtitles.ARMOR_EQUIP_CAT_EARS, "猫耳：穿戴");
             add(ModSoundSubtitles.ARMOR_EQUIP_MOUSE_EARS, "鼠耳：穿戴");
+            add(ModSoundSubtitles.BAX_SPIDER_THROW, "小蜘蛛：扔出");
             add(ModSoundSubtitles.BLUEPRINT_FOLD, "蓝图：折叠");
             add(ModSoundSubtitles.BLUEPRINT_RELEASE, "蓝图：展开");
             add(ModSoundSubtitles.BLUEPRINT_THROW, "蓝图：飞出");
+            add(ModSoundSubtitles.COCOON_BROKEN, "蛛丝茧：被破坏");
+            add(ModSoundSubtitles.COCOON_CREATED, "蛛丝茧：被编织");
             add(ModSoundSubtitles.DANCE_TIME, "“律动时间”");
             add(ModSoundSubtitles.EVILINIA_AMBIENT, "邪恶线灵：尖叫");
             add(ModSoundSubtitles.EVILINIA_DEATH, "邪恶线灵：死亡");

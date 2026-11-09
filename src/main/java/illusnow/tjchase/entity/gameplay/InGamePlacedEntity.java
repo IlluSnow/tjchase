@@ -17,6 +17,7 @@
 
 package illusnow.tjchase.entity.gameplay;
 
+import illusnow.tjchase.entity.PlacedEntity;
 import illusnow.tjchase.item.ModDataComponents;
 import illusnow.tjchase.network.bidirectional.SyncInGameEntityPayload;
 import illusnow.tjchase.network.s2c.OpenGameplayObjectEditScreenForInGameEntityPayload;
@@ -33,7 +34,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
@@ -41,14 +43,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.Nullable;
 
-public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extends Entity implements GameplayObject<GameplayObjectType<O>> {
+public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extends PlacedEntity implements GameplayObject<GameplayObjectType<O>> {
     private static final String TEMPLATE_TAG = "Template";
     private static final EntityDataAccessor<Boolean> DATA_TEMPLATE = SynchedEntityData.defineId(InGamePlacedEntity.class, EntityDataSerializers.BOOLEAN);
-    private final InterpolationHandler interpolation = new InterpolationHandler(this, 3);
     private int cleaningPreparationTicks;
 
     protected InGamePlacedEntity(EntityType<? extends InGamePlacedEntity> entityType, Level level) {
@@ -67,16 +67,10 @@ public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extend
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
-        if (isInvulnerableToBase(damageSource)) {
-            return false;
-        }
+    protected void onHit(ServerLevel level, DamageSource damageSource, float amount) {
         if (damageSource.getEntity() instanceof ServerPlayer player) {
             prepareCleaning(player.getMainHandItem(), player, level);
         }
-        markHurt();
-        gameEvent(GameEvent.ENTITY_DAMAGE, damageSource.getEntity());
-        return true;
     }
 
     @Override
@@ -115,11 +109,6 @@ public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extend
     @Override
     public @Nullable ItemStack getPickResult() {
         return super.getPickResult();
-    }
-
-    @Override
-    public boolean isPickable() {
-        return true;
     }
 
     @Override
@@ -178,35 +167,8 @@ public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extend
     @Override
     public void tick() {
         super.tick();
-        if (!level().isClientSide()) {
-            handleMovements();
-        }
-        interpolation.interpolate();
         if (cleaningPreparationTicks > 0) {
             cleaningPreparationTicks--;
-        }
-    }
-
-    @Override
-    public InterpolationHandler getInterpolation() {
-        return interpolation;
-    }
-
-    protected void handleMovements() {
-        applyGravity();
-        applyInertia();
-        move(MoverType.SELF, getDeltaMovement());
-        applyEffectsFromBlocks();
-        handlePortal();
-        if (!onGround() || getDeltaMovement().lengthSqr() > 1E-5) {
-            needsSync = true;
-        }
-    }
-
-    protected void applyInertia() {
-        setDeltaMovement(getDeltaMovement().scale(0.95));
-        if (getDeltaMovement().lengthSqr() <= 1E-6) {
-            setDeltaMovement(Vec3.ZERO);
         }
     }
 
@@ -222,11 +184,6 @@ public abstract class InGamePlacedEntity<O extends InGamePlacedEntity<O>> extend
     protected void addAdditionalSaveData(ValueOutput output) {
         getGameplayObjectType().serialize(output, (O) this);
         output.putBoolean(TEMPLATE_TAG, isTemplate());
-    }
-
-    @Override
-    protected double getDefaultGravity() {
-        return 0.08;
     }
 
     @Override

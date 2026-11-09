@@ -200,6 +200,11 @@
         },
         {
           "type": "minecraft:item",
+          "name": "tjchase:bax_spider",
+          "weight": 13
+        },
+        {
+          "type": "minecraft:item",
           "functions": [
             {
               "add": false,

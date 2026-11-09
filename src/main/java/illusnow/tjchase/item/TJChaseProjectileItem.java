@@ -34,9 +34,10 @@ import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class TJChaseProjectileItem extends Item implements ProjectileItem {
+public abstract class TJChaseProjectileItem<T extends Projectile> extends Item implements ProjectileItem {
     private static final float PROJECTILE_SHOOT_POWER = 1.5F;
     private static final float INACCURACY = 1;
+    private static final int COOLDOWN = 60;
 
     public TJChaseProjectileItem(Properties properties) {
         super(properties);
@@ -58,27 +59,34 @@ public abstract class TJChaseProjectileItem extends Item implements ProjectileIt
                     1
             );
         }
+
+        T projectile = null;
         if (level instanceof ServerLevel serverlevel) {
-            Projectile.spawnProjectileFromRotation(this::createProjectileFromOwner, serverlevel, stack, player, 0, getProjectileShootPower(), getInaccuracy());
+            projectile = Projectile.spawnProjectileFromRotation(this::createProjectileFromOwner, serverlevel, stack, player, 0, getProjectileShootPower(), getInaccuracy());
         }
 
-        player.awardStat(Stats.ITEM_USED.get(this));
-        player.getCooldowns().addCooldown(stack, getCooldown());
-        stack.consume(1, player);
-        player.awardStat(Stats.ITEM_USED.get(this));
+        consume(stack, player, hand, projectile);
         return InteractionResult.SUCCESS;
     }
 
+    protected void consume(ItemStack stack, Player player, InteractionHand hand, @Nullable T projectile) {
+        player.getCooldowns().addCooldown(stack, getCooldown());
+        stack.consume(1, player);
+        player.awardStat(Stats.ITEM_USED.get(this));
+    }
+
     @Override
-    public Projectile asProjectile(Level level, Position position, ItemStack stack, Direction direction) {
+    public T asProjectile(Level level, Position position, ItemStack stack, Direction direction) {
         return createProjectileFromPos(level, position.x(), position.y(), position.z(), stack);
     }
 
-    protected abstract Projectile createProjectileFromPos(Level level, double x, double y, double z, ItemStack stack);
+    protected abstract T createProjectileFromPos(Level level, double x, double y, double z, ItemStack stack);
 
-    protected abstract Projectile createProjectileFromOwner(ServerLevel level, LivingEntity owner, ItemStack stack);
+    protected abstract T createProjectileFromOwner(ServerLevel level, LivingEntity owner, ItemStack stack);
 
-    protected abstract int getCooldown();
+    protected int getCooldown() {
+        return COOLDOWN;
+    }
 
     protected float getProjectileShootPower() {
         return PROJECTILE_SHOOT_POWER;
