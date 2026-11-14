@@ -95,4 +95,8 @@ public class TJChase {
     public static String prefixEnum(String name) {
         return MODID + ":" + name;
     }
+
+    public static Identifier prefixTex(String name) {
+        return prefix("textures/" + name);
+    }
 }

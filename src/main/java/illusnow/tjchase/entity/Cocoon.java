@@ -73,6 +73,7 @@ public class Cocoon extends PlacedEntity implements GeoEntity {
     private static final float MAX_SIZE = 4.0F;
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final EntityDataAccessor<Float> DATA_SIZE = SynchedEntityData.defineId(Cocoon.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> DATA_DAMAGED = SynchedEntityData.defineId(Cocoon.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     public static final RawAnimation HIT_N = RawAnimation.begin().thenPlay(HIT_N_NAME);
     public static final RawAnimation HIT_S = RawAnimation.begin().thenPlay(HIT_S_NAME);
@@ -91,6 +92,7 @@ public class Cocoon extends PlacedEntity implements GeoEntity {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_SIZE, 1.0F);
+        builder.define(DATA_DAMAGED, false);
     }
 
     @Override
@@ -111,6 +113,9 @@ public class Cocoon extends PlacedEntity implements GeoEntity {
         super.tick();
         if (!level().isClientSide()) {
             life++;
+            if (life >= MAX_LIFE / 2) {
+                setDamaged(true);
+            }
             if (life >= MAX_LIFE) {
                 if (storedEntityType != null) {
                     try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(LOGGER)) {
@@ -177,6 +182,9 @@ public class Cocoon extends PlacedEntity implements GeoEntity {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         life = input.getIntOr(LIFE_TAG, 0);
+        if (life >= MAX_LIFE / 2) {
+            setDamaged(true);
+        }
         tag = input.read(ENTITY_DATA_TAG, CompoundTag.CODEC).orElseGet(CompoundTag::new);
         try {
             storedEntityType = (EntityType<? extends Mob>) input.getString(STORED_ENTITY_TYPE_TAG).map(Identifier::tryParse).map(entityTypes()::getValue).orElse(null);
@@ -293,6 +301,14 @@ public class Cocoon extends PlacedEntity implements GeoEntity {
 
     public void setSize(float size) {
         entityData.set(DATA_SIZE, Math.clamp(size, MIN_SIZE, MAX_SIZE));
+    }
+
+    public boolean isDamaged() {
+        return entityData.get(DATA_DAMAGED);
+    }
+
+    private void setDamaged(boolean damaged) {
+        entityData.set(DATA_DAMAGED, damaged);
     }
 
     @Override

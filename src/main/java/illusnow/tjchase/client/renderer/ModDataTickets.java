@@ -17,16 +17,22 @@
 
 package illusnow.tjchase.client.renderer;
 
+import illusnow.tjchase.TJChase;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.constant.dataticket.DataTicket;
 
 public class ModDataTickets {
-    public static final DataTicket<Float> RENDER_SCALE = DataTicket.create("render_scale", Float.class);
-    public static final DataTicket<Boolean> DANCING = DataTicket.create("dancing", Boolean.class);
-    public static final DataTicket<Double> CUSTOM_ENTITY_ALPHA = DataTicket.create("custom_player", Double.class);
-    public static final DataTicket<Boolean> ALLOW_LAYER_RENDERING = DataTicket.create("allow_layer_rendering", Boolean.class);
-    public static final DataTicket<Vec3> BAX_SPIDER_BACK_POS = DataTicket.create("bax_spider_back_pos", Vec3.class);
-    public static final DataTicket<Vec3> BAX_SPIDER_LINKING_POS = DataTicket.create("bax_spider_linking_pos", Vec3.class);
+    public static final DataTicket<Float> RENDER_SCALE = create("render_scale", Float.class);
+    public static final DataTicket<Boolean> DANCING = create("dancing", Boolean.class);
+    public static final DataTicket<Double> CUSTOM_ENTITY_ALPHA = create("custom_player", Double.class);
+    public static final DataTicket<Boolean> ALLOW_LAYER_RENDERING = create("allow_layer_rendering", Boolean.class);
+    public static final DataTicket<Boolean> COCOON_DAMAGED = create("cocoon_damaged", Boolean.class);
+    public static final DataTicket<Vec3> BAX_SPIDER_BACK_POS = create("bax_spider_back_pos", Vec3.class);
+    public static final DataTicket<Vec3> BAX_SPIDER_LINKING_POS = create("bax_spider_linking_pos", Vec3.class);
 
     private ModDataTickets() {}
+
+    private static <D> DataTicket<D> create(String id, Class<? extends D> type) {
+        return DataTicket.create(TJChase.MODID + "_" + id, type);
+    }
 }
