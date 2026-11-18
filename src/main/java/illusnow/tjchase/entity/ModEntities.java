@@ -36,6 +36,8 @@ public final class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, TJChase.MODID);
     public static final DeferredHolder<EntityType<?>, EntityType<BaxSpider>> BAX_SPIDER = register(ModEntityNames.BAX_SPIDER,
             EntityType.Builder.<BaxSpider>of(BaxSpider::new, MobCategory.MISC).noLootTable().sized(0.5F, 0.25F).eyeHeight(0.125F).clientTrackingRange(8).updateInterval(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<BlueRascal>> BLUE_RASCAL = register(ModEntityNames.BLUE_RASCAL,
+            EntityType.Builder.of(BlueRascal::new, MobCategory.MISC).noLootTable().sized(0.3125F, 0.3125F).eyeHeight(0.15625F).clientTrackingRange(4).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<ThrownBlueprint>> BLUEPRINT = register(ModEntityNames.BLUEPRINT,
             EntityType.Builder.<ThrownBlueprint>of(ThrownBlueprint::new, MobCategory.MISC).noLootTable().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<BlueprintManager>> BLUEPRINT_MANAGER = register(ModEntityNames.BLUEPRINT_MANAGER,
@@ -44,6 +46,8 @@ public final class ModEntities {
             EntityType.Builder.of(Cocoon::new, MobCategory.MISC).noLootTable().sized(0.7F, 0.6875f).eyeHeight(0.6F).clientTrackingRange(8));
     public static final DeferredHolder<EntityType<?>, EntityType<Evilinia>> EVILINIA = register(ModEntityNames.EVILINIA,
             EntityType.Builder.of(Evilinia::new, MobCategory.MONSTER).noLootTable().sized(0.35F, 0.6F).eyeHeight(0.36F).ridingOffset(0.04F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<GreenRascal>> GREEN_RASCAL = register(ModEntityNames.GREEN_RASCAL,
+            EntityType.Builder.of(GreenRascal::new, MobCategory.MISC).noLootTable().sized(0.3125F, 0.3125F).eyeHeight(0.15625F).clientTrackingRange(4).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<HarpTester>> HARP_TESTER = register(ModEntityNames.HARP_TESTER,
             EntityType.Builder.of(HarpTester::new, MobCategory.MISC).noLootTable().noSummon().sized(0, 0).clientTrackingRange(5).updateInterval(20));
     public static final DeferredHolder<EntityType<?>, EntityType<Linia>> LINIA = register(ModEntityNames.LINIA,
@@ -52,6 +56,8 @@ public final class ModEntities {
             EntityType.Builder.<OrbitingBlockEntity>of(OrbitingBlockEntity::new, MobCategory.MISC).noLootTable().sized(HarpConstants.DEFAULT_ORBITING_BLOCK_SIZE, HarpConstants.DEFAULT_ORBITING_BLOCK_SIZE).clientTrackingRange(8).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<Rocket>> ROCKET = register(ModEntityNames.ROCKET,
             EntityType.Builder.of(Rocket::new, MobCategory.MISC).noLootTable().noSummon().sized(1F, 3.15F).eyeHeight(3).ridingOffset(0).clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<RedRascal>> RED_RASCAL = register(ModEntityNames.RED_RASCAL,
+            EntityType.Builder.of(RedRascal::new, MobCategory.MISC).noLootTable().sized(0.3125F, 0.3125F).eyeHeight(0.15625F).clientTrackingRange(4).updateInterval(10));
     public static final DeferredHolder<EntityType<?>, EntityType<VineManager>> VINE_MANAGER = register(ModEntityNames.VINE_MANAGER,
             EntityType.Builder.<VineManager>of(VineManager::new, MobCategory.MISC).noLootTable().noSummon().sized(0, 0).clientTrackingRange(5).updateInterval(20));
     public static final DeferredHolder<EntityType<?>, EntityType<VineSeed>> VINE_SEED = register(ModEntityNames.VINE_SEED,

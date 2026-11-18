@@ -183,6 +183,20 @@
     ],
     "subtitle": "subtitles.tjchase.primed_rocket"
   },
+  "rascal_hit": {
+    "sounds": [
+      "tjchase:item/rascal/hit1",
+      "tjchase:item/rascal/hit2",
+      "tjchase:item/rascal/hit3"
+    ],
+    "subtitle": "subtitles.tjchase.rascal_hit"
+  },
+  "rascal_throw": {
+    "sounds": [
+      "random/bow"
+    ],
+    "subtitle": "subtitles.tjchase.rascal_throw"
+  },
   "remote_control_press": {
     "sounds": [
       "tjchase:item/remote_control/press"

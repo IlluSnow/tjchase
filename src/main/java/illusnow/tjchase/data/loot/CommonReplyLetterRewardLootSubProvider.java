@@ -18,6 +18,7 @@
 package illusnow.tjchase.data.loot;
 
 import illusnow.tjchase.item.ModItems;
+import illusnow.tjchase.item.enchantment.ModEnchantments;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -27,15 +28,16 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import net.minecraft.world.level.storage.loot.functions.EnchantRandomlyFunction;
 import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.function.BiConsumer;
 
 import static net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem;
+import static net.minecraft.world.level.storage.loot.functions.SetItemCountFunction.setCount;
 
 public class CommonReplyLetterRewardLootSubProvider implements LootTableSubProvider {
     private final HolderLookup.Provider registries;
@@ -47,6 +49,36 @@ public class CommonReplyLetterRewardLootSubProvider implements LootTableSubProvi
     @Override
     public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
         output.accept(ModLootTables.COMMON_REPLY_LETTER_REWARD, LootTable.lootTable()
+                .withPool(LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1))
+                        .add(NestedLootTable.inlineLootTable(createVanillaLootTable().build()).setWeight(50))
+                        .add(NestedLootTable.inlineLootTable(createTJChaseLootTable().build()).setWeight(50))
+                ));
+    }
+
+    private LootTable.Builder createTJChaseLootTable() {
+        return LootTable.lootTable()
+                .withPool(LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1))
+                        .add(lootTableItem(ModItems.NETHERITE_HARP.get()).setWeight(1))
+                        .add(lootTableItem(ModItems.HARP.get()).setWeight(19))
+                        .add(lootTableItem(Items.BOOK).setWeight(20).apply(
+                                EnchantRandomlyFunction.randomEnchantment().withOneOf(HolderSet.direct(
+                                        registries.lookupOrThrow(Registries.ENCHANTMENT).get(ModEnchantments.ANGEL_TOM_PASSIVE_2).orElseThrow(),
+                                        registries.lookupOrThrow(Registries.ENCHANTMENT).get(ModEnchantments.ANGEL_TOM_WEAPON_2).orElseThrow(),
+                                        registries.lookupOrThrow(Registries.ENCHANTMENT).get(ModEnchantments.ANGEL_TOM_WEAPON_3).orElseThrow()
+                                ))
+                        ))
+                        .add(lootTableItem(ModItems.BAX_SPIDER.get()).setWeight(20))
+                        .add(lootTableItem(ModItems.BLUE_RASCAL.get()).setWeight(20).apply(setCount(ConstantValue.exactly(16))))
+                        .add(lootTableItem(ModItems.RED_RASCAL.get()).setWeight(20).apply(setCount(ConstantValue.exactly(16))))
+                        .add(lootTableItem(ModItems.GREEN_RASCAL.get()).setWeight(20).apply(setCount(ConstantValue.exactly(16))))
+                        .add(lootTableItem(ModItems.VINE_SEED.get()).setWeight(60).apply(setCount(ConstantValue.exactly(4))))
+                        .add(lootTableItem(ModItems.BLUEPRINT.get()).setWeight(60).apply(setCount(ConstantValue.exactly(4)))));
+    }
+
+    private LootTable.Builder createVanillaLootTable() {
+        return LootTable.lootTable()
                 .withPool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1))
                         .add(lootTableItem(Items.NETHERITE_INGOT).setWeight(1))
@@ -63,38 +95,35 @@ public class CommonReplyLetterRewardLootSubProvider implements LootTableSubProvi
                         .add(lootTableItem(Items.GOLDEN_APPLE).setWeight(5))
                         .add(lootTableItem(Items.NETHERITE_SCRAP).setWeight(5))
                         .add(lootTableItem(Items.DIAMOND).setWeight(5))
-                        .add(lootTableItem(Items.EMERALD).setWeight(5))
+                        .add(lootTableItem(Items.EMERALD).apply(setCount(UniformGenerator.between(1, 2))).setWeight(5))
                         .add(lootTableItem(Items.BREEZE_ROD).setWeight(10))
                         .add(lootTableItem(Items.BLAZE_ROD).setWeight(10))
+                        .add(lootTableItem(Items.BLAZE_POWDER).apply(setCount(UniformGenerator.between(1, 3))).setWeight(10))
                         .add(lootTableItem(Items.GOLDEN_CARROT).setWeight(10))
                         .add(lootTableItem(Items.GLISTERING_MELON_SLICE).setWeight(10))
-                        .add(lootTableItem(Items.ENDER_PEARL).setWeight(10))
-                        .add(lootTableItem(Items.ENDER_EYE).setWeight(10))
-                        .add(lootTableItem(Items.AMETHYST_SHARD).setWeight(10))
-                        .add(lootTableItem(Items.GOLD_INGOT).setWeight(10))
+                        .add(lootTableItem(Items.ENDER_PEARL).apply(setCount(UniformGenerator.between(1, 2))).setWeight(10))
+                        .add(lootTableItem(Items.ENDER_EYE).apply(setCount(UniformGenerator.between(1, 2))).setWeight(10))
+                        .add(lootTableItem(Items.AMETHYST_SHARD).apply(setCount(UniformGenerator.between(2, 4))).setWeight(10))
+                        .add(lootTableItem(Items.GOLD_INGOT).apply(setCount(UniformGenerator.between(1, 2))).setWeight(10))
                         .add(lootTableItem(Items.BOOK).setWeight(10).apply(
                                 EnchantWithLevelsFunction.enchantWithLevels(registries, UniformGenerator.between(5, 15))
                         ))
-                        .add(lootTableItem(Items.IRON_INGOT).setWeight(20))
-                        .add(lootTableItem(Items.LAPIS_LAZULI).setWeight(20))
-                        .add(lootTableItem(Items.COPPER_INGOT).setWeight(20))
-                        .add(lootTableItem(Items.REDSTONE).setWeight(20))
-                        .add(lootTableItem(Items.EXPERIENCE_BOTTLE).setWeight(20))
-                        .add(lootTableItem(Items.COAL).setWeight(25))
-                        .add(lootTableItem(Items.APPLE).setWeight(25))
-                        .add(lootTableItem(Items.BREAD).setWeight(25))
-                        .add(lootTableItem(Items.ARROW).setWeight(25))
-                        .add(lootTableItem(Items.BONE).setWeight(25))
-                        .add(lootTableItem(Items.STRING).setWeight(25))
-                        .add(lootTableItem(Items.STICK).setWeight(25))
-                        .add(lootTableItem(Items.GUNPOWDER).setWeight(25))
-                        .add(lootTableItem(Items.POTATO).setWeight(25))
-                        .add(lootTableItem(Items.CARROT).setWeight(25))
-                        .add(lootTableItem(Items.LEATHER).setWeight(25))
-                        .add(lootTableItem(ModItems.NETHERITE_HARP.get()).setWeight(1))
-                        .add(lootTableItem(ModItems.HARP.get()).setWeight(12))
-                        .add(lootTableItem(ModItems.BAX_SPIDER.get()).setWeight(13))
-                        .add(lootTableItem(ModItems.VINE_SEED.get()).setWeight(35).apply(SetItemCountFunction.setCount(ConstantValue.exactly(3))))
-                        .add(lootTableItem(ModItems.BLUEPRINT.get()).setWeight(35).apply(SetItemCountFunction.setCount(ConstantValue.exactly(3))))));
+                        .add(lootTableItem(Items.IRON_INGOT).apply(setCount(UniformGenerator.between(2, 4))).setWeight(20))
+                        .add(lootTableItem(Items.LAPIS_LAZULI).apply(setCount(UniformGenerator.between(3, 6))).setWeight(20))
+                        .add(lootTableItem(Items.COPPER_INGOT).apply(setCount(UniformGenerator.between(2, 4))).setWeight(20))
+                        .add(lootTableItem(Items.REDSTONE).apply(setCount(UniformGenerator.between(3, 6))).setWeight(20))
+                        .add(lootTableItem(Items.EXPERIENCE_BOTTLE).apply(setCount(UniformGenerator.between(1, 2))).setWeight(20))
+                        .add(lootTableItem(Items.COAL).apply(setCount(UniformGenerator.between(2, 4))).setWeight(25))
+                        .add(lootTableItem(Items.APPLE).apply(setCount(UniformGenerator.between(2, 4))).setWeight(25))
+                        .add(lootTableItem(Items.BREAD).apply(setCount(UniformGenerator.between(2, 4))).setWeight(25))
+                        .add(lootTableItem(Items.ARROW).apply(setCount(UniformGenerator.between(3, 6))).setWeight(25))
+                        .add(lootTableItem(Items.BONE).apply(setCount(UniformGenerator.between(3, 6))).setWeight(25))
+                        .add(lootTableItem(Items.STRING).apply(setCount(UniformGenerator.between(3, 6))).setWeight(25))
+                        .add(lootTableItem(Items.STICK).apply(setCount(UniformGenerator.between(3, 6))).setWeight(25))
+                        .add(lootTableItem(Items.GUNPOWDER).apply(setCount(UniformGenerator.between(2, 4))).setWeight(25))
+                        .add(lootTableItem(Items.POTATO).apply(setCount(UniformGenerator.between(2, 4))).setWeight(25))
+                        .add(lootTableItem(Items.CARROT).apply(setCount(UniformGenerator.between(2, 4))).setWeight(25))
+                        .add(lootTableItem(Items.LEATHER).apply(setCount(UniformGenerator.between(2, 4))).setWeight(25))
+                );
     }
 }

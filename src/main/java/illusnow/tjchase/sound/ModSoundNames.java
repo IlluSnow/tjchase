@@ -50,6 +50,8 @@ public final class ModSoundNames {
     public static final String LINIA_AMBIENT = ModEntityNames.LINIA + "_ambient";
     public static final String LINIA_DEATH = ModEntityNames.LINIA + "_death";
     public static final String LINIA_HURT = ModEntityNames.LINIA + "_hurt";
+    public static final String RASCAL_HIT = "rascal_hit";
+    public static final String RASCAL_THROW = "rascal_throw";
     public static final String VINE_GROW = "vine_grow";
     public static final String VINE_HEAL = "vine_heal";
     public static final String VINE_VANISH = "vine_vanish";

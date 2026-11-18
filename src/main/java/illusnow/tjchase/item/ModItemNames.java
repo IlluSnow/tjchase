@@ -21,6 +21,7 @@ import illusnow.tjchase.entity.ModEntityNames;
 
 public final class ModItemNames {
     public static final String BAX_SPIDER = ModEntityNames.BAX_SPIDER;
+    public static final String BLUE_RASCAL = ModEntityNames.BLUE_RASCAL;
     public static final String BLUEPRINT = ModEntityNames.BLUEPRINT;
     public static final String CAT_EARS = "cat_ears";
     public static final String DIAMOND_VIP_INVITATION_LETTER = "diamond_vip_invitation_letter";
@@ -28,6 +29,7 @@ public final class ModItemNames {
     public static final String ENVELOPE = "envelope";
     public static final String GOLD_VIP_INVITATION_LETTER = "gold_vip_invitation_letter";
     public static final String GOLDEN_FEATHER = "golden_feather";
+    public static final String GREEN_RASCAL = ModEntityNames.GREEN_RASCAL;
     public static final String HARP = "harp";
     public static final String HARP_TESTER = ModEntityNames.HARP_TESTER;
     public static final String MOUSE_EARS = "mouse_ears";
@@ -35,6 +37,7 @@ public final class ModItemNames {
     public static final String NETHERITE_HARP = "netherite_harp";
     public static final String NETHERITE_VIP_INVITATION_LETTER = "netherite_vip_invitation_letter";
     public static final String PROFICIENCY_STICK = "proficiency_stick";
+    public static final String RED_RASCAL = "red_rascal";
     public static final String REMOTE_CONTROL = "remote_control";
     public static final String ROCKET_EDITOR = "rocket_editor";
     public static final String SENT_ENVELOPE = "sent_envelope";

@@ -78,7 +78,7 @@ public class WeakState {
     }
 
     public static boolean weakInsteadOfDie(Player player) {
-        return true;
+        return false;
     }
 
     public boolean isWeak() {

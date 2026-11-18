@@ -20,29 +20,56 @@
     },
     {
       "enum": "net/minecraft/world/item/Rarity",
-      "name": "TJCHASE_BAX_SPIDER_CUSTOM",
+      "name": "TJCHASE_GRAY",
       "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
       "parameters": {
         "class": "illusnow/tjchase/item/ModRarities",
-        "field": "BAX_SPIDER_CUSTOM"
+        "field": "GRAY"
       }
     },
     {
       "enum": "net/minecraft/world/item/Rarity",
-      "name": "TJCHASE_BLUEPRINT_CUSTOM",
+      "name": "TJCHASE_BLUE",
       "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
       "parameters": {
         "class": "illusnow/tjchase/item/ModRarities",
-        "field": "BLUEPRINT_CUSTOM"
+        "field": "BLUE"
       }
     },
     {
       "enum": "net/minecraft/world/item/Rarity",
-      "name": "TJCHASE_HARP_CUSTOM",
+      "name": "TJCHASE_GOLD",
       "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
       "parameters": {
         "class": "illusnow/tjchase/item/ModRarities",
-        "field": "HARP_CUSTOM"
+        "field": "GOLD"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "TJCHASE_LIGHT_PURPLE",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "illusnow/tjchase/item/ModRarities",
+        "field": "LIGHT_PURPLE"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "TJCHASE_GREEN",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "illusnow/tjchase/item/ModRarities",
+        "field": "GREEN"
+      }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "TJCHASE_RED",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "illusnow/tjchase/item/ModRarities",
+        "field": "RED"
       }
     },
     {
@@ -56,29 +83,11 @@
     },
     {
       "enum": "net/minecraft/world/item/Rarity",
-      "name": "TJCHASE_NETHERITE_HARP_CUSTOM",
-      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
-      "parameters": {
-        "class": "illusnow/tjchase/item/ModRarities",
-        "field": "NETHERITE_HARP_CUSTOM"
-      }
-    },
-    {
-      "enum": "net/minecraft/world/item/Rarity",
       "name": "TJCHASE_TOM_CUSTOM",
       "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
       "parameters": {
         "class": "illusnow/tjchase/item/ModRarities",
         "field": "TOM_CUSTOM"
-      }
-    },
-    {
-      "enum": "net/minecraft/world/item/Rarity",
-      "name": "TJCHASE_VINE_SEED_CUSTOM",
-      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
-      "parameters": {
-        "class": "illusnow/tjchase/item/ModRarities",
-        "field": "VINE_SEED_CUSTOM"
       }
     }
   ]

@@ -182,15 +182,20 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(getDamageTypeMsg(ModDamageSources.ORBITING_BLOCK), "%1$s was squashed by a flying block");
             add(getDamageTypeMsg(ModDamageSources.INDIRECT_ORBITING_BLOCK), "%1$s was squashed by a block thrown by %2$s");
             add(getDamageTypeMsg(ModDamageSources.YOGA_BALL), "%1$s was squashed by a inflating yoga ball thrown by %2$s");
+            add(getDamageTypeMsg(ModDamageSources.RASCAL), "%1$s was pummeled by a Rascal");
+            add(getDamageTypeMsg(ModDamageSources.INDIRECT_RASCAL), "%1$s was pummeled a Rascal thrown by %2$s");
             add(HarpTester.NAME, "Monster Rush");
             add(HarpTester.NAME_REMAINING, "Monster Rush - %d remaining");
             add(ModEntities.BAX_SPIDER.get(), "Bax's Spider");
+            add(ModEntities.BLUE_RASCAL.get(), "Devil Tuffy's Blue Rascal");
             add(ModEntities.BLUEPRINT.get(), "Line's Blueprint");
             add(ModEntities.BLUEPRINT_MANAGER.get(), "Blueprint Manager");
             add(ModEntities.COCOON.get(), "Cocoon");
             add(ModEntities.EVILINIA.get(), "Evilinia");
+            add(ModEntities.GREEN_RASCAL.get(), "Devil Tuffy's Green Rascal");
             add(ModEntities.HARP_TESTER.get(), "Harp Tester");
             add(ModEntities.LINIA.get(), "Linia");
+            add(ModEntities.RED_RASCAL.get(), "Devil Tuffy's Red Rascal");
             add(ModEntities.VINE_MANAGER.get(), "Vine Manager");
             add(ModEntities.VINE_SEED.get(), "Robin Hood Tuffy's Bean");
             add(ModEntities.ORBITING_BLOCK.get(), "Flying Block");
@@ -215,6 +220,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "TJChase - Gameplay");
             add(WeakState.WEAK_COUNTDOWN_TEXT, "Weak time remaining: %ds");
             add(ModItems.BAX_SPIDER.get(), "Bax's Spider");
+            add(ModItems.BLUE_RASCAL.get(), "Devil Tuffy's Blue Rascal");
             add(ModItems.BLUEPRINT.get(), "Line's Blueprint");
             add(ModItems.CAT_EARS.get(), "Cat Ears");
             add(ModItems.DIAMOND_VIP_INVITATION_LETTER.get(), "Diamond Member Invitation Letter");
@@ -222,6 +228,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.ENVELOPE.get(), "Common Reply Letter");
             add(ModItems.GOLD_VIP_INVITATION_LETTER.get(), "Gold Member Invitation Letter");
             add(ModItems.GOLDEN_FEATHER.get(), "Golden Feather");
+            add(ModItems.GREEN_RASCAL.get(), "Devil Tuffy's Green Rascal");
             add(ModItems.HARP_TESTER.get(), "Harp Tester");
             add(ModItems.HARP.get(), "Angel Tom's Harp");
             add(ModItems.MOUSE_EARS.get(), "Mouse Ears");
@@ -229,6 +236,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.NETHERITE_HARP.get(), "Angel Tom's Netherite Harp");
             add(ModItems.NETHERITE_VIP_INVITATION_LETTER.get(), "Netherite Member Invitation Letter");
             add(ModItems.PROFICIENCY_STICK.get(), "Proficiency Stick");
+            add(ModItems.RED_RASCAL.get(), "Devil Tuffy's Red Rascal");
             add(ModItems.REMOTE_CONTROL.get(), "Remote Control");
             add(ModItems.ROCKET_EDITOR.get(), "Rocket Editor");
             add(ModItems.SENT_ENVELOPE.get(), "Sent Letter");
@@ -288,6 +296,8 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModSoundSubtitles.LINIA_DEATH, "Linia dies");
             add(ModSoundSubtitles.LINIA_HURT, "Linia hurts");
             add(ModSoundSubtitles.PRIMED_ROCKET, "Rocket Fuse burns");
+            add(ModSoundSubtitles.RASCAL_HIT, "Rascal hits");
+            add(ModSoundSubtitles.RASCAL_THROW, "Rascal flies");
             add(ModSoundSubtitles.REMOTE_CONTROL_PRESS, "Remote Control's button pressed");
             add(ModSoundSubtitles.ROCKET_LAUNCH, "Rocket launches");
             add(ModSoundSubtitles.VINE_GROW, "Beanstalk grows");
@@ -414,6 +424,8 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(getDamageTypeMsg(ModDamageSources.ORBITING_BLOCK), "%1$s被飞行的方块砸扁了");
             add(getDamageTypeMsg(ModDamageSources.INDIRECT_ORBITING_BLOCK), "%1$s被%2$s扔出的方块砸扁了");
             add(getDamageTypeMsg(ModDamageSources.YOGA_BALL), "%1$s在%2$s扔出的瑜伽球膨胀时被压扁了");
+            add(getDamageTypeMsg(ModDamageSources.RASCAL), "%1$s被一个小淘气给砸死了");
+            add(getDamageTypeMsg(ModDamageSources.INDIRECT_RASCAL), "%1$s被%2$s的一个小淘气给砸死了");
             add(getEnchantmentDescriptionId(ModEnchantments.FORCEFUL), "重击");
             add(getEnchantmentDescriptionId(ModEnchantments.EXPLOSIVE), "爆裂");
             add(getEnchantmentDescriptionId(ModEnchantments.OVERLOAD), "过载");
@@ -426,12 +438,15 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(HarpTester.NAME, "怪物之潮");
             add(HarpTester.NAME_REMAINING, "怪物之潮 - 剩余：%d");
             add(ModEntities.BAX_SPIDER.get(), "巴特的小蜘蛛");
+            add(ModEntities.BLUE_RASCAL.get(), "恶魔泰菲的蓝色小淘气");
             add(ModEntities.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModEntities.BLUEPRINT_MANAGER.get(), "蓝图管理器");
             add(ModEntities.COCOON.get(), "蛛丝茧");
             add(ModEntities.EVILINIA.get(), "邪恶线灵");
+            add(ModEntities.GREEN_RASCAL.get(), "恶魔泰菲的绿色小淘气");
             add(ModEntities.HARP_TESTER.get(), "竖琴测试器");
             add(ModEntities.LINIA.get(), "线灵");
+            add(ModEntities.RED_RASCAL.get(), "恶魔泰菲的红色小淘气");
             add(ModEntities.VINE_MANAGER.get(), "藤蔓管理器");
             add(ModEntities.VINE_SEED.get(), "罗宾汉泰菲的藤蔓种子");
             add(ModEntities.ORBITING_BLOCK.get(), "飞行的方块");
@@ -453,9 +468,10 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(EditableValueBehaviors.RangedBehavior.HINT_KEY, "取值范围：[%d, %d]");
             add(EditableValueBehaviors.RangedBehavior.HINT_KEY_DECIMAL, "取值范围：[%.1f, %.1f]");
             add(ModCreativeModeTabs.TAB_ID, "猫鼠");
-            add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "猫鼠 - 主游戏");
+            add(ModCreativeModeTabs.GAMEPLAY_TAB_ID, "猫鼠 - 局内物品");
             add(WeakState.WEAK_COUNTDOWN_TEXT, "虚弱时间剩余：%ds");
             add(ModItems.BAX_SPIDER.get(), "巴特的小蜘蛛");
+            add(ModItems.BLUE_RASCAL.get(), "恶魔泰菲的蓝色小淘气");
             add(ModItems.BLUEPRINT.get(), "莱恩的蓝图");
             add(ModItems.CAT_EARS.get(), "猫猫的耳朵");
             add(ModItems.DIAMOND_VIP_INVITATION_LETTER.get(), "钻石会员邀请函");
@@ -463,6 +479,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.ENVELOPE.get(), "普通回信");
             add(ModItems.GOLD_VIP_INVITATION_LETTER.get(), "黄金会员邀请函");
             add(ModItems.GOLDEN_FEATHER.get(), "金羽毛");
+            add(ModItems.GREEN_RASCAL.get(), "恶魔泰菲的绿色小淘气");
             add(ModItems.HARP_TESTER.get(), "竖琴测试棒");
             add(ModItems.HARP.get(), "天使汤姆的竖琴");
             add(ModItems.MOUSE_EARS.get(), "鼠鼠的耳朵");
@@ -470,6 +487,7 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModItems.NETHERITE_HARP.get(), "天使汤姆的下界合金竖琴");
             add(ModItems.NETHERITE_VIP_INVITATION_LETTER.get(), "下界合金会员邀请函");
             add(ModItems.PROFICIENCY_STICK.get(), "专精度设置棒");
+            add(ModItems.RED_RASCAL.get(), "恶魔泰菲的红色小淘气");
             add(ModItems.REMOTE_CONTROL.get(), "遥控器");
             add(ModItems.ROCKET_EDITOR.get(), "火箭编辑器");
             add(ModItems.SENT_ENVELOPE.get(), "寄出的信");
@@ -529,6 +547,8 @@ public abstract class ModLanguageProvider extends LanguageProvider {
             add(ModSoundSubtitles.LINIA_DEATH, "线灵：死亡");
             add(ModSoundSubtitles.LINIA_HURT, "线灵：受伤");
             add(ModSoundSubtitles.PRIMED_ROCKET, "火箭引线：燃烧");
+            add(ModSoundSubtitles.RASCAL_HIT, "小淘气：命中");
+            add(ModSoundSubtitles.RASCAL_THROW, "小淘气：飞出");
             add(ModSoundSubtitles.REMOTE_CONTROL_PRESS, "遥控器按钮：按下");
             add(ModSoundSubtitles.ROCKET_LAUNCH, "火箭：发射");
             add(ModSoundSubtitles.VINE_GROW, "藤蔓：生长");

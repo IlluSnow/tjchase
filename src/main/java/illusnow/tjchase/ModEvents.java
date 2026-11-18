@@ -19,6 +19,7 @@ package illusnow.tjchase;
 
 import illusnow.tjchase.item.EnvelopeItem;
 import illusnow.tjchase.item.ModCreativeModeTabs;
+import illusnow.tjchase.item.ModDispenseItemBehaviors;
 import illusnow.tjchase.item.ModItems;
 import illusnow.tjchase.network.ModServerPayloadHandlers;
 import illusnow.tjchase.network.bidirectional.SyncInGameEntityPayload;
@@ -27,6 +28,7 @@ import illusnow.tjchase.network.s2c.*;
 import illusnow.tjchase.util.ModRegistries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -127,6 +129,9 @@ public class ModEvents {
             event.accept(ModItems.NETHERITE_HARP.get());
             event.accept(ModItems.VINE_SEED.get());
             event.accept(ModItems.BAX_SPIDER.get());
+            event.accept(ModItems.BLUE_RASCAL.get());
+            event.accept(ModItems.RED_RASCAL.get());
+            event.accept(ModItems.GREEN_RASCAL.get());
             event.accept(ModItems.STAMP.get());
             event.accept(ModItems.ENVELOPE.get());
             event.accept(ModItems.MYSTERIOUS_ENVELOPE.get());
@@ -151,6 +156,11 @@ public class ModEvents {
         event.register(ModRegistries.GAMEPLAY_OBJECT_TYPES);
         event.register(ModRegistries.STRUGGLE_TYPES);
         event.register(ModRegistries.MYSTERIOUS_SHOP_TRADES);
+    }
+
+    @SubscribeEvent
+    public static void onCommonSetup(FMLCommonSetupEvent event) {
+        ModDispenseItemBehaviors.registerBehaviors();
     }
 
     @SubscribeEvent

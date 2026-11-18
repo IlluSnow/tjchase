@@ -56,7 +56,7 @@ public abstract class TJChaseProjectileItem<T extends Projectile> extends Item i
                     sound,
                     SoundSource.PLAYERS,
                     0.5F,
-                    1
+                    0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
             );
         }
 

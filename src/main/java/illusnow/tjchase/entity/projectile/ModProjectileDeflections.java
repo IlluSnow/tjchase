@@ -20,19 +20,19 @@ package illusnow.tjchase.entity.projectile;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
 
 public final class ModProjectileDeflections {
-    public static final ProjectileDeflection YOGA_BALL_BOUNCE_FORWARD_X = (projectile, entity, random) -> {
+    public static final ProjectileDeflection BOUNCE_FORWARD_X = (projectile, entity, random) -> {
         projectile.setDeltaMovement(projectile.getDeltaMovement().multiply(-1, 1, 1));
-        ((YogaBall) projectile).updateRotationWhenBouncing();
+        ((Bounceable) projectile).updateRotationWhenBouncing();
         projectile.needsSync = true;
     };
-    public static final ProjectileDeflection YOGA_BALL_BOUNCE_FORWARD_Y = (projectile, entity, random) -> {
+    public static final ProjectileDeflection BOUNCE_FORWARD_Y = (projectile, entity, random) -> {
         projectile.setDeltaMovement(projectile.getDeltaMovement().multiply(1, -1, 1));
-        ((YogaBall) projectile).updateRotationWhenBouncing();
+        ((Bounceable) projectile).updateRotationWhenBouncing();
         projectile.needsSync = true;
     };
-    public static final ProjectileDeflection YOGA_BALL_BOUNCE_FORWARD_Z = (projectile, entity, random) -> {
+    public static final ProjectileDeflection BOUNCE_FORWARD_Z = (projectile, entity, random) -> {
         projectile.setDeltaMovement(projectile.getDeltaMovement().multiply(1, 1, -1));
-        ((YogaBall) projectile).updateRotationWhenBouncing();
+        ((Bounceable) projectile).updateRotationWhenBouncing();
         projectile.needsSync = true;
     };
     public static final ProjectileDeflection BAX_SPIDER_BOUNCE_BACK = (projectile, entity, random) -> {

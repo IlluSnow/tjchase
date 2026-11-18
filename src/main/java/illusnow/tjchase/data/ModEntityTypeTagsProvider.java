@@ -43,6 +43,7 @@ public class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
                 ModEntities.VINE_MANAGER.get());
         tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(ModEntities.EVILINIA.get());
         tag(EntityTypeTags.FALL_DAMAGE_IMMUNE).add(ModEntities.LINIA.get());
+        tag(EntityTypeTags.IMPACT_PROJECTILES).add(ModEntities.GREEN_RASCAL.get(), ModEntities.RED_RASCAL.get(), ModEntities.BLUE_RASCAL.get(), ModEntities.YOGA_BALL.get(), ModEntities.ORBITING_BLOCK.get());
         tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED).add(ModEntities.BLUEPRINT_MANAGER.get(),
                 ModEntities.HARP_TESTER.get(),
                 ModEntities.ROCKET.get(),

@@ -150,6 +150,15 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
                 .with(sound("block/cobweb/break4"))
                 .with(sound("block/cobweb/break5"))
                 .with(sound("block/cobweb/break6")));
+
+        add(ModSoundEvents.RASCAL_THROW, definition()
+                .subtitle(ModSoundSubtitles.RASCAL_THROW)
+                .with(sound("random/bow")));
+        add(ModSoundEvents.RASCAL_HIT, definition()
+                .subtitle(ModSoundSubtitles.RASCAL_HIT)
+                .with(modSound("item/rascal/hit1"))
+                .with(modSound("item/rascal/hit2"))
+                .with(modSound("item/rascal/hit3")));
     }
 
     private void modIdleSound(Holder<SoundEvent> sound, String subtitle, String name, int count) {

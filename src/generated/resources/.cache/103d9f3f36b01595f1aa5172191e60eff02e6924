@@ -1,7 +1,9 @@
-// 1.21.11	2026-07-17T19:35:55.4667316	Registries
+// 1.21.11	2026-11-14T19:46:11.4239208	Registries
 d5fa83885b8aa9c50659e10062639ccfab187068 data/tjchase/damage_type/indirect_orbiting_block.json
+8cfe2e0a5650cd214ca85281dc4202084241e4bc data/tjchase/damage_type/indirect_rascal.json
 e614562ad2a1e601767df24f5c651e617c3cab45 data/tjchase/damage_type/mob_attack_no_scaling.json
 a9025073089e6c71539ff49e703a294f77dbe34a data/tjchase/damage_type/orbiting_block.json
+a7eadd81690db99c0a1e6ecc08ba87105922c8fa data/tjchase/damage_type/rascal.json
 6f5398c31f2d939fae764dd081018a99d05cac04 data/tjchase/damage_type/yoga_ball.json
 cbbe146a0f4ff465dc4c60f0419e7ee7b985e8ab data/tjchase/enchantment/angel_tom_passive_2.json
 ced31c274518aea984269134099144a532eab970 data/tjchase/enchantment/angel_tom_weapon_2.json

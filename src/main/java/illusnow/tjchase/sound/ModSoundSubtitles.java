@@ -42,6 +42,8 @@ public final class ModSoundSubtitles {
     public static final String PRIMED_ROCKET = prefix(ModSoundNames.PRIMED_ROCKET);
     public static final String REMOTE_CONTROL_PRESS = prefix(ModSoundNames.REMOTE_CONTROL_PRESS);
     public static final String ROCKET_LAUNCH = prefix(ModSoundNames.ROCKET_LAUNCH);
+    public static final String RASCAL_HIT = prefix(ModSoundNames.RASCAL_HIT);
+    public static final String RASCAL_THROW = prefix(ModSoundNames.RASCAL_THROW);
     public static final String VINE_SEED_THROW = prefix(ModSoundNames.VINE_SEED_THROW);
     public static final String VINE_GROW = prefix(ModSoundNames.VINE_GROW);
     public static final String VINE_HEAL = prefix(ModSoundNames.VINE_HEAL);

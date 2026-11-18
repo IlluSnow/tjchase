@@ -48,7 +48,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
 
-public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity {
+public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity, Bounceable {
     public static final RawAnimation INFLATE = RawAnimation.begin().thenPlayAndHold("inflate");
     public static final int DEFLATE_TICKS = 10;
     public static final float INFLATE_SIZE = 2.5F;
@@ -203,21 +203,13 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
             return projectileDeflection0;
         }
         if (canBounce() && hitResult instanceof BlockHitResult blockHitResult) {
-            ProjectileDeflection deflection = getProjectileDeflection(blockHitResult);
+            ProjectileDeflection deflection = Bounceable.getProjectileDeflection(blockHitResult);
             if (deflect(deflection, null, owner, false)) {
                 setDeltaMovement(getDeltaMovement().scale(isInflated() ? 0.4 : 0.7));
                 return deflection;
             }
         }
         return ProjectileDeflection.NONE;
-    }
-
-    private ProjectileDeflection getProjectileDeflection(BlockHitResult blockHitResult) {
-        return switch (blockHitResult.getDirection().getAxis()) {
-            case X -> ModProjectileDeflections.YOGA_BALL_BOUNCE_FORWARD_X;
-            case Y -> ModProjectileDeflections.YOGA_BALL_BOUNCE_FORWARD_Y;
-            case Z -> ModProjectileDeflections.YOGA_BALL_BOUNCE_FORWARD_Z;
-        };
     }
 
     private boolean isInflated() {
@@ -259,6 +251,7 @@ public class YogaBall extends ThrowableProjectile implements Seekable, GeoEntity
         setXRot(0);
     }
 
+    @Override
     public void updateRotationWhenBouncing() {
         Vec3 deltaMovement = getDeltaMovement();
         setYRot((float) (Mth.atan2(deltaMovement.x, deltaMovement.z) * 180 / Math.PI));

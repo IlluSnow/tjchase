@@ -27,19 +27,23 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.specialty.DirectionalProjectileRenderer;
 
 @EventBusSubscriber(modid = TJChase.MODID, value = Dist.CLIENT)
 public final class ModEntityRenderers {
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BAX_SPIDER.get(), BaxSpiderRenderer::new);
+        event.registerEntityRenderer(ModEntities.BLUE_RASCAL.get(), BlueRascalRenderer::new);
         event.registerEntityRenderer(ModEntities.BLUEPRINT.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(ModEntities.BLUEPRINT_MANAGER.get(), BlueprintManagerRenderer::new);
         event.registerEntityRenderer(ModEntities.COCOON.get(), CocoonRenderer::new);
         event.registerEntityRenderer(ModEntities.EVILINIA.get(), context -> new GeoEntityRenderer<>(context, ModEntities.EVILINIA.get()));
+        event.registerEntityRenderer(ModEntities.GREEN_RASCAL.get(), context -> new DirectionalProjectileRenderer<>(context, ModEntities.GREEN_RASCAL.get()));
         event.registerEntityRenderer(ModEntities.HARP_TESTER.get(), DummyEntityRenderer::new);
         event.registerEntityRenderer(ModEntities.LINIA.get(), context -> new GeoEntityRenderer<>(context, ModEntities.LINIA.get()));
         event.registerEntityRenderer(ModEntities.ORBITING_BLOCK.get(), OrbitingBlockRenderer::new);
+        event.registerEntityRenderer(ModEntities.RED_RASCAL.get(), context -> new DirectionalProjectileRenderer<>(context, ModEntities.RED_RASCAL.get()));
         event.registerEntityRenderer(ModEntities.ROCKET.get(), RocketRenderer::new);
         event.registerEntityRenderer(ModEntities.VINE_MANAGER.get(), DummyEntityRenderer::new);
         event.registerEntityRenderer(ModEntities.VINE_SEED.get(), ThrownItemRenderer::new);
